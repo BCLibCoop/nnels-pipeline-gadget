@@ -1,0 +1,532 @@
+running with cElementTree on Python 2.5+
+parsing ./Test Data/identifier_script/Requests-January-2018.xml
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x103f6c030> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x103fc0810> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x103fc75a0> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x103fcf690> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x103fd64b0> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10410d600> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10410df60> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104119690> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104121270> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104121fc0> already had SCN 1001573772
+parsing ./Test Data/identifier_script/BCOpenTextbooks_August2017.xml
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) sarah0026552</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)865847842</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104113f00> already had SCN 865847842
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) sarah0026564</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)884029014</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x103fd6f60> already had SCN 884029014
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) sarah0026555</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)884029026</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x103fd62a0> already had SCN 884029026
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) sarah0026543</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)884028938</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104127810> already had SCN 884028938
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) sarah0026538</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)884028951</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x103fcd4b0> already had SCN 884028951
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) sarah0026566</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)884029015</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104128150> already had SCN 884029015
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) sarah0026563</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)884029058</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104128de0> already had SCN 884029058
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) sarah0026558</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)884029007</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1041194e0> already had SCN 884029007
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) sarah0026550</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)884028893</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104112750> already had SCN 884028893
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) sarah0026549</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)884028977</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10410f420> already had SCN 884028977
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) sarah0026547</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)884028943</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10412a0c0> already had SCN 884028943
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) sarah0026545</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)884028996</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10412ade0> already had SCN 884028996
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) sarah0026553</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)884029004</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104130a80> already had SCN 884029004
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104139840> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) sarah0026565</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)884029059</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1041404b0> already had SCN 884029059
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) sarah0026539</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)884028962</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1041471b0> already had SCN 884028962
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) sarah0026559</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)884029038</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104147db0> already had SCN 884029038
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) sarah0026544</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)884028964</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10414fa50> already had SCN 884028964
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) sarah0026561</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)884028957</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1041567e0> already had SCN 884028957
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) sarah0026546</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)884028994</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10415d480> already had SCN 884028994
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104167060> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) sarah0026557</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)884029006</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104167c60> already had SCN 884029006
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10416d900> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) sarah0026540</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)884028988</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1041747e0> already had SCN 884028988
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000346</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)883986353</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10417b480> already had SCN 883986353
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000345</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)865580601</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1041841b0> already had SCN 865580601
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000343</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)883986359</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104184f00> already had SCN 883986359
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000347</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)861340132</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10418bc30> already had SCN 861340132
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000344</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)883986360</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104193870> already had SCN 883986360
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000866</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)896066697</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10419b720> already had SCN 896066697
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000349</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)883986370</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1041a3420> already had SCN 883986370
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000348</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)883986368</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1041aa1b0> already had SCN 883986368
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000871</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)892455248</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1041aad50> already had SCN 892455248
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000861</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)896066694</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1041b5ab0> already had SCN 896066694
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000850</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)892455389</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1041bb7e0> already had SCN 892455389
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000865</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)896066696</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1041c2690> already had SCN 896066696
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000867</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)898309777</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1041ca360> already had SCN 898309777
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000853</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)864746599</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1041d11b0> already had SCN 864746599
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000875</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)896066638</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1041d8060> already had SCN 896066638
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000856</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)892455378</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1041d8de0> already had SCN 892455378
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000863</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)892455358</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1041e1a80> already had SCN 892455358
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000860</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)898309776</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1041e78d0> already had SCN 898309776
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000869</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)892455379</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1041ef510> already had SCN 892455379
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000855</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)896066701</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1041f8210> already had SCN 896066701
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000874</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)892455337</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1041f8f30> already had SCN 892455337
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000868</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)896066734</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104200b70> already had SCN 896066734
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000862</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)896066695</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104207870> already had SCN 896066695
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000857</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)896066633</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10420e630> already had SCN 896066633
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000858</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)896066634</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104217330> already had SCN 896066634
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000864</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)861341268</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10421d030> already had SCN 861341268
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000848</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)891144758</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10421dd50> already had SCN 891144758
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000849</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)891144861</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104225b40> already had SCN 891144861
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000870</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)892455382</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10422d930> already had SCN 892455382
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000851</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)892455328</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104234510> already had SCN 892455328
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000852</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)896066672</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10423d240> already had SCN 896066672
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000854</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)870637616</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10423df60> already had SCN 870637616
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000977</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)896066738</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104246cf0> already had SCN 896066738
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000978</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)896066739</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10424dc30> already had SCN 896066739
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000980</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)896066762</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104256b70> already had SCN 896066762
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000982</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)896066765</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10425eab0> already had SCN 896066765
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000981</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)896066763</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1042659f0> already had SCN 896066763
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000979</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)896066740</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10426d930> already had SCN 896066740
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104275870> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10427c660> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000972</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)896066640</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1042854e0> already had SCN 896066640
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000975</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)898310038</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10428e240> already had SCN 898310038
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000971</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)898309896</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10428eed0> already had SCN 898309896
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000985</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)896066715</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104296c60> already had SCN 896066715
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000983</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)162105783</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10429d9f0> already had SCN 162105783
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000989</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)896066749</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1042a4b70> already had SCN 896066749
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu001679</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)914216998</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1042ab960> already had SCN 914216998
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu001676</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)914216995</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1042b2930> already had SCN 914216995
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu001677</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)914216996</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1042b97e0> already had SCN 914216996
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu001678</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)914216997</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1042c1660> already had SCN 914216997
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu001675</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1042c83c0> already had SCN bcviu001675
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu001680</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)914216999</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1042d0210> already had SCN 914216999
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1042d9180> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)926273797</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1042e1030> already had SCN 926273797
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)926273796</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1042e1c90> already had SCN 926273796
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1042e7960> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1042ef6f0> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1042f6540> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1042fe390> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1043051b0> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104305f90> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10430dde0> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu000873</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)892455329</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104315c30> already had SCN 892455329
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">ocn892455382</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10431d870> already had SCN ocn892455382
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104325570> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10432d360> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1043341e0> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10433d030> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">bcviu001947</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10433de40> already had SCN bcviu001947
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">bcviu001948</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104344b40> already had SCN bcviu001948
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi)bcviu000864</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)861341268</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10434a9f0> already had SCN 861341268
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi)bcviu001949</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104352690> already had SCN bcviu001949
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10435b720> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1043625d0> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10436a600> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104372450> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10437b360> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1043832d0> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10438b120> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10438bf60> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104392de0> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104396cf0> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10439fc00> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1043a7b10> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1043aea20> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1043b7930> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu001673</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu001673</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">ocn914216993</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1043bf780> already had SCN ocn914216993
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1043c64b0> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu001674</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)914216994</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1043ce0f0> already had SCN 914216994
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1043cef00> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1043d7b10> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1043dd6f0> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1043e4420> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1043ec150> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(Sirsi) bcviu001672</ns0:subfield></ns0:datafield>
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">ocn914216992</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1043ecd20> already had SCN ocn914216992
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1043f3c00> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1043fac30> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104402d80> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10440ced0> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104414f30> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10441bed0> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104423f00> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10442af00> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104432f00> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104439f00> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104441de0> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)933620788</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104447ae0> already had SCN 933620788
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)946062815</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10444ec00> already had SCN 946062815
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)950873324</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104457960> already had SCN 950873324
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)950873491</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10445e990> already had SCN 950873491
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)950873357</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104465960> already had SCN 950873357
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)900282580</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10446e930> already had SCN 900282580
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)933887919</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1044759c0> already had SCN 933887919
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)900282227</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10447ca50> already had SCN 900282227
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)933883777</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104483b70> already had SCN 933883777
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)897840005</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10448ccc0> already had SCN 897840005
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)933925017</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104495d80> already had SCN 933925017
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)932072340</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10449cea0> already had SCN 932072340
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)944246088</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1044a4ea0> already had SCN 944246088
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)951067061</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1044aad20> already had SCN 951067061
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)951031923</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1044b2cc0> already had SCN 951031923
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)951032198</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1044bbc60> already had SCN 951032198
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)956400307  </ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1044c29f0> already had SCN 956400307
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)959336725</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1044c9840> already had SCN 959336725
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)959336726</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1044d1690> already had SCN 959336726
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)911062653</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1044d9570> already had SCN 911062653
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)959336727</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1044e09f0> already had SCN 959336727
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)961216390</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1044ea810> already had SCN 961216390
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)957556469</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1044f1750> already had SCN 957556469
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)940959238</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1044f8690> already had SCN 940959238
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)957558935</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104500fc0> already had SCN 957558935
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)957556634</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104511240> already had SCN 957556634
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10451a540> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)953999340</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104521480> already had SCN 953999340
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC) 959619164 </ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104528d80> already had SCN 959619164
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)953039477</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10452fb40> already had SCN 953039477
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)961476196</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10453f750> already had SCN 961476196
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)961352944</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104546a50> already had SCN 961352944
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)961353258</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10454de40> already had SCN 961353258
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)961353503</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10455e1e0> already had SCN 961353503
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)908396889</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104565240> already had SCN 908396889
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)962280734</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10456d210> already had SCN 962280734
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)973423979</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104574330> already had SCN 973423979
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)975287534</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10457c1e0> already had SCN 975287534
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)975287685</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104583330> already had SCN 975287685
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)973423980</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10458b480> already had SCN 973423980
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1045914b0> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104599480> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1045a1420> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1045a93c0> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1045b0390> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)973884682</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1045b8360> already had SCN 973884682
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)951750571</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1045c1360> already had SCN 951750571
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)953994213</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1045c8390> already had SCN 953994213
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)982127523</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1045cf690> already had SCN 982127523
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1001282357</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1045d84e0> already had SCN 1001282357
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1001268505</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1045e13f0> already had SCN 1001268505
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1000618203</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1045e80c0> already had SCN 1000618203
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1001280624</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1045e8f00> already had SCN 1001280624
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1001281429</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1045f0f30> already had SCN 1001281429
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1001254247</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1045ff180> already had SCN 1001254247
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1000616801</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1046051b0> already had SCN 1000616801
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)970665265</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10460e120> already had SCN 970665265
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1001282288</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104615150> already had SCN 1001282288
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1000615977</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104615f30> already had SCN 1000615977
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1000616140</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10461cf90> already had SCN 1000616140
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1000616198</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104623ed0> already had SCN 1000616198
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)993255777</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10462cdb0> already had SCN 993255777
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)968326927</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104633d20> already had SCN 968326927
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1000616343</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104639d50> already had SCN 1000616343
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1001572494</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104641ba0> already had SCN 1001572494
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1001572573</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1046489f0> already had SCN 1001572573
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1001572651</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1046507b0> already had SCN 1001572651
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1001572834</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1046586f0> already had SCN 1001572834
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1001572912</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1046614b0> already had SCN 1001572912
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1001573137</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104668390> already had SCN 1001573137
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1001573194</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1046702a0> already had SCN 1001573194
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1001573312</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104677420> already had SCN 1001573312
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1001573300</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10467f2d0> already had SCN 1001573300
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1001573315</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1046860f0> already had SCN 1001573315
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1001573436</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104686ed0> already had SCN 1001573436
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1001573486</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10468ecc0> already had SCN 1001573486
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1001573653</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104696b40> already had SCN 1001573653
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1001573547</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10469da50> already had SCN 1001573547
+<ns0:datafield xmlns:ns0="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns0:subfield code="a">(OCoLC)1001573772</ns0:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1046a4840> already had SCN 1001573772
+parsing ./Test Data/identifier_script/Governor_General_2017.xml
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1046a4ea0> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10469dd20> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1046967e0> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10468e810> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x10450a750> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x1044c2480> already had SCN 1001573772
+<ns0:datafield xmlns:ns0="http://wwww.loc.gove/MARC21/slim" xmlns:ns1="http://www.loc.gov/MARC21/slim" ind1=" " ind2=" " tag="035"><ns1:subfield code="a">(OCoLC)1001573772</ns1:subfield></ns0:datafield>
+<Element '{http://www.loc.gov/MARC21/slim}record' at 0x104475f30> already had SCN 1001573772
