@@ -67,13 +67,16 @@ def processSCN(scn):
 	return scn
 
 def processTitle(title):
-	title = title.replace(",","")
-	title = title.replace(":","")
-	title = title.replace(".","")
-	title = title.replace("'","")
-        title = title.replace("?","")
-       	title = title.replace("&","")
-        title = title.replace(" ", "_")
+	# Remove special characters
+	specialchars = [",", ":", ".", "'", "?", "&", "/"]
+	for char in specialchars:
+		print title
+		title = title.replace(char, "")
+
+	# Strip any extranous whitespace
+	title = title.strip()
+	# Underscore remaining whitespace
+	title = title.replace(" ", "_")
 	return title
 
 funcdict = {
