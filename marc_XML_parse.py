@@ -70,7 +70,6 @@ def processTitle(title):
 	# Remove special characters
 	specialchars = [",", ":", ".", "'", "?", "&", "/"]
 	for char in specialchars:
-		print title
 		title = title.replace(char, "")
 
 	# Strip any extranous whitespace
