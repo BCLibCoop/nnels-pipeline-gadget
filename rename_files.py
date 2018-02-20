@@ -1,6 +1,8 @@
 import subprocess
 import itertools
 import data_structs as structs			
+from BookFile import BookFile
+from BookFileType import BookFileType
 
 #----------------------------------------------------#
 # Purpose: Create a filename regex based on the      #
@@ -23,18 +25,21 @@ import data_structs as structs
 #                  the find command                  #
 #----------------------------------------------------#
 def create_filename_regex(patterns):
-	# Define the variable to store the final expression and start with a left a open brace
+	# Define the variable to store the final expression and start with a 
+	# left a open brace
         exp = '(';
 	
 	# Loop over the 'patterns' supplied on the command line
         for pattern in patterns:
 		# Check if it starts with the "ignore directories" expression
                 if pattern.startswith('.*/'):
-			# Because it has the "ignore directories" expression use as is
+			# Because it has the "ignore directories" expression 
+			# use as is
                         print 'Using original pattern: ' + pattern
                         exp += pattern + '|'
                 else:
-			# Because it doesn't have the "ignore directories" expression prepend that to the beginning
+			# Because it doesn't have the "ignore directories" 
+			# expression prepend that to the beginning
                         print 'Using augmented pattern: .*/' + pattern
                         exp += '.*/' + pattern + '|'
         
@@ -231,12 +236,14 @@ def zero_length_token_fix(tokens):
 		if len(tokens[x]) < 1:
 			tokens.remove(tokens[x])
 	
-        # Avoid edge case of a file named _.format and process the any/the token left
+        # Avoid edge case of a file named _.format and process the any/the 
+	# token left
         if len(tokens) > 0:
 		check_two_tokens(tokens, 0)
 
 def process_two_tokens(tokens):
-	# Nothing is stopping people to put a underscore at the beginning or end of a filename
+	# Nothing is stopping people to put a underscore at the beginning or 
+	# end of a filename
 	if len(tokens[0]) > 0 and len(tokens[1]) > 0:
 		check_two_tokens(tokens, 0, 1)
 		check_two_tokens(tokens, 1, 0)
@@ -244,12 +251,72 @@ def process_two_tokens(tokens):
 	else:
 		zero_length_token_fix(tokens)
 
+#----------------------------------------------------#
+# Purpose: To tokenize the filename by unederscore   #
+#          and process the tokens appropriatley      #
+# Parameters: name - The filename to be tokenized    #
+# Return: N/A (To be reevaluated later)
+#----------------------------------------------------#
+def tokenize_by_underscore(name):
+	tokens = name.split('_')
+	print 'Tokens: ' + str(tokens)
+	# Need to check if we have to start trying to make permutations of 
+	# multiple tokens or the simpler case
+	if len(tokens) >  2:
+		do_combinations(tokens)
+	else:
+		process_two_tokens(tokens)
+
+#----------------------------------------------------#
+# Purpose: Break the filename into meaningful peices
+# Parameters: 
+# Return: 
+#----------------------------------------------------#
+def get_name_parts(filename):
+	# If the filename contains a do we want to tokenize it by that (know 
+	# what the format is otherwise eliminate dealing with .blahblah files)
+	if '.' in filename:
+		filename_parts = filename.split('.')
+		
+		# If the filename started with a . then the first token has no 
+		# length so lets just remove it
+		if len(filename_parts[0]) < 1:
+			filename_parts.remove(filename_parts[0])
+		
+		# There should now only be two parts the name and the format
+		if len(filename_parts) == 2:
+			# Check that the name actually has some length (mostly 
+			# a sanity check but...)
+			if len(filename_parts[0]) > 0:
+				name = filename_parts[0]
+				
+				# Check if the filename contains a underscore be
+				# cause this allows us to assume its either the 
+				# title only or some combination of title and 
+				# SCN
+				if '_' in name:
+					tokenize_by_underscore(name)
+				else:
+					check_two_tokens(filename_parts, 0)
+				
+				format = filename_parts[1]
+                        #else:
+                        #       print 'There is something odd about ' + line + 'because broken down it changes into' + str(parts)
+	else:
+		if len(filename) > 0:
+			if '_' in filename:
+				tokenize_by_underscore(filename)
+			else:
+				check_two_tokens([filename], 0)
+
 def func_rename(patterns):
 	# Get the applicable filenames
 	lines = getFileNames(patterns)
 	
 	# Loop over the lines of output
 	for line in lines:
+		currBookType = BookFileType()
+		currBook = BookFile(currBookType)
 		
 		# DEBUGGING: See what is being worked on
 		print 'Currently processing: ' + line
@@ -260,37 +327,5 @@ def func_rename(patterns):
 			if len(path_parts) > 1:
 				line = path_parts[len(path_parts) - 1]
 		
-		# If the filename contains a do we want to tokenize it by that (know what the format is otherwise eliminate dealing with .blahblah files)
-		if '.' in line:
-			filename_parts = line.split('.')
-			
-			# If the filename started with a . then the first token has no length so lets just remove it
-			if len(filename_parts[0]) < 1:
-				filename_parts.remove(filename_parts[0])
-			
-			# There should now only be two parts the name and the format
-			if len(filename_parts) == 2:
-				# Check that the name actually has some length (mostly a sanity check but...)
-				if len(filename_parts[0]) > 0:
-					name = filename_parts[0]
-					
-					# Check if the filename contains a underscore because this allows us to assume its either the title only or some combination of title and SCN
-					if '_' in name:
-						tokens = name.split('_')
-						print 'Tokens: ' + str(tokens)
-						# Need to check if we have to start trying to make permutations of multiple tokens or the simpler case
-						if len(tokens) >  2:
-							do_combinations(tokens)
-						else:
-							process_two_tokens(tokens)
-					else:
-						if structs.hasSCN(filename_parts[0]):
-							print filename_parts[0] + ' is a SCN'
-						elif structs.hasTitle(filename_parts[0]):
-							print filename_parts[0] + ' is a Title'
-						else:
-							print filename_parts[0] + ' is neither a SCN or Title. Not sure what to do with this'
-					format = filename_parts[1]
-			#else:
-			#	print 'There is something odd about ' + line + 'because broken down it changes into' + str(parts)
+		get_name_parts(line)
 
