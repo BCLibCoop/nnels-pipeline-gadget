@@ -1,10 +1,14 @@
 from BookFileType import BookFileType
+import data_structs as structs
 
 #====================================================#
 # Purpose: Represent a BookFile object within the    #
 #          Python scripts                            #
 # Properties: fullpath - The full file path to the   #
 #                        file                        #
+#             filename - The filename of the book    #
+#                        file (No directory          #
+#                        information)                #
 #             SCN - The SCN of the book the file     #
 #                   represents                       #
 #             title - The title of the book the file #
@@ -14,6 +18,7 @@ from BookFileType import BookFileType
 #====================================================#
 class BookFile(object):
 	fullpath = ''   # The full filepath to the book file
+	filename = ''	# The filename (No directory information)
 	
 	#----------------------------------------------------#
 	# Purpose: Constructor for the BookFile object       #
@@ -22,8 +27,10 @@ class BookFile(object):
 	#                    DAISY vs ...)                   #
 	# Return: N/A (Constructor)                          #
 	#----------------------------------------------------#
-	def __init__(self, type):
-		self.type = type
+	def __init__(self):
+		self._SCN = None
+		self._title = None
+		self._type = None
 	
 	#----------------------------------------------------#
 	# Purpose: Getter for the object's SCN property (    #
@@ -81,7 +88,8 @@ class BookFile(object):
 	@title.setter
 	def title(self, newTitle):
 		if structs.hasTitle(newTitle):
-			self._title = newTitle
+			if self.SCN is None or self.SCN == structs.getSCN_fromTitle(newTitle):
+				self._title = newTitle
 	
 	#----------------------------------------------------#
 	# Purpose: Getter for the object's type property (  #

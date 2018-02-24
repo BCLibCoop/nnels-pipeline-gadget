@@ -6,31 +6,8 @@
 # Date: 2018-02-12                                   #
 ######################################################
 
-try:
-  from lxml import etree
-  #print("running with lxml.etree")
-except ImportError:
-  try:
-    # Python 2.5
-    import xml.etree.cElementTree as etree
-    #print("running with cElementTree on Python 2.5+")
-  except ImportError:
-    try:
-      # Python 2.5
-      import xml.etree.ElementTree as etree
-      #print("running with ElementTree on Python 2.5+")
-    except ImportError:
-      try:
-        # normal cElementTree install
-        import cElementTree as etree
-        #print("running with cElementTree")
-      except ImportError:
-        try:
-          # normal ElementTree install
-          import elementtree.ElementTree as etree
-          #print("running with ElementTree")
-        except ImportError:
-          print("Failed to import ElementTree from any known place")
+import dynamic_loader as loader
+loader.load_XML_parser()
 
 # Import datetime object from the datetime module for SCN generation
 from datetime import datetime
@@ -101,11 +78,11 @@ def getSCNFromRecord(record):
 	for field in record:
 		if field.get('tag') == '035':
 			has = True;
-			print etree.tostring(field)
+			print loader.etree.tostring(field)
 			for subfield in field:
 				if subfield.get('code') == 'a':
 					# Get the most refined or "raw" SCN
-					scn = funcdict['SCN'](subfield.text)
+]\				scn = funcdict['SCN'](subfield.text)
 					
 					# Add the SCN as an entry in the 
 					# dictionary associated with its 
@@ -172,7 +149,7 @@ def processMarcXMLFile(filename):
 	print "parsing " + filename
 	
 	# Setup the XML parsing of the file
-	tree = etree.parse(filename)
+	tree = loader.etree.parse(filename)
 	root = tree.getroot()
 	
 	# Get the SCN
@@ -183,7 +160,7 @@ def processMarcXMLFile(filename):
 	for key,value in with035.iteritems():
 		returnVal[getTitleFromRecord(value)] = key
 	
-	tree = etree.ElementTree(root)
+	tree = loader.etree.ElementTree(root)
 	tree.write(filename,  xml_declaration=True, encoding="utf-8")
 	
 	return returnVal
@@ -193,7 +170,7 @@ def processMarcXMLFile(filename):
 # Parameters: Command line parameters                #
 # Return: N/A                                        #
 #----------------------------------------------------#
-if __name__ == '__main__':
+def create_:
 	
 	# Setup the propery variables
 	renames = {}
@@ -211,6 +188,3 @@ if __name__ == '__main__':
 	for key,value in renames.iteritems():
 		outputFile.write(value + "\t" +  key.encode('utf-8') + "\n")
 
-	#parser = SafeConfigParser()
-	#parser.read('The Legacy-metadata.ini')
-	#print parser.get('The Legacy', 'title')

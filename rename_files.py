@@ -1,8 +1,14 @@
+######################################################
+# Purpose: Provide functionality for the rename      #
+#          features within the program               #
+# Author: Alan Bridgeman                             #
+######################################################
+
 import subprocess
 import itertools
 import data_structs as structs			
 from BookFile import BookFile
-from BookFileType import BookFileType
+from BookFileType import BookFileType, BookFileTypeFactory
 
 #----------------------------------------------------#
 # Purpose: Create a filename regex based on the      #
@@ -112,7 +118,7 @@ def createCombinationToken(set):
 			outputEntry += '_'
 	
         # DEBUGGING: See what the value of the "combination token" is
-	print outputEntry
+	#print outputEntry
 	
 	# Return the value
 	return outputEntry
@@ -128,7 +134,7 @@ def createCombinationToken(set):
 #                that need to be varified as a SCN   #
 #                or title                            #
 #----------------------------------------------------#
-def do_combinations(tokens):
+def get_combinations(tokens):
 	print 'Do permutation stuff'
 	
 	# Generate all possible combinations using the itertools moduole
@@ -143,94 +149,65 @@ def do_combinations(tokens):
 		outputSet.append(createCombinationToken(set))
 	
 	# Return the result
-	return outputSet
+	return outputSet         
 
 #----------------------------------------------------#
-# Purpose: Check if the potentially identified       #
-#          title matches with the expected title as  #
-#          queryed using the SCN as a key            #
-# Parameters: scn - The scn that HAS been identified #
-#             potential_title - The token you think  #
-#                               is the title         #
-# Return: N/A (To be reevaluated later)              #
+# Purpose: Check the provieded token for matches     #
+#          with SCNs and titles                      #
+# Parameters: book - The book object being processed #
+#             token - The token to be checked        #
+#                     against                        #
+# Return: N/A                                        #
 #----------------------------------------------------#
-def check_by_SCN(scn, potential_title):
-	# DEBUGGING: Display that we've identified this as a SCN
-	print scn + ' is a SCN'
-	
-	# Query the data structure to get the expected title for the SCN
-	expectedTitle = structs.getTitle_fromSCN(scn)
-	
-	# Perform the check and respond appropriatly
-	if expectedTitle == potential_title:
-		print 'The filename matched the format SCN_title'
-	else:
-		print 'The filename is a format of SCN_ something (that is not the title because the title is ' + expectedTitle + ')'
-
-#----------------------------------------------------#
-# Purpose: Check if the potentially identified SCN   #
-#          matches with the expected SCN as queryed  #
-#          using the title as a key                  #
-# Parameters: title - The title that HAS been        #
-#                     identified                     #
-#             potential_SCN - The token you think is #
-#                             the SCN                #
-# Return: N/A (To be reevaluated later)              #
-#----------------------------------------------------#
-def check_by_Title(title, potential_SCN):
-	# DEBUGGING: Display that we've identified this as a title
-	print title + ' is a Title'
-	
-	# Query the data structures to get the expected SCN for the title
-	expectedSCN = structs.getSCN_fromTitle(title)
-	
-	# Perform the check and respond appropriately
-	if expectedSCN == potential_SCN:
-		print 'The filename match the format title_SCN'
-	else:
-		print 'The filename is a format of title_ something that is not the SCN'
+def check_token(book, token):
+	# Check if the current token matches a SCN
+	if structs.hasSCN(token):
+		# Now that we know the token matches A SCN lets check if its 
+		# the proper one if we can
+		if book.title is not None:
+			if token == getSCN_fromTitle(book.title):
+				print 'Setting the SCN: ' + token
+				# Since it matched set it in the book object
+				book.SCN = token
+			else:
+				# Since it didn't match let the user know and move on
+				print 'Skipping SCN ' + token + ' because it does not match with identified title ' + book.title
+		else:
+			print 'Setting the SCN: ' + token
+			# Because we don't yet know the title assume this is 
+			# the right SCN
+			book.SCN = token
+	# Check if the current token matches a title
+	elif structs.hasTitle(token):
+		# Now that we know the token matches A title lets check if its 
+		# the propery one if we can
+		if book.SCN is not None:
+			if token == structs.getTitle_fromSCN(book.SCN):
+				print 'Setting the title: ' + token
+				# Since it matched set it in the book object
+				book.title = token
+			else:
+				# Since it didn't match let the user know and move on
+				print 'Skipping title ' + token + ' because it does not match with identified SCN ' + book.SCN
+		else:
+			print 'Setting the title: ' + token
+			# Because we don't yet know the SCN assume this is the 
+			# right title
+			book.title = token
+	elif book.type is None:
+		factory = BookFileTypeFactory()
+		bookType = factory.getStringType(token) 
+		if bookType is not None:
+			book.type = bookType
+			print 'Changed book type to ' + str(bookType)
 
 #----------------------------------------------------#
 # Purpose: 
 # Parameters: 
 # Return: 
 #----------------------------------------------------#
-def check_two_tokens(tokens, index1, index2 = None):
-	if structs.hasSCN(tokens[index1]):
-		if index2 is not None:
-			check_by_SCN(tokens[index1], tokens[index2])
-		else:
-			print tokens[index1] + ' is a SCN'
-	elif structs.hasTitle(tokens[index1]):
-		if index2 is not None:
-			check_by_title(tokens[index1], tokens[index2])
-		else:
-			print tokens[index1] + ' is a Title'
-	else:
-		print tokens[index1] + ' is neither a SCN or Title. Not sure what to do with this'
-
-#-----------------------------------------------------#
-# Purpose: 
-# Parameter: 
-# Return: 
-#-----------------------------------------------------#
-def check_combined_token(str1, str2):
-	combined_token = str1 + '_' + str2
-	
-	if structs.hasSCN(str1 + '_' + str2):
-		print str1 + '_' + str2 + ' is a SCN'
-	elif structs.hasTitle(str1 + '_' + str2):
-		print str1 + '_' + str2 + ' is a Title'
-        else:
-		print str1 + '_' + str2 + ' is neither a SCN or Title. Not sure what to do with this'
-
-#----------------------------------------------------#
-# Purpose: 
-# Parameters: 
-# Return: 
-#----------------------------------------------------#
-def zero_length_token_fix(tokens):
-	
+def zero_length_token_fix(book, tokens):
+	# Loop over each of the tokens to check their length
 	for x in range(0, len(tokens)):
 		# Check if token x is a/the empty entry
 		if len(tokens[x]) < 1:
@@ -239,17 +216,17 @@ def zero_length_token_fix(tokens):
         # Avoid edge case of a file named _.format and process the any/the 
 	# token left
         if len(tokens) > 0:
-		check_two_tokens(tokens, 0)
+		check_token(book, tokens[0])
 
-def process_two_tokens(tokens):
+def process_two_tokens(book, tokens):
 	# Nothing is stopping people to put a underscore at the beginning or 
 	# end of a filename
 	if len(tokens[0]) > 0 and len(tokens[1]) > 0:
-		check_two_tokens(tokens, 0, 1)
-		check_two_tokens(tokens, 1, 0)
-		check_combined_token(tokens[0], tokens[1])
+		check_token(book, tokens[0])
+		check_token(book, tokens[1])
+		check_token(book, tokens[0] + '_' + tokens[1])
 	else:
-		zero_length_token_fix(tokens)
+		zero_length_token_fix(book, tokens)
 
 #----------------------------------------------------#
 # Purpose: To tokenize the filename by unederscore   #
@@ -257,75 +234,212 @@ def process_two_tokens(tokens):
 # Parameters: name - The filename to be tokenized    #
 # Return: N/A (To be reevaluated later)
 #----------------------------------------------------#
-def tokenize_by_underscore(name):
+def tokenize_by_underscore(book, name):
 	tokens = name.split('_')
 	print 'Tokens: ' + str(tokens)
+	
 	# Need to check if we have to start trying to make permutations of 
 	# multiple tokens or the simpler case
 	if len(tokens) >  2:
-		do_combinations(tokens)
+		combos = get_combinations(tokens)
+		for combo in combos:
+			check_token(book, combo)
 	else:
-		process_two_tokens(tokens)
+		process_two_tokens(book, tokens)
 
 #----------------------------------------------------#
 # Purpose: Break the filename into meaningful peices
 # Parameters: 
 # Return: 
 #----------------------------------------------------#
-def get_name_parts(filename):
+def get_name_parts(book):
 	# If the filename contains a do we want to tokenize it by that (know 
 	# what the format is otherwise eliminate dealing with .blahblah files)
-	if '.' in filename:
-		filename_parts = filename.split('.')
+	if '.' in book.filename:
+		filename_parts = book.filename.split('.')
 		
 		# If the filename started with a . then the first token has no 
 		# length so lets just remove it
 		if len(filename_parts[0]) < 1:
 			filename_parts.remove(filename_parts[0])
 		
-		# There should now only be two parts the name and the format
+		# If there are EXACTLY two tokens assume the second token is the
+                # format/extension
 		if len(filename_parts) == 2:
-			# Check that the name actually has some length (mostly 
-			# a sanity check but...)
-			if len(filename_parts[0]) > 0:
-				name = filename_parts[0]
-				
-				# Check if the filename contains a underscore be
-				# cause this allows us to assume its either the 
-				# title only or some combination of title and 
-				# SCN
-				if '_' in name:
-					tokenize_by_underscore(name)
-				else:
-					check_two_tokens(filename_parts, 0)
-				
-				format = filename_parts[1]
-                        #else:
-                        #       print 'There is something odd about ' + line + 'because broken down it changes into' + str(parts)
-	else:
-		if len(filename) > 0:
-			if '_' in filename:
-				tokenize_by_underscore(filename)
+                        format = filename_parts[1]
+                        bookType = BookFileTypeFactory.getExtensionType(format)
+                        if bookType is not None:
+				book.type = bookType
+			print bookType
+		
+		# Check that the name actually has some length (mostly 
+		# a sanity check but...)
+		if len(filename_parts[0]) > 0:
+			name = filename_parts[0]
+			
+			# Check if the filename contains a underscore be
+			# cause this allows us to assume its either the 
+			# title only or some combination of title and 
+			# SCN
+			if '_' in name:
+				tokenize_by_underscore(book, name)
 			else:
-				check_two_tokens([filename], 0)
+				check_token(book, filename_parts[0])
+		else:
+			print 'The filename seems to be unreadable'
+	else:
+		if len(book.filename) > 0:
+			if '_' in filename:
+				tokenize_by_underscore(book.filename)
+			else:
+				check_token(book, book.filename)
+
+#----------------------------------------------------#
+# Purpose: Create a list of book objects from the    #
+#          patterns provided at the command line     #
+# Parameters: patterns - The patterns to use to get  #
+#                        the files that will be      #
+#                        represented in the book     #
+#                        objects contained in the    #
+#                        list                        #
+# Return: list - A list of the book objects to be    #
+#                processed                           #
+#----------------------------------------------------#
+def create_booklist(patterns):
+	# A list variable to hold the reults
+	booklist = []
+	
+	# Get the list of files with the given patterns
+	files = getFileNames(patterns)
+	
+	# Loop over the list of files and create a new book object for each
+	for currFile in files:
+		currBook = BookFile()
+		currBook.fullpath = currFile
+		
+		# Add the newly created book object to the list
+		booklist.append(currBook)
+	
+	# Return the result
+	return booklist
+
+#----------------------------------------------------#
+# Purpose: Get the books filename (filename without  #
+#          directory)                                #
+# Parameters: book - The current book being          #
+#                    processed                       #
+# Return: string - The books filename (without       #
+#                  directory information)            #
+#----------------------------------------------------#
+def get_book_filename(book):
+	# Create a variable for the result that will be returned
+	book_filename = None
+	
+	# Check if there is a / character in the fullpath of the book
+	if '/' in book.fullpath:
+		# Tokenize/split the path using the / as a delimiter
+		path_parts = book.fullpath.split('/')
+		
+		# Check if there is more than one token/substring after the 
+		# split
+		if len(path_parts) > 1:
+			# Set the result to be the the last token in the set 
+			# (the text after the last /)
+			book_filename = path_parts[len(path_parts) - 1]
+	
+	# Check if the result variable is still None
+	if book_filename == None:
+		# Because it wasn't set assume that the filename and path are 
+		# the same
+		book_filename = book.fullpath
+	
+	# Return the result
+	return book_filename
 
 def func_rename(patterns):
-	# Get the applicable filenames
-	lines = getFileNames(patterns)
+	# Get a list of books
+	books = create_booklist(patterns)
 	
-	# Loop over the lines of output
-	for line in lines:
-		currBookType = BookFileType()
-		currBook = BookFile(currBookType)
+	# Loop over the list of books
+	for book in books:
+		# Set the book's filename (remove directory info)
+		book.filename = get_book_filename(book)
 		
-		# DEBUGGING: See what is being worked on
-		print 'Currently processing: ' + line
+		# 
+		get_name_parts(book)
+	
+	for book in books:
+		# DEBUGGING: Print a summary of the information we have
+		print '|----------------------------------------------------|'
+		print '| BOOK SUMMARY'
+		print '| ============'
+		print '| File Path: ' + str(book.fullpath)
+		print '| File Name: ' + str(book.filename)
+		print '| Book SCN: ' + str(book.SCN)
+		print '| Book Title: ' + str(book.title)
+		print '| Book Type: ' + str(book.type)
+		print '|----------------------------------------------------|'
 		
-		# If the filename is not in the current directory get rid of the directory information
-		if '/' in line:
-			path_parts = line.split('/')
-			if len(path_parts) > 1:
-				line = path_parts[len(path_parts) - 1]
-		
-		get_name_parts(line)
-
+		# Check if there was enough information or if further
+		# investigation is required
+		if book.SCN is None and book.title is None:
+			# Checck if the book has a type
+			if book.type is not None:
+				# Get the metadata from the actual file based
+				# on its type
+				metadata = book.type.get_metadata(book.fullpath)
+				
+				# DEBUGGING: Print the result of the file 
+				#            metadata extraction
+				print metadata
+				
+				# Check if the title is specified in the 
+				# metadata (which is the mostly likely 
+				# consistant element across all the file types 
+				# and this system)
+				if metadata['title'] is not None:
+					# DEBUGGING: Print statement for 
+					#            getting an inital title
+					#            value before any
+					#            processing
+					print 'Should set the title to: ' + metadata['title']
+					# Assign to a secondary variable (just
+					# so that we have a way to still get the
+					# original if needed
+					title = metadata['title']
+					
+					# Remove special characters (NOTE: 
+					# was required addition of u'\u2019' for
+					# removing single quote)
+        				specialchars = [",", ":", ".", "'", u'\u2019', "?", "&", "/"]
+        				for char in specialchars:
+                				title = title.replace(char, "")
+				
+        				# Strip any extranous whitespace
+        				title = title.strip()
+					
+        				# Underscore remaining whitespace
+        				title = title.replace(" ", "_")
+					
+					# Capatilize the first letter only
+					title = title.lower()
+					title = title[:1].upper() + title[1:]
+					
+					# DEBUGGING: Print the resultant title 
+					#            after processing
+					print 'Title to use: ' + title
+					
+					# Set the book object's title to be the 
+					# title from the metadata after
+					# processing
+					book.title = title
+					
+					# DEBUGGING: Print the book Object's 
+					#            title to make sure it works
+					print 'Did set the title to: ' + str(book.title)
+					
+					# Confirm the change took
+					if book.title is not None:
+						print 'Chaned the title to ' + book.title
+			else:
+				print book.filename + ' seems to be a bit of a mystory'
