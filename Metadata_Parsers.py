@@ -1,3 +1,18 @@
+# Python Builtin Modules
+import abc				# Requried for OOP abstract processing
+import subprocess			# Requried to perform command line 
+					# commands while collecting the output
+# My Modules
+import dynamic_loader as loader		# Requred for dynamic loading of 
+					# critical modules (ex. xml parser 
+					# module)
+import funcs				# Requried to use some generic functions
+
+# "Dynamic" Loads
+loader.load_XML_parser()		# Reqried to use XML parser module
+
+DEBUG_MODE = False
+
 #====================================================#
 # Purpose: A generic data structure to hold          #
 #          information found in each metadata record #
@@ -8,56 +23,573 @@
 #             SCN - The XCN of the book the metadata #
 #                   record describes (Required field #
 #                   of all metadata types)           #
+# Superclass: object                                 #
 # NOTE: Can be used as a concrete class but the      #
 #       recommendation is to subclass and treat it   #
 #       as an abstract class so that more specific   #
 #       types of metadata might be contained (ex.    #
 #       Marc_XML, etc...)                            #
 #====================================================#
-class Metadata_Record(objec):
+class Metadata_Record(object):
+	#----------------------------------------------------#
+	# Purpose: Initialize a Metadata_Recored with        #
+	#          default variables (constructor)           #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	# Return: N/A                                        #
+	# See Also: __init__ documentation in Python         # 
+	#           documentaion                             #
+	#----------------------------------------------------#
         def __init__(self):
-                self.title = None
+		if DEBUG_MODE:
+                	print '===================================================='
+			print 'Call Summary for __init__ (Metadata_Record)'
+			print '----------------------------------------------------'
+			print 'Self: ' + str(self)
+			print '===================================================='
+		
+		self.title = None
                 self.SCN = None
+	
+	def validate(self):
+		return self.SCN is not None and self.title is not None
+	
+	def __str__(self):
+		return '{SCN:' + self.SCN + ', title:' + self.title.decode('ascii', errors='ignore') + '}'
 
 #====================================================#
 # Purpose: Provide an abstract base class for        #
 #          metadata parsers for the purposes of      #
 #          subtype polymorphism                      #
-# Properties: recordset (abstract) - All subclasses  #
-#                                    should have     #
-#                                    some form of    #
-#                                    recordset data  #
-#                                    structure to    #
-#                                    hold the        #
-#                                    records         #
+# Properties: parsable_files - The files to parse    #
+#             recordset - A collection of records    #
+#                         parsed from the dired data #
+#                         NOTE: This property is     #
+#                               special in that I    #
+#                               force all subclasses #
+#                               to implemented a     #
+#                               setter for it. I     #
+#                               employ a indirection #
+#                               technique that has   #
+#                               me call a secondary  #
+#                               abstract method      #
+# Methods: _recordset_set (abstract) - Indirection   #
+#                                      merthod for   #
+#                                      forcing       #
+#                                      subclasses to #
+#                                      implement     #
+#                                      recordset     #
+#                                      setter        #
+#          find_parsable_files (abstract) - Find     #
+#                                           files    #
+#                                           that     #
+#                                           could be #
+#                                           parsed   #
+# Superclass: object                                 #
 #====================================================#
 class Metadata_Parser(object):
-        @property
-        def recordset(self):
+	__metaclass__ = abc.ABCMeta
+	parsable_files = []
+	
+	#----------------------------------------------------#
+	# Purpose: Getter for the recordset property         #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	# Return: The value of the recordset property        #
+	# See Also: @property in the Pythobn documentation   #
+	#----------------------------------------------------#
+	@property
+	def recordset(self):
+		return self._recordset
+	
+	#----------------------------------------------------#
+	# Purpose: Actual setter of the recordset property   #
+	#          but delegates back to the abstracct       #
+	#          _recordset_set                            #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	#             records - The value desired for the    #
+	#                       recordset property to become #
+	# Return: N/A                                        #
+	# See Also: @<var>.setter in Python documentation    #
+	#----------------------------------------------------#
+	@recordset.setter
+	def recordset(self, records):
+		self._recordset_set(records)
+	
+	#----------------------------------------------------#
+	# Purpose: A sudo-setter (indirect setter) method    #
+	#          for the recordset property mostly to make #
+	#          the variable "abstract" so that all       #
+	#          subclasses must implement their own way   #
+	#          to set the variable as its a fundemental  #
+	#          design choice for the parser              #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	#             records - The collection of records to #
+	#                       set the recordset property   #
+	#                       to                           #
+	# Return: N/A                                        #
+	# Raises: NotImplementedError - Can't call the       #
+	#                               method for the base  #
+	#                               class                #
+	# See Also: @abstractmethod in the abc module        #
+	#           documentation in the Python              #
+	#           documentation                            #
+	#----------------------------------------------------#
+	@abc.abstractmethod
+        def _recordset_set(self, records):
                 raise NotImplementedError
+	
+	#----------------------------------------------------#
+	# Purpose: To find all parsable files based on a     #
+	#          directory or pattern                      #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	#             look_dir - Directory to invoke find on #
+	#                        meaning that all files      #
+	#                        matching at least one of    #
+	#                        the patterns in the         #
+	#                        patterns parameter within   #
+	#                        the directory specified     #
+	#                        are found                   #
+	#                        NOTE: use . to represent    #
+	#                              current directory     #
+	#             patterns - A set of Regular            #
+	#                        Expressions (reges) to use  #
+	#                        in the find utility to find #
+	#                        the desired files           #
+	# Return: List - A list of filenames that match at   #
+	#                least one of the patterns specified #
+	#                in the parametersaned are beneath   #
+	#                the direcotry specified             #
+	# Raises: NotImplementedError - Can't call the       #
+	#                               method of the base   #
+	#                               class                #
+	# See Also: @abstractmethod in abc module            #
+	#           documentation in Python documentation    #
+	#----------------------------------------------------#
+	@abc.abstractmethod
+	def find_parsable_files(self, look_dir, patterns):
+		raise NotImplementedError
+	
 
+#====================================================#
+# Purpose: A tier 2 abstract class in the            #
+#          Metadata_Parser hiearchy meant to         #
+#          simplify the processing of XML file based #
+#          metadata parsing                          #
+# Properties: parsable_files (Metadata_Parser) - See #
+#                                                Doc #
+#             recordset (Metadata_Parser) - See Docs #
+#             trees - A dictionary of XML tree       #
+#                     objects if applicable          #
+#             record_tag (abstract) - The name of    #
+#                                     the tag that   #
+#                                     represents a   #
+#                                     tag (ex.       #
+#                                     'record')      #
+# Methods: _recordset_set (Metadata_Parser) - See    # 
+#                                             Docs   #
+#          find_parsable_files (Metadata_Parser)-See #
+#                                                Doc #
+#          files_to_trees - Construct XML tree       #
+#                           objects from a list of   #
+#                           files                    #
+#          file_to_tree - Construct XML tree from a  #
+#                         file                       #
+#          parse_record (abstract) - Do the actual   #
+#                                    parsing of the  #
+#                                    record element  #
+#                                    as defined by   #
+#                                    the record_tag  #
+#                                    property        #
+#          find_record - Find the record elements    #
+#                        and call the parse_record   #
+#                        method                      #
+# Superclass: Metadata_Parser                        #
+#====================================================#
+class Metadata_XML_Parser(Metadata_Parser):
+	#----------------------------------------------------#
+        # Purpose: Initialize a Metadata_XML_Parser with     #
+        #          default variables (constructor)           #
+        # Parameters: self (implicit) - The instance of the  #
+        #                               object the function  #
+        #                               is invoked on        #
+	#             XML_files (optional) - If specified    #
+	#                                    used as the     #
+	#                                    source for the  #
+	#                                    parsing by      #
+	#                                    loading in the  #
+	#                                    XML file into a #
+	#                                    XML tree object #
+        # Return: N/A                                        #
+        # See Also: __init__ documentation in Python         #
+        #           documentaion                             #
+        #----------------------------------------------------#
+	def __init__(self, XML_files=None):
+		# Call the parents constructor
+		super(Metadata_XML_Parser, self).__init__()
+		
+		self.trees = {}
+		
+		# Check if the file parameter was set
+		if XML_files is not None:
+			# TO BE IMPLEMENTED: Check if XML_files is an actual 
+			#                    set of files or a set regexs/paths 
+			#                    that would need to be expaneded 
+			#                    into a set of files
+			
+			# Load the file in so that we can use it as an XML tree 
+			# instead
+			self.file_to_tree(XML_files)
+	
+	#----------------------------------------------------#
+	# Purpose: To parse a file into a XML tree object    #
+	#          for ease parsing using the built in       #
+	#          etree.parse function                      #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  # 
+	#                               is being invoked on  #
+	#             XML_file - The file (path) to be       #
+	#                        converted into the XML tree #
+	#                        object                      #
+	# Return: N/A                                        #
+	# NOTE: Sets up a self.tree dictionary property that #
+	#       uses the XML_file paramter as the keys       #
+	#----------------------------------------------------#
+	def file_to_tree(self, XML_file):
+		self.trees[XML_file] = loader.etree.parse(XML_file)
+	
+	#----------------------------------------------------#
+	# Purpose: To parse a set of files int a set of XML  #
+	#          tree objects for ease of parsing          #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is being invoked on  #
+	#             file_list - The set of files (paths)   #
+	#                         to be converted into a set #
+	#                         of XML treee objects       #
+	# Return: N/A                                        #
+	#----------------------------------------------------#
+	def files_to_trees(self, file_list):
+		# Loop over the files in the list
+		for XML_file in file_list:
+			self.file_to_tree(XML_file)
+	
+	#----------------------------------------------------#
+	# Purpose: Getter for an abstract property           #
+	#          record_tag that each subclass needs to    #
+	#          set individually                          #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is being invoked on  #
+	# Return: N/A                                        #
+	# Raises: NotImplementedError - Can't access the     #
+	#                               variable/property of #
+	#                               the base class (     #
+	#                               point is to force    #
+	#                               subclasses to        #
+	#                               implement what to    #
+	#                               return)              #
+	# See Also: @abstractproperty in the abc module      #
+	#           documentation in the Python              #
+	#           documentation                            #
+	#----------------------------------------------------#
+	@abc.abstractproperty
+	def record_tag(self):
+		raise NotImplementedError
+	
+	#----------------------------------------------------#
+	# Purpose: Force all subclasses to have a method to  #
+	#          perform the actual parsing of the         #
+	#          applicable XML Element object             #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is being invoked on  #
+	#             record - The XML Element object to be  #
+	#                      parsed                        #
+	# Return: N/A                                        #
+	# Raises: NotImplementedError - Can't call the base  #
+	#                               class's abstract     #
+	#                               method               #
+	# See Also: @abstractmethod in the abc module        #
+	#           documentation in the Python              #
+	#           documentation                            #
+	#----------------------------------------------------#
+	@abc.abstractmethod
+	def parse_record(self, record):
+		raise NotImplementedError
+	
+	#----------------------------------------------------#
+	# Purpose: Find the appropriate records and trigger  #
+	#          the parsing of them                       #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is being invoked on  #
+	#             from_file - The file to look in for    #
+	#                         records elements (however  #
+	#                         the subclass defines       #
+	#                         record elements            #
+	#             curr_elem (optional) - The elemet      #
+	#                                    we're currently #
+	#                                    looking at (    #
+	#                                    uses recurrsion #
+	#                                    )               #
+	# Return: N/A                                        #
+	# NOTE: This method calls the parse_record method    #
+	#       whenever it finds a new record               #
+	#----------------------------------------------------#
+	def find_records(self, from_file, curr_elem=None):
+		if DEBUG_MODE:
+			print '===================================================='
+			print 'Call Summary for find_records (Metadata_XML_Parser) '
+			print '----------------------------------------------------'
+			print 'Self: ' + str(self)
+			print 'From File: ' + str(from_file)
+			print 'Current Element: ' + str(curr_elem)
+			print '===================|================================'
+		
+		self.find_tag(self.record_tag, self.parse_record, from_file=from_file, curr_elem=curr_elem)
+	
+	#----------------------------------------------------#
+	# Purpose: Find the elements that have the given     #
+	#          attributes                                #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is being invoked on  #
+	#             desired_tag - The tag to find          #
+	#             desired_attr_dict - A dictionary where #
+	#                                 the keys are the   #
+	#                                 attribute names    #
+	#                                 and the values are #
+	#                                 the values to look #
+	#                                 for                #
+	#             callback - The callback for when       #
+	#                        elements are found          #
+	#             callback_args - Arguments to the       #
+	#                             callback function      #
+	#             root_elem - The root Element object to #
+	#                         look within for the tags   #
+	#                         with the given attributes  #
+	#----------------------------------------------------#
+	def find_tag_with_attr(self, desired_tag, desired_attr_dict, callback, callback_args, root_elem):
+		if DEBUG_MODE:
+			print '===================================================='
+			print 'Call Summary for find_tag_with_attr (Metadata_XML_Parser)'
+			print '----------------------------------------------------'
+			print 'Self: ' + str(self)
+			print 'Desired Tag: ' + str(desired_tag)
+			print 'Desired Attributes: ' + str(desired_attr_dict)
+			print 'Callback: ' + str(callback)
+			print 'Callback Arguments: ' + str(callback_args)
+			print 'Root Element: ' + str(root_elem)
+			print '===================================================='
+		
+		check_attr_args = {'attrs':desired_attr_dict,
+		                   'callback':callback,
+		                   'callback_args':callback_args}
+		
+		self.find_tag(desired_tag, self.check_attr, check_attr_args, curr_elem=root_elem)
+	
+	#----------------------------------------------------#
+	# Purpose: To check if the current element has the   #
+	#          desired attributes. This is a seperate    #
+	#          method because of code reuse in           #
+	#          particular the find_tag method ONLY finds #
+	#          the desired tag elements and doesn't do   #
+	#          any additional checking. It would make    #
+	#          the method overly complex to add this     #
+	#          functionality directly to that method so, #
+	#          instead replace the callback normally     #
+	#          supplied to that method by the calling    #
+	#          (concrete) class with this method and     #
+	#          perform checks in this method and call    #
+	#          the specificed callback with the element  #
+	#          this method recieves if and only if the   #
+	#          attributes match what was asked. In       #
+	#          shorter but less explict terms it works   #
+	#          as a transparent filter (to the calling   #
+	#          class)                                    #
+	# Parameters: self (implicit) - 
+	#             elem - The element being inspected     #
+	#             attrs - A dictionary containing the    #
+	#                     desired key-value combinations #
+	#             callback - A callback function to      #
+	#                        invoke when an appropraite  #
+	#                        element is found            #
+	#             callback_args - A dictionary of        #
+	#                             ADDITIONAL arguments   #
+	#                             to supply to the       #
+	#                             callback               #
+	#----------------------------------------------------#
+	def check_attr(self, elem, attrs, callback, callback_args):
+		if DEBUG_MODE:
+			print '===================================================='
+			print 'Call Summary for check_attr (Metadata_XML_Parser)   '
+			print '----------------------------------------------------'
+			print 'Self: ' + str(self)
+			print 'Element: ' + str(elem)
+			print 'Attributes: ' + str(attrs)
+			print 'Callback: ' + str(callback)
+			print 'Callback Arguments: ' + str(callback_args)
+			print '===================================================='
+		
+		for k,v in attrs.iteritems():
+			if elem.get(k) == v:
+				if callback_args is None:
+					callback(elem)
+				else:
+					callback(elem, **callback_args)
+	
+	#
+	#
+	def find_tag(self, desired_tag, callback, callback_args=None, from_file=None, curr_elem=None):
+		if DEBUG_MODE:
+			print '===================================================='
+			print 'Call Summary for find_tag (Metadata_XML_Parser)     '
+			print '----------------------------------------------------'
+			print 'Self: ' + str(self)
+			print 'Desired Tag: ' + str(desired_tag)
+			print 'Callback: ' + str(callback)
+			print 'Callback Arguments: ' + str(callback_args)
+			print 'From File: ' + str(from_file)
+			print 'Current Element: ' + str(curr_elem)
+			print '===================================================='
+		
+		if from_file is None:
+			if curr_elem is None:
+				raise NotImplementedError
+		else:
+			# Check if we're running in "recursive mode" or not
+			if curr_elem is None:
+				root = self.trees[from_file].getroot()
+				self.find_tag(desired_tag, callback, from_file=from_file, curr_elem=root)
+		if curr_elem is not None:
+			tag = curr_elem.tag
+			
+			if '{' not in desired_tag:
+				tag = tag[tag.find('}') + 1:]
+				
+				# Check if the current element matches the 
+				# subclasses definition
+				if tag == desired_tag:
+					if callback_args is None:
+						callback(curr_elem)
+					else:
+						callback(curr_elem, **callback_args)
+				else:
+					# Since it isn't a record keep digging 
+					# deeper if applicable
+					if len(list(curr_elem)) > 0:
+						for child in curr_elem:
+							self.find_tag(desired_tag, callback, callback_args, from_file, curr_elem=child)
+			
 #====================================================#
 # Purpose: A more specific concrete class for Marc   #
 #          XML records                               #
 # Properties: title (Metadata_Record) - See Docs     #
 #             SCN (Metadata_Record) - See Docs       #
+# Superclass: Metadata_Record                        #
 #====================================================#
 class Marc_XML_Record(Metadata_Record):
+	#----------------------------------------------------#
+        # Purpose: Initialize a Metadata_Recored with        #
+        #          default variables (constructor)           #
+        # Parameters: self (implicit) - The instance of the  #
+        #                               object the function  #
+        #                               is invoked on        #
+        # Return: N/A                                        #
+        # See Also: __init__ documentation in Python         #
+        #           documentaion                             #
+        #----------------------------------------------------#
         def __init__(self):
-                super(Metadata_Record, self).__init__())
+                super(Marc_XML_Record, self).__init__()
+	
+	@property
+	def SCN(self):
+		return self._SCN
+	
+	@SCN.setter
+	def SCN(self, value):
+		if value is not None:
+			if '(' in value:
+				value = value[value.find(')') + 1:]
+				value = value.strip()
+		
+		self._SCN = value
+	
+	@property
+	def title(self):
+		return self._title
+	
+	@title.setter
+	def title(self, value):
+		if value is not None:
+			# Remove special characters
+			specialchars = [",", ":", ".", "'", "?", "&", "/"]
+			
+			for char in specialchars:
+				value = value.replace(char, "")
+			
+			# Strip any extranous whitespace
+			value = value.strip()
+			
+			# Underscore remaining whitespace
+			value = value.replace(" ", "_")
+		
+		self._title = value
+	
+	def __str__(self):
+		return super(Marc_XML_Record, self).__str__()
 
-class Marc_XML_RecordSet(object):
-        def __init__(self):
+#====================================================#
+# Purpose: A collection data structure to ensure     #
+#          proper typing of entries within the       #
+#          sturcture as well as provide any          #
+#          additional processing or functionality as #
+#          requried                                  #
+# Propterties: records - The records held within the #
+#                        data structure              #
+# Methods: add_record - To add a record to the data  #
+#                       structure                    #
+# Superclass: object                                 #
+#====================================================#
+class Marc_XML_RecordSet(object):        
+	#----------------------------------------------------#
+        # Purpose: Initialize a Marc_XML_RecordSet with      #
+        #          default variables (constructor)           #
+        # Parameters: self (implicit) - The instance of the  #
+        #                               object the function  #
+        #                               is invoked on        #
+        # Return: N/A                                        #
+        # See Also: __init__ documentation in Python         #
+        #           documentaion                             #
+        #----------------------------------------------------#
+	def __init__(self):
                 self._records = []
 	
+	#----------------------------------------------------#
+	# Purpose: Getter for the records property           #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	# Return: list - A list of all the records contained #
+	#                in the data structur                #
+	#----------------------------------------------------#
 	@property
 	def records(self):
 		return self._records
 	
 	@records.setter
 	def records(self):
-		# TO BE IMPLEMENTED
-		# Check if all entries are of Marc_XML_Record type
+		# TO BE IMPLEMENTED: Check if all entries are of Marc_XML_Record
+		#                     type
 		pass
 		
 	
@@ -74,7 +606,8 @@ class Marc_XML_RecordSet(object):
 	#----------------------------------------------------#
         def add_record(self, record):
                 if isinstance(record, Marc_XML_Record):
-                        self._records.append(reord)
+			if record.validate():
+                        	self._records.append(record)
                 else:
                         raise TypeError
 
@@ -83,8 +616,216 @@ class Marc_XML_RecordSet(object):
 #          metadata parser abstract class for the    #
 #          specific purpose of parsing Marc XML      #
 #          files                                     #
-# Properties: recordset (Metadata_Parser - See Docs  #
+# Properties: parsable_files (Metadata_Parser) - See #
+#                                                Doc #
+#             recordset (Metadata_Parser) - See Docs #
+#             trees (Metadata_XML_Parser) - See Docs #
+#             record_tag (Metadata_XML_Parser) - See #
+#                                                Doc #
+# Methods: files_to_trees (Metadata_XML_Parser)-See  #
+#                                               Docs #
+#          file_to_tree (Metadata_XML_Parser) - See  #
+#                                               Docs #
+#          find_records (Metadata_XML_Parser) - See  #
+#                                               Docs #
+#          _recordset_set (Overriden) - Sets the     #
+#                                       recoredset   #
+#                                       property     #
+#          find_parsable_files (Overriden) - finds   #
+#                                            proper  #
+#                                            files   #
+#          parse_record (Overriden) - Provides       #
+#                                     implementation #
+#                                     of the parsing #
+#                                     of records     #
+# Superclass: Metadata_XML_Parser                    #
 #====================================================#
-class Marc_XML_Parser(Metadata_Parser):
-        def __init__(self):
+class Marc_XML_Parser(Metadata_XML_Parser):
+	
+	Marc_index = {
+		'SCN':{'tag':'035', 'code':'a'}, 
+		'title':{'tag':'245', 'code':'a'}
+	}
+	
+	#----------------------------------------------------#
+        # Purpose: Initialize a Marc_XML_Parser with         #
+        #          default variables (constructor)           #
+        # Parameters: self (implicit) - The instance of the  #
+        #                               object the function  #
+        #                               is invoked on        #
+	#             patterns (optional) - 
+        # Return: N/A                                        #
+        # See Also: __init__ documentation in Python         #
+        #           documentaion                             #
+        #----------------------------------------------------#
+        def __init__(self, patterns=None):
+		print 'Creating a Marc XML Parser'
+		
+		if patterns is not None:
+			find_parsable_files(custom_patterns=patterns)
+			print 'Calling super constructor with ' + self.parsable_files
+			super(Marc_XML_Parser, self).__init__(self.parsable_files)
+		else:
+			print 'Calling super constructor with no arguments'
+			super(Marc_XML_Parser, self).__init__()
                 self.recordset = Marc_XML_RecordSet()
+	
+	#----------------------------------------------------#
+	# Purpose: To set the recordset property (indirectly #
+	#          ). Perform validation in checking that    #
+	#          the supplied records argument is a        #
+	#          instance of the Marc_XML_RecordSet class  #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	# Return: N/A                                        #
+	# Overrides: _recordset_set (Metadata_Parser)        #
+	#----------------------------------------------------#
+	def _recordset_set(self, records):
+		if isinstance(records, Marc_XML_RecordSet):
+			self._recordset = records
+		else:
+			raise TypeError
+	
+	#----------------------------------------------------#
+	# Purpose: Getter for the record_tag property (tells #
+	#          what tag indicates a record)              #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	# Return: String - The name of the tag that          #
+	#                  represents the record ('record'   #
+	#                  in the case of Marc XML)          #
+	# Overrides: record_tag (Metadata_XML_Parser)        #
+	# See Also: @property in the Python documentation    #
+	#----------------------------------------------------#
+	@property
+	def record_tag(self):
+		return 'record' 
+	
+	#----------------------------------------------------#
+	# Purpose: 
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	#             look_dir (optional) - 
+	#             custom_patterns (optional) - 
+	# Return: List - A list of files for parsing         #
+	# Overrides: find_parsable_files (Metadata_Parser)   #
+	#----------------------------------------------------#
+	def find_parsable_files(self, look_dir='.', custom_patterns=['*.xml']):
+		# Check if the parent_dir is that special . character
+		if look_dir == '.':
+			# Because there is prefix all entries with .*/
+			full_pattern = funcs.combine_regex(custom_patterns, prefix_each='.*/')
+		else:
+			# Because we're not looking in the current directory no
+			# special processing has to occur
+			full_pattern = funcs.combine_regex(custom_patterns)
+		
+		# Setup arguments for the use of the find utility
+		args = ['find', '-E', look_dir, '-regex', full_pattern]
+		
+		# DEBUGGING: Print statement showing whats being run
+		print 'Running ' + args[0] + ' with arguments ' + str(args[-1:])
+		
+		# Actually running the command
+		proc = subprocess.Popen(args, stdout=subprocess.PIPE)
+		stdout, stderr = proc.communicate()
+		
+		# Break the output up into lines
+		Marc_XML_files = stdout.decode('ascii').splitlines()
+		
+		# Return the results
+		return Marc_XML_files
+	
+	def parse_subfield(self, subfield, name, record):
+		if DEBUG_MODE:
+			print '===================================================='
+			print 'Call Summary for parse_subfield (Marc_XML_Parser)'
+			print '----------------------------------------------------'
+			print 'Self: ' + str(self)
+			print 'Subfield: ' + str(subfield)
+			print '===================================================='
+		
+		print 'Actual XML Element: ' + loader.etree.tostring(subfield)
+		print 'Just ' + name + ': ' + subfield.text
+		setattr(record, name, subfield.text)
+		if name == 'SCN':
+			#record.SCN = subfield.text
+			print 'Record SCN set to ' + record.SCN
+		elif name == 'title':
+			#record.title = subfield.text
+			print 'Record title set to ' + record.title
+	
+	def parse_data_field(self, data_field, name, subfield, record):
+		if DEBUG_MODE:
+			print '===================================================='
+			print 'Call Summary for parse_data_field (Marc_XML_Parser)'
+			print '----------------------------------------------------'
+			print 'Self: ' + str(self)
+			print 'Datafield: ' + str(data_field)
+			print '===================================================='
+		
+		self.find_tag_with_attr('subfield', {'code':subfield}, self.parse_subfield, {'record':record,'name':name}, data_field)
+	
+	def parse_record(self, record):
+		if DEBUG_MODE:
+			print '===================================================='
+			print 'Call Summary for parse_record (Marc_XML_Parser)'
+			print '----------------------------------------------------'
+			print 'Self: ' + str(self)
+			print 'Record; ' + str(record)
+			print '===================================================='
+		# Create a new Marc_XML_Record object for the purposes of 
+		# holding all the information contained within the record in a 
+		# clear dedicated data structure
+		record_obj = Marc_XML_Record()
+		
+		# Loop over the Marc_index to extract as much meaningful info as
+		# we can
+		for k,v in self.Marc_index.iteritems():
+			# What attributes (with associated values) to look for
+			look_for_attrs = {'tag':v['tag']}
+			
+			# What method to call when a appropriate element is 
+			# found
+			callback = self.parse_data_field
+			
+			# ADDITIONAL (excluding self AND the element) arguments
+			# to the callback method
+			callback_args = {
+				'name':k, 
+				'subfield':v['code'],
+				'record':record_obj
+			}
+			
+			# Call the method
+			self.find_tag_with_attr('datafield', look_for_attrs, callback, callback_args, record)
+		
+		self.recordset.add_record(record_obj)
+	
+	#----------------------------------------------------#
+	# Purpose: Generice trigger method similar to that 
+	#          of execute or run in similar models
+	# Parameters: 
+	# Return: 
+	#----------------------------------------------------#
+	def parse(self):
+		if DEBUG_MODE:
+			print '===================================================='
+			print 'Call Summary for parse (Marc_XML_Parser)'
+			print '----------------------------------------------------'
+			print 'Self: ' + str(self)
+			print '===================================================='
+		
+		self.files_to_trees(self.parsable_files)
+		for parsable_file in  self.parsable_files:
+			self.find_records(parsable_file)
+	
+if __name__ == '__main__':
+	parser = Marc_XML_Parser()
+	parser.parsable_files = parser.find_parsable_files()
+	parser.parse()
+	for record in parser.recordset.records:
+		print record
