@@ -69,7 +69,7 @@ def create_filename_regex(patterns):
 def getFileNames(patterns):
 	# Prepare the arguments for a basic find command using regex (Extended 
 	# regex)
-        args = ['find', '-E', '.', '-regex']
+        args = ['find', '.', '-regextype posix-extended', '-regex']
 
         # Build the regex expression from the patterns supplied
         exp = create_filename_regex(patterns)
@@ -82,7 +82,7 @@ def getFileNames(patterns):
 
         # Run the find command and get the results (See subprocess documentation
 	# for more details)
-        proc = subprocess.Popen(args, stdout=subprocess.PIPE)
+        proc = subprocess.Popen(args, shell=True, stdout=subprocess.PIPE)
         stdout, stderr = proc.communicate()
 
         # Get the lines of output as a list
