@@ -440,6 +440,6 @@ def func_rename(patterns):
 					
 					# Confirm the change took
 					if book.title is not None:
-						print 'Chaned the title to ' + book.title
+						print 'Changed the title to ' + book.title
 			else:
-				print book.filename + ' seems to be a bit of a mystory'
+				print book.filename + ' seems to be a bit of a mystery'
