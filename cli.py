@@ -6,7 +6,7 @@ from rename_files import func_rename
 @click.command()
 @click.option('--dictionary', '-d', prompt='Dictionary', help='The filename that you want to be processed')
 @click.option('--pattern', '-p', default=[u'.*'], help='The file pattern to use for looking up relavent filenames', multiple=True)
-@click.option('--target', '-t', default='./testdata/files', help='The target directory to search for relevant files')
+@click.option('--target', '-t', default='testdata/files', help='The target directory to search for relevant files')
 def main(dictionary, pattern, target):
         click.echo('Opening %s' % file)
         with open(dictionary) as f:

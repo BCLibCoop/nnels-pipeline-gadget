@@ -33,7 +33,7 @@ from BookFileType import BookFileType, BookFileTypeFactory
 def create_filename_regex(patterns):
 	# Define the variable to store the final expression and start with a 
 	# left a open brace
-        exp = '(';
+        exp = "'";
 	
 	# Loop over the 'patterns' supplied on the command line
         for pattern in patterns:
@@ -53,7 +53,7 @@ def create_filename_regex(patterns):
 	exp = exp[:len(exp) - 1]
 	
 	# Add a close brace to end the expression
-	exp += ')'
+	exp += "'"
 	
 	# Return the result
 	return exp
@@ -76,6 +76,7 @@ def getFileNames(patterns, target_dir):
 
         # Add the built pattern to the find command arguments
         args.append(exp)
+        args = " ".join(args)
 
         # DEBUGGING: Just to see if the command was built right
         print args
@@ -84,6 +85,8 @@ def getFileNames(patterns, target_dir):
 	# for more details)
         proc = subprocess.Popen(args, shell=True, stdout=subprocess.PIPE)
         stdout, stderr = proc.communicate()
+        print stdout
+        print stderr
 
         # Get the lines of output as a list
         lines = stdout.decode('ascii').splitlines()
@@ -253,7 +256,8 @@ def tokenize_by_underscore(book, name):
 # Return: 
 #----------------------------------------------------#
 def get_name_parts(book):
-	# If the filename contains a do we want to tokenize it by that (know 
+
+	# If the filename contains an extension do we want to tokenize it by that (know 
 	# what the format is otherwise eliminate dealing with .blahblah files)
 	if '.' in book.filename:
 		filename_parts = book.filename.split('.')
@@ -365,7 +369,6 @@ def func_rename(patterns, target_dir):
 		# Set the book's filename (remove directory info)
 		book.filename = get_book_filename(book)
 		
-		# 
 		get_name_parts(book)
 	
 	for book in books:
