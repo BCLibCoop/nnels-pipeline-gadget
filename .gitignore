@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 .*
 *.pyc
+=======
+output.txt
+*.pyc
+>>>>>>> f52a4b8dc5a2c42af17d6b9a9f3bbdf0fcd406d1

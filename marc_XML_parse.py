@@ -82,8 +82,8 @@ def getSCNFromRecord(record):
 			for subfield in field:
 				if subfield.get('code') == 'a':
 					# Get the most refined or "raw" SCN
-]\				scn = funcdict['SCN'](subfield.text)
-					
+					scn = funcdict['SCN'](subfield.text)
+
 					# Add the SCN as an entry in the 
 					# dictionary associated with its 
 					# record
@@ -170,7 +170,7 @@ def processMarcXMLFile(filename):
 # Parameters: Command line parameters                #
 # Return: N/A                                        #
 #----------------------------------------------------#
-def create_:
+def create_():
 	
 	# Setup the propery variables
 	renames = {}
@@ -188,3 +188,4 @@ def create_:
 	for key,value in renames.iteritems():
 		outputFile.write(value + "\t" +  key.encode('utf-8') + "\n")
 
+create_()

@@ -93,7 +93,7 @@ def get_file_names(patterns, folder):
 	
 	# Prepare the arguments for a basic find command using regex (Extended 
 	# regex)
-        args = ['find', '-E', folder, '-regex']
+        args = ['find', folder, '-regextype posix-extended', '-regex']
 	
 	use_prefixs = correct_for_globbing(patterns)
 	
@@ -112,7 +112,7 @@ def get_file_names(patterns, folder):
 
         # Run the find command and get the results (See subprocess documentation
 	# for more details)
-        proc = subprocess.Popen(args, stdout=subprocess.PIPE)
+        proc = subprocess.Popen(args, shell=True, stdout=subprocess.PIPE)
         stdout, stderr = proc.communicate()
 
         # Get the lines of output as a list
