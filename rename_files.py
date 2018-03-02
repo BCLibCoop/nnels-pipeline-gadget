@@ -66,10 +66,10 @@ def create_filename_regex(patterns):
 # Returns: List - A list of the applicable filenames #
 #                 (including path)                   #
 #----------------------------------------------------#
-def getFileNames(patterns):
+def getFileNames(patterns, target_dir):
 	# Prepare the arguments for a basic find command using regex (Extended 
 	# regex)
-        args = ['find', '.', '-regextype posix-extended', '-regex']
+        args = ['find', target_dir, '-regextype posix-extended', '-regex']
 
         # Build the regex expression from the patterns supplied
         exp = create_filename_regex(patterns)
@@ -305,12 +305,12 @@ def get_name_parts(book):
 # Return: list - A list of the book objects to be    #
 #                processed                           #
 #----------------------------------------------------#
-def create_booklist(patterns):
+def create_booklist(patterns, target_dir):
 	# A list variable to hold the reults
 	booklist = []
 	
 	# Get the list of files with the given patterns
-	files = getFileNames(patterns)
+	files = getFileNames(patterns, target_dir)
 	
 	# Loop over the list of files and create a new book object for each
 	for currFile in files:
@@ -356,9 +356,9 @@ def get_book_filename(book):
 	# Return the result
 	return book_filename
 
-def func_rename(patterns):
+def func_rename(patterns, target_dir):
 	# Get a list of books
-	books = create_booklist(patterns)
+	books = create_booklist(patterns, target_dir)
 	
 	# Loop over the list of books
 	for book in books:

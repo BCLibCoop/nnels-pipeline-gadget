@@ -6,7 +6,8 @@ from rename_files import func_rename
 @click.command()
 @click.option('--dictionary', '-d', prompt='Dictionary', help='The filename that you want to be processed')
 @click.option('--pattern', '-p', default=[u'.*'], help='The file pattern to use for looking up relavent filenames', multiple=True)
-def main(dictionary, pattern):
+@click.option('--target', '-t', default='./testdata/files', help='The target directory to search for relevant files')
+def main(dictionary, pattern, target):
         click.echo('Opening %s' % file)
         with open(dictionary) as f:
                 lines = f.readlines()
@@ -19,14 +20,15 @@ def main(dictionary, pattern):
                 structs.setSCN_fromTitle(tokens[1], tokens[0])
 	
 	options = ['get', 'set', 'rename']
-	callbackArgs = {'rename':'pattern'}
+	callbackArgs = {'rename': (pattern, target) }
         callbacks = {}
         for option in options:
                 callbacks[option] = 'func_' + option
 	
         input = click.prompt('What would you like to do?', type=click.Choice(options))
 	if input in callbackArgs:
-		globals()[callbacks[input]](locals()[callbackArgs[input]])
+                opts = callbackArgs[input]
+		globals()[callbacks[input]](*opts)
 	else:
 		globals()[callbacks[input]]()
 
