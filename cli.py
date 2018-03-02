@@ -2,7 +2,7 @@ import click
 import data_structs as structs
 from Metadata_Parsers import Marc_XML_Parser
 from funcs import func_get, func_set
-from rename_files import func_rename
+from rename_files import rename_files
 
 @click.command()
 #@click.option('--dictionary', '-d', prompt='Dictionary', help='The filename that you want to be processed')
