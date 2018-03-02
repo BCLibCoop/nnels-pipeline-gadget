@@ -1,4 +1,4 @@
-SCN	Title
+SCN	title
 1001573547	Beginning_Excel
 892455389	Nationalism_self-determination_and_secession
 1001268505	Microbiology

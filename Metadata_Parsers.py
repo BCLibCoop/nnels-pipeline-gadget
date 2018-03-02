@@ -1,62 +1,24 @@
-# Python Builtin Modules
-import abc				# Requried for OOP abstract processing
-import subprocess			# Requried to perform command line 
-					# commands while collecting the output
 # My Modules
-import dynamic_loader as loader		# Requred for dynamic loading of 
-					# critical modules (ex. xml parser 
-					# module)
+import dynamic_loader as loader
 import funcs				# Requried to use some generic functions
 
-# "Dynamic" Loads
+# Load abc (Abstract Class) module
+loader.load_abc()
+abc = loader.abc
+
+# Load subprocess (Command Line) module
+loader.load_subprocess()
+subprocess = loader.subprocess
+
+# Load etree (XML)  module
 loader.load_XML_parser()		# Reqried to use XML parser module
+etree = loader.etree
+
+# Load the Metadata_Record class
+loader.load_Metadata_Record()
+Metadata_Record = loader.Metadata_Record
 
 DEBUG_MODE = False
-
-#====================================================#
-# Purpose: A generic data structure to hold          #
-#          information found in each metadata record #
-# Properties: title - The title of the book the      #
-#                     metadata record describes (    #
-#                     Required field of all metadata #
-#                     types)                         #
-#             SCN - The XCN of the book the metadata #
-#                   record describes (Required field #
-#                   of all metadata types)           #
-# Superclass: object                                 #
-# NOTE: Can be used as a concrete class but the      #
-#       recommendation is to subclass and treat it   #
-#       as an abstract class so that more specific   #
-#       types of metadata might be contained (ex.    #
-#       Marc_XML, etc...)                            #
-#====================================================#
-class Metadata_Record(object):
-	#----------------------------------------------------#
-	# Purpose: Initialize a Metadata_Recored with        #
-	#          default variables (constructor)           #
-	# Parameters: self (implicit) - The instance of the  #
-	#                               object the function  #
-	#                               is invoked on        #
-	# Return: N/A                                        #
-	# See Also: __init__ documentation in Python         # 
-	#           documentaion                             #
-	#----------------------------------------------------#
-        def __init__(self):
-		if DEBUG_MODE:
-                	print '===================================================='
-			print 'Call Summary for __init__ (Metadata_Record)'
-			print '----------------------------------------------------'
-			print 'Self: ' + str(self)
-			print '===================================================='
-		
-		self.title = None
-                self.SCN = None
-	
-	def validate(self):
-		return self.SCN is not None and self.title is not None
-	
-	def __str__(self):
-		return '{SCN:' + self.SCN + ', title:' + self.title.decode('ascii', errors='ignore') + '}'
 
 #====================================================#
 # Purpose: Provide an abstract base class for        #
@@ -264,7 +226,7 @@ class Metadata_XML_Parser(Metadata_Parser):
 	#       uses the XML_file paramter as the keys       #
 	#----------------------------------------------------#
 	def file_to_tree(self, XML_file):
-		self.trees[XML_file] = loader.etree.parse(XML_file)
+		self.trees[XML_file] = etree.parse(XML_file)
 	
 	#----------------------------------------------------#
 	# Purpose: To parse a set of files int a set of XML  #
@@ -545,8 +507,8 @@ class Marc_XML_Record(Metadata_Record):
 		
 		self._title = value
 	
-	def __str__(self):
-		return super(Marc_XML_Record, self).__str__()
+	#def __str__(self):
+	#	return super(Marc_XML_Record, self).__str__()
 
 #====================================================#
 # Purpose: A collection data structure to ensure     #
@@ -574,6 +536,12 @@ class Marc_XML_RecordSet(object):
 	def __init__(self):
                 self._records = []
 	
+	def __getitem__(self, index):
+		return self._records[index]
+	
+	def __len__(self):
+		return len(self._records)
+	
 	#----------------------------------------------------#
 	# Purpose: Getter for the records property           #
 	# Parameters: self (implicit) - The instance of the  #
@@ -589,7 +557,7 @@ class Marc_XML_RecordSet(object):
 	@records.setter
 	def records(self):
 		# TO BE IMPLEMENTED: Check if all entries are of Marc_XML_Record
-		#                     type
+		#                    type
 		pass
 		
 	
@@ -610,6 +578,16 @@ class Marc_XML_RecordSet(object):
                         	self._records.append(record)
                 else:
                         raise TypeError
+	
+	def __str__(self):
+		result_str = '['
+		
+		for record in self.records:
+			result_str += str(record) + ', '
+		
+		result_str = result_str[:-2] + ']'
+		
+		return result_str
 
 #====================================================#
 # Purpose: Provide a concreate implementation of the $
@@ -739,6 +717,15 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 		# Return the results
 		return Marc_XML_files
 	
+	#----------------------------------------------------#
+	# Purpose: To parse an individual subfield element   #
+	#          in the Marc XML file (callback for        #
+	#          find_tag_with_attr call)                  #
+	# Parameters: self (implicit) -
+	#             subfield - 
+	#             name - 
+	#             record - 
+	#----------------------------------------------------#
 	def parse_subfield(self, subfield, name, record):
 		if DEBUG_MODE:
 			print '===================================================='
@@ -748,16 +735,32 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 			print 'Subfield: ' + str(subfield)
 			print '===================================================='
 		
-		print 'Actual XML Element: ' + loader.etree.tostring(subfield)
-		print 'Just ' + name + ': ' + subfield.text
+		# Set a attribute/property of the Marc_XML_Record to be of the 
+		# name name and value of subfield.text
 		setattr(record, name, subfield.text)
-		if name == 'SCN':
-			#record.SCN = subfield.text
-			print 'Record SCN set to ' + record.SCN
-		elif name == 'title':
-			#record.title = subfield.text
-			print 'Record title set to ' + record.title
 	
+	#----------------------------------------------------#
+	# Purpose: To parse an individual datafield element  #
+	#          in the Marc XML file (callback function   #
+	#          for find_tag_with_attr call)              #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	#             data_field - The XML Element that      #
+	#                          represents the individual #
+	#                          data field being          #
+	#                          processed                 #
+	#             name - The name of the value we're     #
+	#                    trying to get (ex. SCN, title,  #
+	#                    etc...)                         #
+	#             subfield - The subfield code to look   #
+	#                        for to get the desired      #
+	#                        value                       #
+	#             record - The Marc_XML_Record object    #
+	#                      that all parsed values are    #
+	#                      added to                      #
+	# Return: N/A
+	#----------------------------------------------------#
 	def parse_data_field(self, data_field, name, subfield, record):
 		if DEBUG_MODE:
 			print '===================================================='
@@ -767,8 +770,34 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 			print 'Datafield: ' + str(data_field)
 			print '===================================================='
 		
-		self.find_tag_with_attr('subfield', {'code':subfield}, self.parse_subfield, {'record':record,'name':name}, data_field)
+		# What attributes (with associated values) to look for
+		look_for_attrs = {'code':subfield}
+		
+		# What method to call when an appropriate element is found
+		callback = self.parse_subfield
+		
+		# ADDITIONAL (excluding self AND the element) arguments to the 
+		# callback method
+		callback_args = {
+			'record':record,
+			'name':name
+		}
+		
+		# Call the method
+		self.find_tag_with_attr('subfield', look_for_attrs, callback, callback_args, data_field)
 	
+	#----------------------------------------------------#
+	# Purpose: To parse an individual record (callback   #
+	#          function for find_record)                 #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	#             record - The XML Element that          #
+	#                      represents an individual      #
+	#                      record                        #
+	# Return: N/A                                        #
+	# Overrides: parse_record (Metadata_XML_Parser)      #
+	#----------------------------------------------------#
 	def parse_record(self, record):
 		if DEBUG_MODE:
 			print '===================================================='
@@ -788,7 +817,7 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 			# What attributes (with associated values) to look for
 			look_for_attrs = {'tag':v['tag']}
 			
-			# What method to call when a appropriate element is 
+			# What method to call when an appropriate element is 
 			# found
 			callback = self.parse_data_field
 			
@@ -803,13 +832,16 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 			# Call the method
 			self.find_tag_with_attr('datafield', look_for_attrs, callback, callback_args, record)
 		
+		# Add the record to the recordset
 		self.recordset.add_record(record_obj)
 	
 	#----------------------------------------------------#
-	# Purpose: Generice trigger method similar to that 
-	#          of execute or run in similar models
-	# Parameters: 
-	# Return: 
+	# Purpose: Generic trigger method similar to that    #
+	#          of execute or run in similar models       #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	# Return: N/A                                        #
 	#----------------------------------------------------#
 	def parse(self):
 		if DEBUG_MODE:
@@ -819,13 +851,221 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 			print 'Self: ' + str(self)
 			print '===================================================='
 		
+		# If the parsable files isn't set already set it up with 
+		# defaults
+		if self.parsable_files is None or len(self.parsable_files) < 1:
+			self.parsable_files = self.find_parsable_files()
+		
+		# Build the XML trees from the parsable_files property
 		self.files_to_trees(self.parsable_files)
-		for parsable_file in  self.parsable_files:
+		
+		# For each file/tree loop over and find the records in it
+		for parsable_file in self.parsable_files:
 			self.find_records(parsable_file)
 	
-if __name__ == '__main__':
-	parser = Marc_XML_Parser()
-	parser.parsable_files = parser.find_parsable_files()
-	parser.parse()
-	for record in parser.recordset.records:
-		print record
+	#----------------------------------------------------#
+	# Purpose: Add the quotes needed for the JSON        #
+	#          formating of the output                   #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked  on       #
+	#             input - The input the process and      #
+	#                     produce the desired output     #
+	# Return: String - A string representing the input   #
+	#                  properly quoted for JSON          #
+	# NOTE: This method starts with a underscore (_)     #
+	#       which means its intended to be a private     #
+	#       method for use by the class only             #
+	#----------------------------------------------------#
+	def _add_json_quotes(self, input):	
+		# Split the input into tokens by colon(s)
+		sub_tokens = input.split(':')
+		
+		# Make sure there is an appropriate amount of tokens
+		if len(sub_tokens) != 2:
+			raise TypeError
+		
+		# Add the quotes and reconstruct the string
+		returnValue = ''
+		returnValue += '"' + sub_tokens[0].strip() + '"'
+		returnValue += ':'
+		returnValue += '"' + sub_tokens[1].strip() + '"'
+		
+		# Return the result
+		return returnValue
+	
+	#----------------------------------------------------#
+	# Purpose: Process each entry string for the JSON    #
+	#          this includes making sure correct quoting #
+	#          and adding commas as appropriate          #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	#             tokens - The array of json tokens      #
+	#             index - The index within the tokens    #
+	#                     array to process               #
+	# Return: string - The processed token               #
+	# NOTE: This method starts with a underscore (_)     #
+	#       which means its intended to be a private     #
+	#       method for use by the class only             #
+	#----------------------------------------------------#
+	def _process_json_entry(self, token, is_first=False, is_last=False):
+		returnValue = token
+		
+		if is_first:
+			returnValue = returnValue[1:]
+		if is_last:
+			returnValue = returnValue[:-1]
+		
+		returnValue = self._add_json_quotes(returnValue)
+		
+		return returnValue
+	
+	#----------------------------------------------------#
+	# Purpose: Builds the proper string for an entry in  #
+	#          a record (ex. title in a record)          #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	#             tokens - The array of JSON tokens      #
+	#             index - The index of the element in    #
+	#                     the tokens array being         #
+	#                     "reconstructed"                #
+	# Return: string - The processed line                #
+	# NOTE: This method starts with a underscore (_)     #
+	#       which means its intended to be a private     #
+	#       method for use by the class only             #
+	#----------------------------------------------------#
+	def _build_json_entry(self, token, is_first=False, is_last=False):
+		processed_record = self._process_json_entry(token, is_first, is_last)
+		
+		if not is_last:
+			processed_record += ', '
+		
+		return processed_record
+	
+	#----------------------------------------------------#
+	# Purpose: Build a JSON record within the entire     #
+	#          JSON file                                 #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	#             record - The record we're creating a   #
+	#                      JSON representation of        #
+	# Return: string - The valid JSON string             #
+	#                  representation of the record      #
+	# NOTE: This method starts with a underscore (_)     #
+	#       which means its intended to be a private     #
+	#       method for use by the class only             #
+	#----------------------------------------------------#
+	def _build_json_record(self, record):
+		# Tokenize the record by comma (,)
+		tokens = record.split(',')
+		
+		# Do the converstion/processing and reconstruct by returning 
+		# results
+		returnValue = '{'
+		for index in range(0, len(tokens)):
+			curr_token = tokens[index]
+			is_first = index == 0
+			is_last = index == len(tokens) - 1
+			returnValue += self._build_json_entry(curr_token, is_first, is_last)
+		returnValue += '}'
+		
+		return returnValue
+	
+	#----------------------------------------------------#
+	# Purpose: Write a individual record to the output   #
+	#          file                                      #
+	# Parameters: self (implicit) - The insanfce of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	#             fp - The file pointer/object that can  #
+	#                  be wrote to                       #
+	#             record - The record (object) being     # 
+	#                      written out                   #
+	#             format - The format its being written  #
+	#                      out as                        #
+	#             is_last - Boolean if it is the last    #
+	#                       entry (for comma suffix)     #
+	#----------------------------------------------------#
+	def _write_record_to_file(self, fp, record, format, is_last=False):
+		record_str = str(record)
+		
+		if format == 'json':
+			record_str = self._build_json_record(record_str)
+		
+		fp.write(record_str)
+		
+		if not is_last:
+			fp.write(',\n')
+	
+	#----------------------------------------------------#
+	# Purpose: To write the records contained in the     #
+	#          recordset property of this instance into  #
+	#          a file                                    #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the funtion   #
+	#                               is invoked on        #
+	#             fp - The file pointer/object that can  #
+	#                  be wrote to                       #
+	#             format - The format being writen       #
+	# Return: N/A                                        #
+	# NOTE: This method starts with a underscore (_)     #
+	#       which means its intended to be a private     #
+	#       method for use by the class only             #
+	#----------------------------------------------------#
+	def _write_records_to_file(self, fp, format):
+		for record_index in range(0, len(self.recordset)):
+			record = self.recordset[record_index]
+			is_last = record_index == len(self.recordset) - 1
+			self._write_record_to_file(fp, record, format, is_last)
+	
+	#----------------------------------------------------#
+	# Purpose: Similar to parse in that it is a trigger  #
+	#          method to simply start the parsing of the #
+	#          files. The difference being this outputs  #
+	#          the results to a file with the designated #
+	#          name and in the designated type           #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	#             output_file - The filename (including  #
+	#                           path) of the file to     #
+	#                           output to (preferablly   #
+	#                           without a file           #
+	#                           extensions but...)       #
+	#             fromat (optional) - The format in      #
+	#                                 which the output   #
+	#                                 file should be in. #
+	#                                 By default this is #
+	#                                 JSON beause this   #
+	#                                 is a schemaless    #
+	#                                 database structure #
+	#                                 and the data       #
+	#                                 between reords     #
+	#                                 doesn't            #
+	#                                 NECCESSARLY follow #
+	#                                 a consistant       #
+	#                                 schema and JSON is #
+	#                                 common place in    #
+	#                                 other programs     #
+	# Return: N/A                                        #
+	#----------------------------------------------------#
+	def parse_to_file(self, output_file, format='json'):
+		# Parse the files using the generic trigg3er method
+		self.parse()
+		
+		# Give the filename the appropriate extension
+		if format == 'json' and not output_file.endswith('.json'):
+			# TO BE IMPLEMENTED: Strip extension if it exists
+			output_file = output_file + '.json'
+		
+		# Write to the file
+		with open(output_file, 'w+') as f:
+			if format == 'json':
+				f.write('{\n"collection":[\n')
+			self._write_records_to_file(f,  format)
+			if format == 'json':
+				f.write(']\n}')
+

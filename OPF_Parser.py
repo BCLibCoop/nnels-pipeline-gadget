@@ -1,8 +1,14 @@
-import subprocess
-import dynamic_loader as loader
-loader.load_XML_parser()
+from Metadata_Parsers import Metadata_XML_Parser
 
-class OPF_Parser:
+import dynamic_loader as loader
+
+loader.load_subprocess()
+subprocess = loader.subprocess
+
+loader.load_XML_parser()
+etree = loader.etree
+
+class OPF_Parser(Metadata_XML_Parser):
 	def __init__(self, epub_file):
 		opf_file = self.get_opf_name(epub_file)
 		self.ingest_opf(epub_file, opf_file)
@@ -36,26 +42,41 @@ class OPF_Parser:
 		
 		out, err = unzip_proc.communicate()
 		
-		self.root = loader.etree.fromstring(out)
+		self.root = etree.fromstring(out)
+	
+	def _recordset_set(self, value):
+		self._recordset = value
+	def find_parsable_files(self):
+		pass
+	@property
+	def record_tag(self):
+		return 'metadata'
+	def parse_meta_tag(self, tag_elem):
+		print etree.tostring(tag_elem)
+	def parse_title_tag(self, title_elem):
+		print 'The title is: ' + title_elem.text
+	def parse_record(self, record):
+		self.find_tag('meta', self.parse_meta_tag, curr_elem=record)
+		self.find_tag('title', self.parse_title_tag, curr_elem=record)
 	
 	def get_metadata(self):
 		return_value = {}
-		
-		for child in self.root:
-			curr_tag = child.tag[child.tag.find('}') + 1:]
-			if curr_tag == 'metadata':
-				for grandchild in child:
-					curr_tag = grandchild.tag[grandchild.tag.find('}') + 1:]
-					if curr_tag == 'meta':
-						value = grandchild.get('content')
-						if grandchild.get('content').startswith('id'):
-							value = self.get_manifest_entry(grandchild.get('content'))
-						return_value[grandchild.get('name')] = value
-					else:
-						return_value[curr_tag] = grandchild.text
-		
+		self.find_records(None, curr_elem=self.root)
+		#for child in self.root:
+		#	curr_tag = child.tag[child.tag.find('}') + 1:]
+		#	if curr_tag == 'metadata':
+		#		for grandchild in child:
+		#			curr_tag = grandchild.tag[grandchild.tag.find('}') + 1:]
+		#			if curr_tag == 'meta':
+		#				value = grandchild.get('content')
+		#				if grandchild.get('content').startswith('id'):
+		#					value = self.get_manifest_entry(grandchild.get('content'))
+		#				return_value[grandchild.get('name')] = value
+		#			else:
+		#				return_value[curr_tag] = grandchild.text
+		#
 		# Return the result
-		return return_value
+		#return return_value
 	
 	def get_manifest_entry(self, id):
 		return_value = None

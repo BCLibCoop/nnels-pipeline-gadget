@@ -4,81 +4,111 @@
 # Author: Alan Bridgeman                             #
 ######################################################
 
-import subprocess
+import dynamic_loader as loader
+
+loader.load_subprocess()
+subprocess = loader.subprocess
+#import subprocess
+
 import itertools
-import data_structs as structs			
+
+loader.load_data_structs()
+structs = loader.structs
+#import data_structs as structs
+
+import funcs
+		
 from BookFile import BookFile
 from BookFileType import BookFileType, BookFileTypeFactory
 
+DEBUG_MODE = False
+
 #----------------------------------------------------#
-# Purpose: Create a filename regex based on the      #
-#          patterns supplied at runtime with --files #
-#          flag(s). Because the find command line    #
-#          utility can only use one regex (in the    #
-#          way I want) at once. So, I logical OR all #
-#          the supplied 'patterns' together. I also  #
-#          add a .*/ at the beginning if it doesn't  #
-#          have it as my assumption is that the find #
-#          utility is looking for filenames rather   #
-#          than file paths consequently I prepend a  #
-#          "ignore" expression for directories. I    #
-#          may put some kind of mode parameter       #
-#          to control this later but for now I think #
-#          it works this way                         #
-# Parameters: patterns - The patterns used to within #
-#                        the regex                   #
-# Return: string - The Regex that will be used in    #
-#                  the find command                  #
+# Purpose: Because I use regular expressions instead #
+#          of globbing (like the terminal) I thought #
+#          it would make sense to try to correct if  #
+#          someone tried to use globbing at least in #
+#          the simplist form (ex. *.extension        #
+#          becomes .*.extension)                     #
+# Parameters: patterns - The patterns to evaluate    #
+# Return: list/string/None - A list or value         #
+#                            representing what the   #
+#                            value for the           #
+#                            prefix_each argument of #
+#                            the combine_regex       #
+#                            function should be or   #
+#                            None if the prefix_each #
+#                            argument should not be  #
+#                            specified               #
 #----------------------------------------------------#
-def create_filename_regex(patterns):
-	# Define the variable to store the final expression and start with a 
-	# left a open brace
-        exp = '(';
+def correct_for_globbing(patterns):
+	# Fill an array of the same size as patterns with None for all values
+	use_prefixs = [None for i in range(len(patterns))]
 	
-	# Loop over the 'patterns' supplied on the command line
-        for pattern in patterns:
-		# Check if it starts with the "ignore directories" expression
-                if pattern.startswith('.*/'):
-			# Because it has the "ignore directories" expression 
-			# use as is
-                        print 'Using original pattern: ' + pattern
-                        exp += pattern + '|'
-                else:
-			# Because it doesn't have the "ignore directories" 
-			# expression prepend that to the beginning
-                        print 'Using augmented pattern: .*/' + pattern
-                        exp += '.*/' + pattern + '|'
-        
-	# Remove the last character because it will be an extranous | character
-	exp = exp[:len(exp) - 1]
+	# For each pattern see if it starts with a star (*) if so then check if 
+	# it has a dot (.) next to it. If so we can correct with a dot (.) 
+	# prefix
+        for index in range(0, len(patterns)):
+                if patterns[index].startswith('*'):
+                        if '.' in patterns[index]:
+                                tokens = patterns[index].split('.')
+                                if len(tokens) == 2:
+                                        if len(tokens[0]) == 1:
+                                                use_prefixs[index] = '.'
 	
-	# Add a close brace to end the expression
-	exp += ')'
+	# Check if all prefixes are the same (None or the same value)
+        all_prefixs_same = True
+        for index in range(0, len(use_prefixs)):
+                for index2 in range(0, len(use_prefixs)):
+                        if use_prefixs[index] != use_prefixs[index2]:
+                                all_prefixs_same = False
+	
+	# If they are all the same (arbitrarly) assign the first entry to be the
+	# value of the variable. In other words change the type of the variable
+        if all_prefixs_same:
+                use_prefixs = use_prefixs[0]
 	
 	# Return the result
-	return exp
+	return use_prefixs
 
 #----------------------------------------------------#
 # Purpose: To get all the filenames that fit the     #
 #          specified patterns                        #
 # Parameters: patterns - The pattern(s) to match the #
 #                        filenames against           #
+#             folder - The workspace directory/      #
+#                      folder where all the relavent #
+#                      files are kept                #
 # Returns: List - A list of the applicable filenames #
 #                 (including path)                   #
 #----------------------------------------------------#
-def getFileNames(patterns):
+def get_file_names(patterns, folder):
+	if DEBUG_MODE:
+		print '===================================================='
+		print 'Call Summary for get_file_names (rename_files.py)'
+		print '----------------------------------------------------'
+		print 'Patterns: ' + str(patterns)
+		print 'Workspace: ' + str(folder)
+		print '===================================================='
+	
 	# Prepare the arguments for a basic find command using regex (Extended 
 	# regex)
-        args = ['find', '-E', '.', '-regex']
-
+        args = ['find', '-E', folder, '-regex']
+	
+	use_prefixs = correct_for_globbing(patterns)
+	
         # Build the regex expression from the patterns supplied
-        exp = create_filename_regex(patterns)
-
+	if use_prefixs is not None:
+        	exp = funcs.combine_regex(patterns, prefix_each=use_prefixs)
+	else:
+		exp = funcs.combine_regex(patterns)
+	
         # Add the built pattern to the find command arguments
         args.append(exp)
 
         # DEBUGGING: Just to see if the command was built right
-        print args
+        if DEBUG_MODE:
+		print args
 
         # Run the find command and get the results (See subprocess documentation
 	# for more details)
@@ -118,7 +148,8 @@ def createCombinationToken(set):
 			outputEntry += '_'
 	
         # DEBUGGING: See what the value of the "combination token" is
-	#print outputEntry
+	if DEBUG_MODE:
+		print outputEntry
 	
 	# Return the value
 	return outputEntry
@@ -135,7 +166,8 @@ def createCombinationToken(set):
 #                or title                            #
 #----------------------------------------------------#
 def get_combinations(tokens):
-	print 'Do permutation stuff'
+	if DEBUG_MODE:
+		print 'Do permutation stuff'
 	
 	# Generate all possible combinations using the itertools moduole
 	superset = []
@@ -159,31 +191,47 @@ def get_combinations(tokens):
 #                     against                        #
 # Return: N/A                                        #
 #----------------------------------------------------#
-def check_token(book, token):
+def check_token(records, book, token):
+	if DEBUG_MODE:
+		print '===================================================='
+        	print 'Call Summary for rename_files (rename_files.py) '
+        	print '----------------------------------------------------'
+        	print 'Records: ' + str(records)
+		print 'Book: ' + str(book)
+        	print 'Token: ' + str(token)
+        	print '===================================================='
+	
 	# Check if the current token matches a SCN
-	if structs.hasSCN(token):
+	if structs.has_SCN(records, token):
+		metadata_record = structs.get_item_with_attr(records, 'SCN', token)
 		# Now that we know the token matches A SCN lets check if its 
 		# the proper one if we can
 		if book.title is not None:
-			if token == getSCN_fromTitle(book.title):
-				print 'Setting the SCN: ' + token
-				# Since it matched set it in the book object
+			if metadata_record.title == book.title:
+				if DEBUG_MODE:
+					print 'Setting the SCN: ' + token
+				# Sinc it matched set it in the book object
 				book.SCN = token
 			else:
-				# Since it didn't match let the user know and move on
-				print 'Skipping SCN ' + token + ' because it does not match with identified title ' + book.title
+				# Since it didn't match let the user know and 
+				# move on
+				if DEBUG_MODE:
+					print 'Skipping SCN ' + token + ' because it does not match with identified title ' + book.title
 		else:
-			print 'Setting the SCN: ' + token
+			if DEBUG_MODE:
+				print 'Setting the SCN: ' + token
 			# Because we don't yet know the title assume this is 
 			# the right SCN
 			book.SCN = token
 	# Check if the current token matches a title
-	elif structs.hasTitle(token):
+	elif structs.has_title(records, token):
+		metadata_record = structs.get_item_with_attr(records, 'title', token)
 		# Now that we know the token matches A title lets check if its 
 		# the propery one if we can
 		if book.SCN is not None:
-			if token == structs.getTitle_fromSCN(book.SCN):
-				print 'Setting the title: ' + token
+			if metadata_record.SCN == book.SCN:
+				if DEBUG_MODE:
+					print 'Setting the title: ' + token
 				# Since it matched set it in the book object
 				book.title = token
 			else:
@@ -199,14 +247,24 @@ def check_token(book, token):
 		bookType = factory.getStringType(token) 
 		if bookType is not None:
 			book.type = bookType
-			print 'Changed book type to ' + str(bookType)
+			if DEBUG_MODE:
+				print 'Changed book type to ' + str(bookType)
 
 #----------------------------------------------------#
 # Purpose: 
 # Parameters: 
 # Return: 
 #----------------------------------------------------#
-def zero_length_token_fix(book, tokens):
+def zero_length_token_fix(records, book, tokens):
+	if DEBUG_MODE:
+		print '===================================================='
+        	print 'Call Summary for zero_length_token_fix (rename_files.py) '
+        	print '----------------------------------------------------'
+		print 'Records: ' + str(records)
+        	print 'Book: ' + str(book)
+        	print 'Tokens: ' + str(tokens)
+        	print '===================================================='
+	
 	# Loop over each of the tokens to check their length
 	for x in range(0, len(tokens)):
 		# Check if token x is a/the empty entry
@@ -216,17 +274,26 @@ def zero_length_token_fix(book, tokens):
         # Avoid edge case of a file named _.format and process the any/the 
 	# token left
         if len(tokens) > 0:
-		check_token(book, tokens[0])
+		check_token(records, book, tokens[0])
 
-def process_two_tokens(book, tokens):
+def process_two_tokens(records, book, tokens):
+	if DEBUG_MODE:
+		print '===================================================='
+        	print 'Call Summary for process_two_tokens (rename_files.py) '
+        	print '----------------------------------------------------'
+		print 'Records: ' + str(records)
+        	print 'Book: ' + str(book)
+        	print 'Tokens: ' + str(tokens)
+        	print '===================================================='
+	
 	# Nothing is stopping people to put a underscore at the beginning or 
 	# end of a filename
 	if len(tokens[0]) > 0 and len(tokens[1]) > 0:
-		check_token(book, tokens[0])
-		check_token(book, tokens[1])
-		check_token(book, tokens[0] + '_' + tokens[1])
+		check_token(records, book, tokens[0])
+		check_token(records, book, tokens[1])
+		check_token(records, book, tokens[0] + '_' + tokens[1])
 	else:
-		zero_length_token_fix(book, tokens)
+		zero_length_token_fix(records, book, tokens)
 
 #----------------------------------------------------#
 # Purpose: To tokenize the filename by unederscore   #
@@ -234,25 +301,43 @@ def process_two_tokens(book, tokens):
 # Parameters: name - The filename to be tokenized    #
 # Return: N/A (To be reevaluated later)
 #----------------------------------------------------#
-def tokenize_by_underscore(book, name):
+def tokenize_by_underscore(records, book, name):
+	if DEBUG_MODE:
+		print '===================================================='
+        	print 'Call Summary for tokenize_by_underscore (rename_files.py) '
+        	print '----------------------------------------------------'
+		print 'Recoreds: ' + str(records)
+        	print 'Book: ' + str(book)
+        	print 'Name: ' + str(name)
+        	print '===================================================='
+	
 	tokens = name.split('_')
-	print 'Tokens: ' + str(tokens)
+	
+	if DEBUG_MODE:
+		print 'Tokens: ' + str(tokens)
 	
 	# Need to check if we have to start trying to make permutations of 
 	# multiple tokens or the simpler case
 	if len(tokens) >  2:
 		combos = get_combinations(tokens)
 		for combo in combos:
-			check_token(book, combo)
+			check_token(records, book, combo)
 	else:
-		process_two_tokens(book, tokens)
+		process_two_tokens(records, book, tokens)
 
 #----------------------------------------------------#
 # Purpose: Break the filename into meaningful peices
 # Parameters: 
 # Return: 
 #----------------------------------------------------#
-def get_name_parts(book):
+def get_name_parts(records, book):
+	if DEBUG_MODE:
+		print '===================================================='
+        	print 'Call Summary for rename_files (rename_files.py) '
+        	print '----------------------------------------------------'
+        	print 'Book: ' + str(book)
+        	print '===================================================='
+	
 	# If the filename contains a do we want to tokenize it by that (know 
 	# what the format is otherwise eliminate dealing with .blahblah files)
 	if '.' in book.filename:
@@ -270,29 +355,29 @@ def get_name_parts(book):
                         bookType = BookFileTypeFactory.getExtensionType(format)
                         if bookType is not None:
 				book.type = bookType
-			print bookType
+			if DEBUG_MODE:
+				print bookType
 		
 		# Check that the name actually has some length (mostly 
 		# a sanity check but...)
 		if len(filename_parts[0]) > 0:
 			name = filename_parts[0]
 			
-			# Check if the filename contains a underscore be
-			# cause this allows us to assume its either the 
-			# title only or some combination of title and 
-			# SCN
+			# Check if the filename contains a underscore because 
+			# this allows us to assume its either the title only 
+			# or some combination of title and SCN
 			if '_' in name:
-				tokenize_by_underscore(book, name)
+				tokenize_by_underscore(records, book, name)
 			else:
-				check_token(book, filename_parts[0])
+				check_token(records, book, filename_parts[0])
 		else:
-			print 'The filename seems to be unreadable'
+			print 'The filename seems to be unreadable (has no length)'
 	else:
 		if len(book.filename) > 0:
 			if '_' in filename:
-				tokenize_by_underscore(book.filename)
+				tokenize_by_underscore(records, book.filename)
 			else:
-				check_token(book, book.filename)
+				check_token(records, book, book.filename)
 
 #----------------------------------------------------#
 # Purpose: Create a list of book objects from the    #
@@ -302,15 +387,26 @@ def get_name_parts(book):
 #                        represented in the book     #
 #                        objects contained in the    #
 #                        list                        #
+#             folder - The workspace directory/      #
+#                      folder where all the relavent #
+#                      files are kept                #
 # Return: list - A list of the book objects to be    #
 #                processed                           #
 #----------------------------------------------------#
-def create_booklist(patterns):
+def create_booklist(patterns, folder):
+	if DEBUG_MODE:
+		print '===================================================='
+		print 'Call Summary for create_booklist (rename_files.py) '
+		print '----------------------------------------------------'
+		print 'Patterns: ' + str(patterns)
+		print 'Workspace: ' + str(folder)
+		print '===================================================='
+	
 	# A list variable to hold the reults
 	booklist = []
 	
 	# Get the list of files with the given patterns
-	files = getFileNames(patterns)
+	files = get_file_names(patterns, folder)
 	
 	# Loop over the list of files and create a new book object for each
 	for currFile in files:
@@ -332,6 +428,13 @@ def create_booklist(patterns):
 #                  directory information)            #
 #----------------------------------------------------#
 def get_book_filename(book):
+	if DEBUG_MODE:
+		print '===================================================='
+        	print 'Call Summary for get_book_filename (rename_files.py) '
+        	print '----------------------------------------------------'
+        	print 'Book: ' + str(book)
+        	print '===================================================='
+	
 	# Create a variable for the result that will be returned
 	book_filename = None
 	
@@ -356,17 +459,37 @@ def get_book_filename(book):
 	# Return the result
 	return book_filename
 
-def func_rename(patterns):
+#----------------------------------------------------#
+# Purpose: Trigger method for starting the renaming  #
+#          of files funtionality                     #
+# Parameters: patterns - A list of regular           #
+#                        expression "patterns" to    #
+#                        identify book files         # 
+#             folder - The workspace directory/      #
+#                      folder where all the relavent #
+#                      files are kept                #
+# Return: N/A                                        #
+#----------------------------------------------------#
+def rename_files(records, patterns, folder='.'):
+	if DEBUG_MODE:
+		print '===================================================='
+		print 'Call Summary for rename_files (rename_files.py) '
+		print '----------------------------------------------------'
+		print 'Patterns: ' + str(patterns)
+		print 'Workspace: ' + str(folder)
+		print '===================================================='
+	
 	# Get a list of books
-	books = create_booklist(patterns)
+	books = create_booklist(patterns, folder)
 	
 	# Loop over the list of books
 	for book in books:
 		# Set the book's filename (remove directory info)
 		book.filename = get_book_filename(book)
 		
+		
 		# 
-		get_name_parts(book)
+		get_name_parts(records, book)
 	
 	for book in books:
 		# DEBUGGING: Print a summary of the information we have
@@ -391,55 +514,61 @@ def func_rename(patterns):
 				
 				# DEBUGGING: Print the result of the file 
 				#            metadata extraction
-				print metadata
+				#print metadata
 				
 				# Check if the title is specified in the 
 				# metadata (which is the mostly likely 
 				# consistant element across all the file types 
 				# and this system)
-				if metadata['title'] is not None:
-					# DEBUGGING: Print statement for 
-					#            getting an inital title
-					#            value before any
-					#            processing
-					print 'Should set the title to: ' + metadata['title']
-					# Assign to a secondary variable (just
-					# so that we have a way to still get the
-					# original if needed
-					title = metadata['title']
-					
-					# Remove special characters (NOTE: 
-					# was required addition of u'\u2019' for
-					# removing single quote)
-        				specialchars = [",", ":", ".", "'", u'\u2019', "?", "&", "/"]
-        				for char in specialchars:
-                				title = title.replace(char, "")
-				
-        				# Strip any extranous whitespace
-        				title = title.strip()
-					
-        				# Underscore remaining whitespace
-        				title = title.replace(" ", "_")
-					
-					# Capatilize the first letter only
-					title = title.lower()
-					title = title[:1].upper() + title[1:]
-					
-					# DEBUGGING: Print the resultant title 
-					#            after processing
-					print 'Title to use: ' + title
-					
-					# Set the book object's title to be the 
-					# title from the metadata after
-					# processing
-					book.title = title
-					
-					# DEBUGGING: Print the book Object's 
-					#            title to make sure it works
-					print 'Did set the title to: ' + str(book.title)
-					
-					# Confirm the change took
-					if book.title is not None:
-						print 'Chaned the title to ' + book.title
+				#if metadata['title'] is not None:
+				#	# DEBUGGING: Print statement for 
+				#	#            getting an inital title
+				#	#            value before any
+				#	#            processing
+				#	print 'Should set the title to: ' + metadata['title']
+				#	# Assign to a secondary variable (just
+				#	# so that we have a way to still get the
+				#	# original if needed
+				#	title = metadata['title']
+				#	
+				#	# Remove special characters (NOTE: 
+				#	# was required addition of u'\u2019' for
+				#	# removing single quote)
+        			#	specialchars = [",", ":", ".", "'", u'\u2019', "?", "&", "/"]
+        			#	for char in specialchars:
+                		#		title = title.replace(char, "")
+				#
+        			#	# Strip any extranous whitespace
+        			#	title = title.strip()
+				#	
+        			#	# Underscore remaining whitespace
+        			#	title = title.replace(" ", "_")
+				#	
+				#	# Capatilize the first letter only
+				#	title = title.lower()
+				#	title = title[:1].upper() + title[1:]
+				#	
+				#	# DEBUGGING: Print the resultant title 
+				#	#            after processing
+				#	print 'Title to use: ' + title
+				#	
+				#	# Set the book object's title to be the 
+				#	# title from the metadata after
+				#	# processing
+				#	book.title = title
+				#	
+				#	# DEBUGGING: Print the book Object's 
+				#	#            title to make sure it works
+				#	print 'Did set the title to: ' + str(book.title)
+				#	
+				#	# Confirm the change took
+				#	if book.title is not None:
+				#		print 'Chaned the title to ' + book.title
 			else:
 				print book.filename + ' seems to be a bit of a mystory'
+	
+if __name__ == '__main__':
+	with open('output.txt') as f:
+		lines = f.readlines()
+		records = structs.records_from_tab_seperated(lines[0],lines)	
+		rename_files(records, ['.*.zip', '.*.epub'])

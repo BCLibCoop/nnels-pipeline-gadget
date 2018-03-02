@@ -28,71 +28,12 @@ class BookFile(object):
 	# Return: N/A (Constructor)                          #
 	#----------------------------------------------------#
 	def __init__(self):
-		self._SCN = None
-		self._title = None
+		self.SCN = None
+		self.title = None
 		self._type = None
 	
 	#----------------------------------------------------#
-	# Purpose: Getter for the object's SCN property (    #
-	#          Needed as a result of having a custom     #
-	#          setter for validation)                    #
-	# Parameters: self (implicit) - The instance of the  #
-	#                               object the function  #
-	#                               is being called on   #
-	# Return: The SCN property of the object             #
-	#----------------------------------------------------#
-	@property
-	def SCN(self):
-		return self._SCN
-	
-	#----------------------------------------------------#
-	# Purpose: Custom setter for the object's SCN        #
-	#          property because need to validate it      #
-	#          against the "database"                    #
-	# Parameters: self (implicit) - The instance of the  #
-	#                               object the function  #
-	#                               is being called on   #
-	#             newSCN - The value proposed to be the  #
-	#                      SCN                           #
-	# Return: N/A (Setter)                               #
-	#----------------------------------------------------#
-	@SCN.setter
-	def SCN(self, newSCN):
-		if structs.hasSCN(newSCN):
-			self._SCN = newSCN
-	
-	#----------------------------------------------------#
-	# Purpose: Getter for the object's title property (  #
-	#          Needed as a result of having a custom     #
-	#          setter for validation)                    #
-	# Parameters: self (implicit) - The instance of the  #
-	#                               object the function  #
-	#                               is being called on   #
-	# Return: The title property of the object           #
-	#----------------------------------------------------#
-	@property
-	def title(self):
-		return self._title 
-	
-	#----------------------------------------------------#
-	# Purpose: Custom setter for the object's title      #
-	#          property because need to validate it      #
-	#          against the "database"                    #
-	# Parameters: self (implicit) - The instance of the  #
-	#                               object the function  #
-	#                               is being called on   #
-	#             newTitle - The value proposed to be    #
-	#                        the title                   #
-	# Return: N/A (Setter)                               #
-	#----------------------------------------------------#
-	@title.setter
-	def title(self, newTitle):
-		if structs.hasTitle(newTitle):
-			if self.SCN is None or self.SCN == structs.getSCN_fromTitle(newTitle):
-				self._title = newTitle
-	
-	#----------------------------------------------------#
-	# Purpose: Getter for the object's type property (  #
+	# Purpose: Getter for the object's type property (   #
 	#          Needed as a result of having a custom     #
 	#          setter for validation)                    #
 	# Parameters: self (implicit) - The instance of the  #
@@ -121,3 +62,18 @@ class BookFile(object):
 			self._type = newType
 		else:
 			raise TypeError('BookFileType required')
+	
+	def __str__(self):
+		result_str = '{'
+		
+		attrs = vars(self)
+		for k,v in attrs.iteritems():
+			if k.startswith('_'):
+				result_str += k[1:] + ':' + str(v) + ', '
+			else:
+				result_str += k + ':' + str(v) + ', '
+		
+		result_str = result_str[:-2] + '}'
+		result_str = unicode(result_str)
+		
+		return result_str

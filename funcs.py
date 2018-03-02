@@ -34,7 +34,48 @@ def func_set():
         input = click.prompt('What would you like to get?', type=click.Choice(options))
         globals()[callbacks[input]]()
 
+#----------------------------------------------------#
+# Purpose: Combine patterns to form single regex     #
+# Parameters: patterns - The patterns to combine     #
+#             prefix (optional) - Any text or        #
+#                                 pattern to         #
+#                                 "prefix" to the    #
+#                                 entire combined    #
+#                                 pattern            #
+#             suffix (optional) - Any text or        #
+#                                 pattern to         #
+#                                 "suffix"/append to #
+#                                 the entire         #
+#                                 combined pattern   #
+#             prefix_each (optional) - Any text or   #
+#                                      pattern to    #
+#                                      "prefix" to   #
+#                                      each of the   #
+#                                      patterns      #
+#                                      before        #
+#                                      combination   #
+#             suffix_each (optional) - Any text or   #
+#                                      pattern to    #
+#                                      "suffix"/     #
+#                                      append to     #
+#                                      each of the   #
+#                                      patterns      #
+#                                      before        #
+#                                      combination   #
+# Return: string - The resultant combined regex      #
+#                  expression                        #
+#----------------------------------------------------#
 def combine_regex(patterns, prefix=None, suffix=None, prefix_each=None, suffix_each=None):
+	print '===================================================='
+        print 'Call Summary for combine_regex (funcs.py)'
+        print '----------------------------------------------------'
+        print 'Patterns: ' + str(patterns)
+        print 'Prefix (Whole): ' + str(prefix)
+	print 'Suffix (Whole): ' + str(suffix)
+	print 'Prefix (Each): ' + str(prefix_each)
+	print 'Suffix (Each): ' + str(suffix_each)
+        print '===================|================================'
+	
 	# Define the variable to store the final expression in
 	exp = ''
 	
@@ -46,16 +87,26 @@ def combine_regex(patterns, prefix=None, suffix=None, prefix_each=None, suffix_e
 	exp += '(';
 	
 	# Loop over the 'patterns' supplied on the command line
-	for pattern in patterns:
+	for index in range(0, len(patterns)):
 		if prefix_each is not None:
-			if not pattern.startswith(prefix_each):
-				exp += prefix_each
+			if type(prefix_each) != list:
+				if not patterns[index].startswith(prefix_each):
+					exp += prefix_each
+			else:
+				if prefix_each[index] is not None:
+					if not patterns[index].startswith(prefix_each[index]):
+						exp += prefix_each[index]
 		
-		exp += pattern
+		exp += patterns[index]
 		
 		if suffix_each is not None:
-			if not pattern.endswith(suffix_each):
-				exp += suffix_each
+			if type(suffix_each) != list:
+				if not patterns[index].endswith(suffix_each):
+					exp += suffix_each
+			else:
+				if suffix_each[index] is not None:
+					if not patterns[index].endswith(suffix_each[index]):
+						exp += suffix_each[index]
 		
 		exp += '|'
 	

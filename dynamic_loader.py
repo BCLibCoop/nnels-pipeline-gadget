@@ -109,3 +109,19 @@ def load_XML_parser():
 	
 	# Return the Boolean flag
 	return success
+
+def load_abc():
+	global abc
+	import abc
+def load_subprocess():
+	global subprocess
+	import subprocess
+def load_json():
+	global json
+	import json
+def load_Metadata_Record():
+	global Metadata_Record
+	from Metadata_Record import Metadata_Record
+def load_data_structs():
+	global structs
+	import  data_structs as structs
