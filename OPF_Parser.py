@@ -10,6 +10,7 @@ etree = loader.etree
 
 class OPF_Parser(Metadata_XML_Parser):
 	def __init__(self, epub_file):
+		super(OPF_Parser, self).__init__()
 		opf_file = self.get_opf_name(epub_file)
 		self.ingest_opf(epub_file, opf_file)
 	
@@ -52,16 +53,28 @@ class OPF_Parser(Metadata_XML_Parser):
 	def record_tag(self):
 		return 'metadata'
 	def parse_meta_tag(self, tag_elem):
-		print etree.tostring(tag_elem)
+		return_result = None
+		
+		print etree.tostring(tag_elem)\
+		
+		if tag_elem.get('content').startswith('id'):
+			value = self.get_manifest_entry(tag_elem.get('content'))
+			return_result='The value is: ' + value.encode('ascii')
+		
+		return return_result
+	
 	def parse_title_tag(self, title_elem):
-		print 'The title is: ' + title_elem.text
+		return 'The title is: ' + title_elem.text
+	
 	def parse_record(self, record):
-		self.find_tag('meta', self.parse_meta_tag, curr_elem=record)
-		self.find_tag('title', self.parse_title_tag, curr_elem=record)
+		return_result = {}
+		
+		return_result['find_tag (meta)'] = self.find_tag_with_attr('meta', {'content':'id'}, self.parse_meta_tag, None, record)
+		return_result['find_tag (title)'] = self.find_tag('title', self.parse_title_tag, curr_elem=record)
+		return return_result
 	
 	def get_metadata(self):
-		return_value = {}
-		self.find_records(None, curr_elem=self.root)
+		return_value = self.find_records(None, curr_elem=self.root)
 		#for child in self.root:
 		#	curr_tag = child.tag[child.tag.find('}') + 1:]
 		#	if curr_tag == 'metadata':
@@ -76,7 +89,7 @@ class OPF_Parser(Metadata_XML_Parser):
 		#				return_value[curr_tag] = grandchild.text
 		#
 		# Return the result
-		#return return_value
+		return return_value
 	
 	def get_manifest_entry(self, id):
 		return_value = None
@@ -92,3 +105,4 @@ class OPF_Parser(Metadata_XML_Parser):
 		
 		#
 		return return_value
+

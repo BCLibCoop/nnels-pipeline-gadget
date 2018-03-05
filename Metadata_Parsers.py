@@ -1,4 +1,4 @@
-# My Modules
+# My Modules;
 import dynamic_loader as loader
 import funcs				# Requried to use some generic functions
 
@@ -315,9 +315,11 @@ class Metadata_XML_Parser(Metadata_Parser):
 			print 'Self: ' + str(self)
 			print 'From File: ' + str(from_file)
 			print 'Current Element: ' + str(curr_elem)
-			print '===================|================================'
+			print '===================================================='
 		
-		self.find_tag(self.record_tag, self.parse_record, from_file=from_file, curr_elem=curr_elem)
+		return_result = self.find_tag(self.record_tag, self.parse_record, from_file=from_file, curr_elem=curr_elem)
+		print 'Return (find_record): ' + str(return_result)
+		return return_result
 	
 	#----------------------------------------------------#
 	# Purpose: Find the elements that have the given     #
@@ -401,13 +403,107 @@ class Metadata_XML_Parser(Metadata_Parser):
 			print 'Callback: ' + str(callback)
 			print 'Callback Arguments: ' + str(callback_args)
 			print '===================================================='
+		return_result = {}
 		
 		for k,v in attrs.iteritems():
 			if elem.get(k) == v:
-				if callback_args is None:
-					callback(elem)
+				self._use_callback(elem, return_result, callback, callback_args)
+		
+		return return_result
+	
+	#----------------------------------------------------#
+	# Purpose: To abstract some of the callback calling  #
+	#          complexity out of other methods           #
+	#          particulalry as it relates to returns     #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	#             curr_elem - The current element being  #
+	#                         processed                  #
+	#             return_result - The dictionary that    #
+	#                             holds the results      #
+	#             callback - The callback function/      #
+	#                        method to use               #
+	#             callback_args - The arguments to       #
+	#                             supply to the callback #
+	# Return: N/A (All results are stored back in        #
+	#         return_result)                             #
+	#----------------------------------------------------#
+	def _use_callback(self, curr_elem, return_result, callback, callback_args):
+		tag = curr_elem.tag[curr_elem.tag.find('}') + 1:]
+		
+		# Check if there was any callback arguments given or not
+		if callback_args is None:
+			# Check if the return  dictionary already contains an 
+			# element with the given tag already
+			if return_result[tag] != None:
+				# Because the dictionary does we want to append
+				# a number to the dictionary entry key
+				num_of_tag = 1
+				got_set = False
+				
+				# To simplify, keep incrementing until a unused
+				#  number is found and use that
+				while not got_set:
+					try:
+						return_result[tag + str(num_of_tag)]
+						num_of_tag += 1
+					except KeyError:
+						return_result[tag + str(num_of_tag)] = callback(curr_elem)
+						got_set = True
+			else:
+				# Because there is no dictionary entry for tag 
+				# create one
+				return_result[tag] = callback(curr_elem)
+		else:
+			try:
+				# Check if the return  dictionary already 
+				# contains an element with the given tag already
+				if return_result[tag] != None:
+					# Because the dictionary does we want to
+					# append a number to the dictionary 
+					# entry key
+					num_of_tag = 1
+					got_set = False
+					
+					# To simplify, keep incrementing until a
+					# unused number is found and use that
+					while not got_set:
+						try:
+							return_result[tag + str(num_of_tag)]
+							num_of_tag += 1
+						except KeyError:
+							return_result[tag + str(num_of_tag)] = callback(curr_elem, **callback_args)
+							got_set = True
 				else:
-					callback(elem, **callback_args)
+					# Because there is no dictionary entry for tag
+					# create one
+					return_result[tag] = callback(curr_elem, **callback_args)
+			except KeyError:
+				return_result[tag] = callback(curr_elem, **callback_args)
+					
+
+	#----------------------------------------------------#
+	# Purpose: To reformat the results so that instead   #
+	#          of having numbered elemented the returned #
+	#          result just has children                  #
+	#          ex. {'metadata':None, 'metadata1':None}   #
+	#              to {'metadata':{1:None,               #
+	#              'metadata':None}}                     #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	# Return: N/A (All results are stored back in        #
+	#         return_result)                             #
+	#----------------------------------------------------#
+	def _restructure_result(self, return_result):
+		 for k in return_result.keys():
+                        for k2 in return_result.keys():
+                                if k2.startswith(k):
+                                        if k != k2:
+                                                new_key = k2[len(k):]
+                                                return_result[k][new_key] = return_result[k2]
+                                                del return_result[k2]
 	
 	#
 	#
@@ -424,6 +520,9 @@ class Metadata_XML_Parser(Metadata_Parser):
 			print 'Current Element: ' + str(curr_elem)
 			print '===================================================='
 		
+		return_result = {}
+		
+		# If we've specified a file do some simple checks
 		if from_file is None:
 			if curr_elem is None:
 				raise NotImplementedError
@@ -431,27 +530,46 @@ class Metadata_XML_Parser(Metadata_Parser):
 			# Check if we're running in "recursive mode" or not
 			if curr_elem is None:
 				root = self.trees[from_file].getroot()
-				self.find_tag(desired_tag, callback, from_file=from_file, curr_elem=root)
+				return_result['root'] = self.find_tag(desired_tag, callback, from_file=from_file, curr_elem=root)
+		
+		#
 		if curr_elem is not None:
 			tag = curr_elem.tag
 			
 			if '{' not in desired_tag:
 				tag = tag[tag.find('}') + 1:]
 				
+				try:
+					return_result[tag]
+				except KeyError:
+					return_result[tag] = None
+				
 				# Check if the current element matches the 
 				# subclasses definition
 				if tag == desired_tag:
-					if callback_args is None:
-						callback(curr_elem)
-					else:
-						callback(curr_elem, **callback_args)
+					self._use_callback(curr_elem, return_result, callback, callback_args)
 				else:
 					# Since it isn't a record keep digging 
 					# deeper if applicable
 					if len(list(curr_elem)) > 0:
 						for child in curr_elem:
-							self.find_tag(desired_tag, callback, callback_args, from_file, curr_elem=child)
-			
+							if return_result[tag] != None:
+								num_of_tag = 1
+								got_set = False
+								while not got_set:
+									try:
+										return_result[tag + str(num_of_tag)]
+										num_of_tag += 1
+									except KeyError:
+										return_result[tag + str(num_of_tag)] = self.find_tag(desired_tag, callback, callback_args, from_file, curr_elem=child)
+										got_set = True
+							else:
+								return_result[tag] = self.find_tag(desired_tag, callback, callback_args, from_file, curr_elem=child)
+		
+		# Return the result
+		self._restructure_result(return_result)
+		return return_result
+
 #====================================================#
 # Purpose: A more specific concrete class for Marc   #
 #          XML records                               #
@@ -990,12 +1108,12 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 	#                       entry (for comma suffix)     #
 	#----------------------------------------------------#
 	def _write_record_to_file(self, fp, record, format, is_last=False):
-		record_str = str(record)
+		record_str = unicode(record)
 		
 		if format == 'json':
 			record_str = self._build_json_record(record_str)
 		
-		fp.write(record_str)
+		fp.write(record_str.encode('utf-8'))
 		
 		if not is_last:
 			fp.write(',\n')

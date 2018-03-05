@@ -19,10 +19,10 @@ structs = loader.structs
 import funcs
 		
 from BookFile import BookFile
-from BookFileType import BookFileType, BookFileTypeFactory
+from BookFileType import BookFileType, DAISY_Type, BookFileTypeFactory
 
 DEBUG_MODE = False
-
+OS = 'Mac' # Can be Mac or Linux
 #----------------------------------------------------#
 # Purpose: Because I use regular expressions instead #
 #          of globbing (like the terminal) I thought #
@@ -93,7 +93,10 @@ def get_file_names(patterns, folder):
 	
 	# Prepare the arguments for a basic find command using regex (Extended 
 	# regex)
-        args = ['find', folder, '-regextype posix-extended', '-regex']
+	if OS == 'Mac':
+        	args = ['find', '-E', folder, '-regex']
+	elif OS == 'Linux':
+		args = ['find', folder, '-regextype posix-extended', '-regex']
 	
 	use_prefixs = correct_for_globbing(patterns)
 	
@@ -107,13 +110,16 @@ def get_file_names(patterns, folder):
         args.append(exp)
 
         # DEBUGGING: Just to see if the command was built right
-        if DEBUG_MODE:
-		print args
+        #if DEBUG_MODE:
+	print args
 
         # Run the find command and get the results (See subprocess documentation
 	# for more details)
-        proc = subprocess.Popen(args, shell=True, stdout=subprocess.PIPE)
-        stdout, stderr = proc.communicate()
+	if OS == 'Mac':
+        	proc = subprocess.Popen(args, stdout=subprocess.PIPE)
+        elif OS == 'Linux':
+		proc = subprocess.Popen(args, shell=True, stdout=subprocess.PIPE)
+	stdout, stderr = proc.communicate()
 
         # Get the lines of output as a list
         lines = stdout.decode('ascii').splitlines()
@@ -374,8 +380,8 @@ def get_name_parts(records, book):
 			print 'The filename seems to be unreadable (has no length)'
 	else:
 		if len(book.filename) > 0:
-			if '_' in filename:
-				tokenize_by_underscore(records, book.filename)
+			if '_' in book.filename:
+				tokenize_by_underscore(records, book, book.filename)
 			else:
 				check_token(records, book, book.filename)
 
@@ -482,11 +488,14 @@ def rename_files(records, patterns, folder='.'):
 	# Get a list of books
 	books = create_booklist(patterns, folder)
 	
+	renames = {}
+	
 	# Loop over the list of books
 	for book in books:
 		# Set the book's filename (remove directory info)
 		book.filename = get_book_filename(book)
 		
+		renames[book.filename] = None
 		
 		# 
 		get_name_parts(records, book)
@@ -514,61 +523,30 @@ def rename_files(records, patterns, folder='.'):
 				
 				# DEBUGGING: Print the result of the file 
 				#            metadata extraction
-				#print metadata
-				
-				# Check if the title is specified in the 
-				# metadata (which is the mostly likely 
-				# consistant element across all the file types 
-				# and this system)
-				#if metadata['title'] is not None:
-				#	# DEBUGGING: Print statement for 
-				#	#            getting an inital title
-				#	#            value before any
-				#	#            processing
-				#	print 'Should set the title to: ' + metadata['title']
-				#	# Assign to a secondary variable (just
-				#	# so that we have a way to still get the
-				#	# original if needed
-				#	title = metadata['title']
-				#	
-				#	# Remove special characters (NOTE: 
-				#	# was required addition of u'\u2019' for
-				#	# removing single quote)
-        			#	specialchars = [",", ":", ".", "'", u'\u2019', "?", "&", "/"]
-        			#	for char in specialchars:
-                		#		title = title.replace(char, "")
-				#
-        			#	# Strip any extranous whitespace
-        			#	title = title.strip()
-				#	
-        			#	# Underscore remaining whitespace
-        			#	title = title.replace(" ", "_")
-				#	
-				#	# Capatilize the first letter only
-				#	title = title.lower()
-				#	title = title[:1].upper() + title[1:]
-				#	
-				#	# DEBUGGING: Print the resultant title 
-				#	#            after processing
-				#	print 'Title to use: ' + title
-				#	
-				#	# Set the book object's title to be the 
-				#	# title from the metadata after
-				#	# processing
-				#	book.title = title
-				#	
-				#	# DEBUGGING: Print the book Object's 
-				#	#            title to make sure it works
-				#	print 'Did set the title to: ' + str(book.title)
-				#	
-				#	# Confirm the change took
-				#	if book.title is not None:
-				#		print 'Chaned the title to ' + book.title
+				print 'Result of call is: ' + str(metadata)
 			else:
 				print book.filename + ' seems to be a bit of a mystory'
+		
+		if book.SCN is not None:
+			if book.title is None:
+				book.title = structs.get_item_with_attr(records, 'SCN', book.SCN).title
+		if book.title is not None:
+			if book.SCN is None:
+				book.SCN = structs.get_item_with_attr(records, 'title', book.title).SCN
+		
+			file_ext = book.filename.split('.')[len(book.filename.split('.')) - 1]
+			file_name_length = len(book.filename)
+			renames[book.fullpath] = book.fullpath[:-file_name_length]  + book.title + '_' + book.SCN
+			if isinstance(book.type, DAISY_Type):
+				renames[book.fullpath] += '_DAISY'
+				renames[book.fullpath] += '.' + file_ext
+			
+	return renames
 	
 if __name__ == '__main__':
 	with open('output.txt') as f:
 		lines = f.readlines()
 		records = structs.records_from_tab_seperated(lines[0],lines)	
-		rename_files(records, ['.*.zip', '.*.epub'])
+		renames = rename_files(records, ['.*.zip', '.*.epub'])
+		for k,v in renames.iteritems():
+			print 'Changing ' + str(k) + ' into ' + str(v)
