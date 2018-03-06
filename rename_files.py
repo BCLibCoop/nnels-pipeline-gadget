@@ -19,7 +19,7 @@ structs = loader.structs
 import funcs
 		
 from BookFile import BookFile
-from BookFileType import BookFileType, DAISY_Type, BookFileTypeFactory
+from BookFileType import BookFileType, DAISY_Type, DAISY202_Type, DAISY3_Type, BookFileTypeFactory
 
 DEBUG_MODE = False
 OS = 'Mac' # Can be Mac or Linux
@@ -466,6 +466,42 @@ def get_book_filename(book):
 	return book_filename
 
 #----------------------------------------------------#
+# Purpose: To generate the new (desired) filename    #
+# Parameters: book - The book object to generate the #
+#                    new (desired) filename for      #
+# Return: string - The new (desired) filename        #
+#----------------------------------------------------#
+def _generate_new_file_name(book):
+        # Set the return variable to None initially
+        return_result = None
+
+        # Get the extension of the book file
+        file_ext = book.filename.split('.')[len(book.filename.split('.')) - 1]
+
+        # Get the length of the filename (used for extracting the folder info)
+        file_name_length = len(book.filename)
+
+        # Extract the folder information from the book's fullpath
+        return_result = book.fullpath[:-file_name_length]
+
+        # Generate that desired title_SCN format that was desired
+        return_result += book.title + '_' + book.SCN
+
+        # If its a DAISY book put the appropriate suffix at the end of the
+        # filename
+        if isinstance(book.type, DAISY_Type):
+                if isinstance(book.type, DAISY202_Type):
+                        return_result += '_DAISY202'
+                elif isinstance(book.type, DAISY3_Type):
+                        return_result += '_DAISY3'
+
+        # Add the file extenstion (.type) to theend of the file name
+        return_result += '.' + file_ext
+
+        # Return the result
+        return return_result
+
+#----------------------------------------------------#
 # Purpose: Trigger method for starting the renaming  #
 #          of files funtionality                     #
 # Parameters: patterns - A list of regular           #
@@ -533,20 +569,8 @@ def rename_files(records, patterns, folder='.'):
 		if book.title is not None:
 			if book.SCN is None:
 				book.SCN = structs.get_item_with_attr(records, 'title', book.title).SCN
-		
-			file_ext = book.filename.split('.')[len(book.filename.split('.')) - 1]
-			file_name_length = len(book.filename)
-			renames[book.fullpath] = book.fullpath[:-file_name_length]  + book.title + '_' + book.SCN
-			if isinstance(book.type, DAISY_Type):
-				renames[book.fullpath] += '_DAISY'
-				renames[book.fullpath] += '.' + file_ext
-			
-	return renames
+		if book.SCN is not None and book.title is not None:
+			renames[book.fullpath] = _generate_new_file_name(book)
 	
-if __name__ == '__main__':
-	with open('output.txt') as f:
-		lines = f.readlines()
-		records = structs.records_from_tab_seperated(lines[0],lines)	
-		renames = rename_files(records, ['.*.zip', '.*.epub'])
-		for k,v in renames.iteritems():
-			print 'Changing ' + str(k) + ' into ' + str(v)
+	# Return the resulrt
+	return renames

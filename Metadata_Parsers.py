@@ -199,6 +199,7 @@ class Metadata_XML_Parser(Metadata_Parser):
 		super(Metadata_XML_Parser, self).__init__()
 		
 		self.trees = {}
+		self.trees_without_ns = {}
 		
 		# Check if the file parameter was set
 		if XML_files is not None:
@@ -209,7 +210,7 @@ class Metadata_XML_Parser(Metadata_Parser):
 			
 			# Load the file in so that we can use it as an XML tree 
 			# instead
-			self.file_to_tree(XML_files)
+			self.file_to_trees(XML_files)
 	
 	#----------------------------------------------------#
 	# Purpose: To parse a file into a XML tree object    #
@@ -226,7 +227,13 @@ class Metadata_XML_Parser(Metadata_Parser):
 	#       uses the XML_file paramter as the keys       #
 	#----------------------------------------------------#
 	def file_to_tree(self, XML_file):
-		self.trees[XML_file] = etree.parse(XML_file)
+		tree = etree.parse(XML_file)
+		self.trees[XML_file] = tree.getroot()
+		
+		it = etree.iterparse(XML_file)
+		for _, el in it:
+			el.tag = el.tag.split('}', 1)[1]  # strip all namespace
+		self.trees_without_ns[XML_file] = it.root
 	
 	#----------------------------------------------------#
 	# Purpose: To parse a set of files int a set of XML  #
@@ -244,6 +251,14 @@ class Metadata_XML_Parser(Metadata_Parser):
 		for XML_file in file_list:
 			self.file_to_tree(XML_file)
 	
+	def add_XML_tree(self, name, input):
+		if type(input) is list:
+			self.files_to_trees(input)
+		else:
+			if '<' not in input:
+				self.file_to_tree(input)
+			else:
+				self.tress[name] = etree.fromstring(input)
 	#----------------------------------------------------#
 	# Purpose: Getter for an abstract property           #
 	#          record_tag that each subclass needs to    #
@@ -317,8 +332,8 @@ class Metadata_XML_Parser(Metadata_Parser):
 			print 'Current Element: ' + str(curr_elem)
 			print '===================================================='
 		
-		return_result = self.find_tag(self.record_tag, self.parse_record, from_file=from_file, curr_elem=curr_elem)
-		print 'Return (find_record): ' + str(return_result)
+		return_result = self.find_tag(self.record_tag, self.parse_record, root=curr_elem, from_file=from_file)
+		
 		return return_result
 	
 	#----------------------------------------------------#
@@ -359,7 +374,9 @@ class Metadata_XML_Parser(Metadata_Parser):
 		                   'callback':callback,
 		                   'callback_args':callback_args}
 		
-		self.find_tag(desired_tag, self.check_attr, check_attr_args, curr_elem=root_elem)
+		return_result = self.find_tag(desired_tag, self.check_attr, check_attr_args, root=root_elem)
+		
+		return return_result
 	
 	#----------------------------------------------------#
 	# Purpose: To check if the current element has the   #
@@ -403,12 +420,14 @@ class Metadata_XML_Parser(Metadata_Parser):
 			print 'Callback: ' + str(callback)
 			print 'Callback Arguments: ' + str(callback_args)
 			print '===================================================='
-		return_result = {}
+		return_result = None
 		
 		for k,v in attrs.iteritems():
 			if elem.get(k) == v:
-				self._use_callback(elem, return_result, callback, callback_args)
+				print '[check_attr]Making callback call'
+				return_result = self._use_callback(elem, callback, callback_args)
 		
+		print '[check_attr]Preparing to Return: ' #+ str(return_result)
 		return return_result
 	
 	#----------------------------------------------------#
@@ -429,85 +448,35 @@ class Metadata_XML_Parser(Metadata_Parser):
 	# Return: N/A (All results are stored back in        #
 	#         return_result)                             #
 	#----------------------------------------------------#
-	def _use_callback(self, curr_elem, return_result, callback, callback_args):
-		tag = curr_elem.tag[curr_elem.tag.find('}') + 1:]
+	def _use_callback(self, curr_elem, callback, callback_args):
+		if DEBUG_MODE:
+			print '===================================================='
+                        print 'Call Summary for _use_callback (Metadata_XML_Parser)     '
+                        print '----------------------------------------------------'
+                        print 'Self: ' + str(self)
+                        print 'Current Element: ' + str(curr_elem)
+                        print 'Callback: ' + str(callback)
+                        print 'Callback Arguments: ' + str(callback_args)
+                        print '===================================================='
 		
-		# Check if there was any callback arguments given or not
-		if callback_args is None:
-			# Check if the return  dictionary already contains an 
-			# element with the given tag already
-			if return_result[tag] != None:
-				# Because the dictionary does we want to append
-				# a number to the dictionary entry key
-				num_of_tag = 1
-				got_set = False
-				
-				# To simplify, keep incrementing until a unused
-				#  number is found and use that
-				while not got_set:
-					try:
-						return_result[tag + str(num_of_tag)]
-						num_of_tag += 1
-					except KeyError:
-						return_result[tag + str(num_of_tag)] = callback(curr_elem)
-						got_set = True
+		return_result = None
+		
+		if callback is not None:
+			# Check if there was any callback arguments given or not
+			if callback_args is None:
+				return_result = callback(curr_elem)
 			else:
-				# Because there is no dictionary entry for tag 
-				# create one
-				return_result[tag] = callback(curr_elem)
+				return_result = callback(curr_elem, **callback_args)
 		else:
-			try:
-				# Check if the return  dictionary already 
-				# contains an element with the given tag already
-				if return_result[tag] != None:
-					# Because the dictionary does we want to
-					# append a number to the dictionary 
-					# entry key
-					num_of_tag = 1
-					got_set = False
-					
-					# To simplify, keep incrementing until a
-					# unused number is found and use that
-					while not got_set:
-						try:
-							return_result[tag + str(num_of_tag)]
-							num_of_tag += 1
-						except KeyError:
-							return_result[tag + str(num_of_tag)] = callback(curr_elem, **callback_args)
-							got_set = True
-				else:
-					# Because there is no dictionary entry for tag
-					# create one
-					return_result[tag] = callback(curr_elem, **callback_args)
-			except KeyError:
-				return_result[tag] = callback(curr_elem, **callback_args)
-					
-
-	#----------------------------------------------------#
-	# Purpose: To reformat the results so that instead   #
-	#          of having numbered elemented the returned #
-	#          result just has children                  #
-	#          ex. {'metadata':None, 'metadata1':None}   #
-	#              to {'metadata':{1:None,               #
-	#              'metadata':None}}                     #
-	# Parameters: self (implicit) - The instance of the  #
-	#                               object the function  #
-	#                               is invoked on        #
-	# Return: N/A (All results are stored back in        #
-	#         return_result)                             #
-	#----------------------------------------------------#
-	def _restructure_result(self, return_result):
-		 for k in return_result.keys():
-                        for k2 in return_result.keys():
-                                if k2.startswith(k):
-                                        if k != k2:
-                                                new_key = k2[len(k):]
-                                                return_result[k][new_key] = return_result[k2]
-                                                del return_result[k2]
+			return_result = curr_elem.tag #etree.tostring(curr_elem)
+		
+		print '[_use_callback]Preparing to Return: ' #+ str(return_result)
+		
+		return return_result
 	
 	#
 	#
-	def find_tag(self, desired_tag, callback, callback_args=None, from_file=None, curr_elem=None):
+	def find_tag(self, desired_tag, callback, callback_args=None, root=None, from_file=None):
 		if DEBUG_MODE:
 			print '===================================================='
 			print 'Call Summary for find_tag (Metadata_XML_Parser)     '
@@ -516,58 +485,42 @@ class Metadata_XML_Parser(Metadata_Parser):
 			print 'Desired Tag: ' + str(desired_tag)
 			print 'Callback: ' + str(callback)
 			print 'Callback Arguments: ' + str(callback_args)
+			print 'Root: ' + str(root)
 			print 'From File: ' + str(from_file)
-			print 'Current Element: ' + str(curr_elem)
 			print '===================================================='
 		
-		return_result = {}
+		return_result = []
 		
 		# If we've specified a file do some simple checks
-		if from_file is None:
-			if curr_elem is None:
+		if root is None:
+			# Check that we don't have the erronous case of both 
+			# not being specified
+			if from_file is None:
 				raise NotImplementedError
+			else:
+				# Check if the desired tag provided has a 
+				# namespace attached to it or not (denoted by 
+				# {namespace})
+				if desired_tag.startswith('{'):
+					new_root = self.trees[from_file].getroot()
+				else:
+					new_root = self.trees_without_ns[from_file]
+				# Recall this method with the new parameter
+				return_result = self.find_tag(desired_tag, callback, callback_args, root=new_root)
 		else:
-			# Check if we're running in "recursive mode" or not
-			if curr_elem is None:
-				root = self.trees[from_file].getroot()
-				return_result['root'] = self.find_tag(desired_tag, callback, from_file=from_file, curr_elem=root)
+			# Find all elements of the given type within the subree
+			elems = root.iter(desired_tag)
+			
+			# Loop over of the found elements and call the callback
+			# with it
+			for elem in elems:
+				callback_return = self._use_callback(elem, callback, callback_args)
+				print '[find_tag]Callback Returning: ' #+ str(callback_return)
+				return_result.append(callback_return)
+		
+		print '[find_tag]Preparing to Return: ' + str(return_result)
 		
 		#
-		if curr_elem is not None:
-			tag = curr_elem.tag
-			
-			if '{' not in desired_tag:
-				tag = tag[tag.find('}') + 1:]
-				
-				try:
-					return_result[tag]
-				except KeyError:
-					return_result[tag] = None
-				
-				# Check if the current element matches the 
-				# subclasses definition
-				if tag == desired_tag:
-					self._use_callback(curr_elem, return_result, callback, callback_args)
-				else:
-					# Since it isn't a record keep digging 
-					# deeper if applicable
-					if len(list(curr_elem)) > 0:
-						for child in curr_elem:
-							if return_result[tag] != None:
-								num_of_tag = 1
-								got_set = False
-								while not got_set:
-									try:
-										return_result[tag + str(num_of_tag)]
-										num_of_tag += 1
-									except KeyError:
-										return_result[tag + str(num_of_tag)] = self.find_tag(desired_tag, callback, callback_args, from_file, curr_elem=child)
-										got_set = True
-							else:
-								return_result[tag] = self.find_tag(desired_tag, callback, callback_args, from_file, curr_elem=child)
-		
-		# Return the result
-		self._restructure_result(return_result)
 		return return_result
 
 #====================================================#
@@ -755,16 +708,16 @@ class Marc_XML_Parser(Metadata_XML_Parser):
         #           documentaion                             #
         #----------------------------------------------------#
         def __init__(self, patterns=None):
-		print 'Creating a Marc XML Parser'
-		
+		# Check if the pattern parameter was set
 		if patterns is not None:
-			find_parsable_files(custom_patterns=patterns)
-			print 'Calling super constructor with ' + self.parsable_files
+			self.find_parsable_files(custom_patterns=patterns)
+			
 			super(Marc_XML_Parser, self).__init__(self.parsable_files)
 		else:
-			print 'Calling super constructor with no arguments'
 			super(Marc_XML_Parser, self).__init__()
-                self.recordset = Marc_XML_RecordSet()
+               
+		# Set the recordset property to a new Marc_XML_Recordset object
+		self.recordset = Marc_XML_RecordSet()
 	
 	#----------------------------------------------------#
 	# Purpose: To set the recordset property (indirectly #
@@ -856,6 +809,12 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 		# Set a attribute/property of the Marc_XML_Record to be of the 
 		# name name and value of subfield.text
 		setattr(record, name, subfield.text)
+		
+		return_result = 'Set ' + name + ' to ' + subfield.text
+		
+		print '[parse_subfield]Preparing for Return: ' + return_result.encode('utf-8')
+		
+		return return_result
 	
 	#----------------------------------------------------#
 	# Purpose: To parse an individual datafield element  #
@@ -902,7 +861,11 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 		}
 		
 		# Call the method
-		self.find_tag_with_attr('subfield', look_for_attrs, callback, callback_args, data_field)
+		return_result = self.find_tag_with_attr('subfield', look_for_attrs, callback, callback_args, data_field)
+		
+		print '[parse_data_field]Preparing to Return: ' + str(return_result)
+		
+		return return_result
 	
 	#----------------------------------------------------#
 	# Purpose: To parse an individual record (callback   #
@@ -924,6 +887,8 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 			print 'Self: ' + str(self)
 			print 'Record; ' + str(record)
 			print '===================================================='
+		return_result = []
+		
 		# Create a new Marc_XML_Record object for the purposes of 
 		# holding all the information contained within the record in a 
 		# clear dedicated data structure
@@ -948,10 +913,14 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 			}
 			
 			# Call the method
-			self.find_tag_with_attr('datafield', look_for_attrs, callback, callback_args, record)
+			return_result.append(self.find_tag_with_attr('datafield', look_for_attrs, callback, callback_args, record))
 		
 		# Add the record to the recordset
 		self.recordset.add_record(record_obj)
+		
+		print '[parse_record]Preparing to Return: ' + str(return_result)
+		
+		return return_result
 	
 	#----------------------------------------------------#
 	# Purpose: Generic trigger method similar to that    #
@@ -979,7 +948,11 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 		
 		# For each file/tree loop over and find the records in it
 		for parsable_file in self.parsable_files:
-			self.find_records(parsable_file)
+			return_result = self.find_records(parsable_file)
+		
+		print '[parse]Preparing to Return: ' #+ return_result
+		
+		return return_result
 	
 	#----------------------------------------------------#
 	# Purpose: Add the quotes needed for the JSON        #
@@ -1187,3 +1160,6 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 			if format == 'json':
 				f.write(']\n}')
 
+if __name__ == '__main__':
+	parser = Marc_XML_Parser()
+	print 'Output: ' + str(parser.parse())
