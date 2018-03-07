@@ -569,6 +569,17 @@ def rename_files(records, patterns, folder='.'):
 		if book.title is not None:
 			if book.SCN is None:
 				book.SCN = structs.get_item_with_attr(records, 'title', book.title).SCN
+		
+		print '|----------------------------------------------------|'
+                print '| BOOK SUMMARY'
+                print '| ============'
+                print '| File Path: ' + str(book.fullpath)
+                print '| File Name: ' + str(book.filename)
+                print '| Book SCN: ' + str(book.SCN)
+                print '| Book Title: ' + str(book.title)
+                print '| Book Type: ' + str(book.type)
+                print '|----------------------------------------------------|'
+		
 		if book.SCN is not None and book.title is not None:
 			renames[book.fullpath] = _generate_new_file_name(book)
 	

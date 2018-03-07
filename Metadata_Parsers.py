@@ -18,6 +18,8 @@ etree = loader.etree
 loader.load_Metadata_Record()
 Metadata_Record = loader.Metadata_Record
 
+from Metadata_File_Writers import Metadata_File_Writer, Metadata_JSON_Writer
+
 DEBUG_MODE = False
 
 #====================================================#
@@ -331,9 +333,10 @@ class Metadata_XML_Parser(Metadata_Parser):
 			print 'From File: ' + str(from_file)
 			print 'Current Element: ' + str(curr_elem)
 			print '===================================================='
-		
+		# call the find_tag function with the appropraite arguments
 		return_result = self.find_tag(self.record_tag, self.parse_record, root=curr_elem, from_file=from_file)
 		
+		# Return the results
 		return return_result
 	
 	#----------------------------------------------------#
@@ -370,12 +373,16 @@ class Metadata_XML_Parser(Metadata_Parser):
 			print 'Root Element: ' + str(root_elem)
 			print '===================================================='
 		
+		# Create the callback arguments for the check_attr function that
+		# we'll need to specify for the find_tag call
 		check_attr_args = {'attrs':desired_attr_dict,
 		                   'callback':callback,
 		                   'callback_args':callback_args}
 		
+		# Call the find_tag function with the appropriate parameters
 		return_result = self.find_tag(desired_tag, self.check_attr, check_attr_args, root=root_elem)
 		
+		# Return the results
 		return return_result
 	
 	#----------------------------------------------------#
@@ -420,33 +427,31 @@ class Metadata_XML_Parser(Metadata_Parser):
 			print 'Callback: ' + str(callback)
 			print 'Callback Arguments: ' + str(callback_args)
 			print '===================================================='
+		# Set the return variable to initially be None
 		return_result = None
 		
+		# Check that it has and is equal to the ones we want. If so, 
+		# call the callback
 		for k,v in attrs.iteritems():
 			if elem.get(k) == v:
-				print '[check_attr]Making callback call'
 				return_result = self._use_callback(elem, callback, callback_args)
 		
-		print '[check_attr]Preparing to Return: ' #+ str(return_result)
+		# Return the result
 		return return_result
 	
 	#----------------------------------------------------#
 	# Purpose: To abstract some of the callback calling  #
 	#          complexity out of other methods           #
-	#          particulalry as it relates to returns     #
 	# Parameters: self (implicit) - The instance of the  #
 	#                               object the function  #
 	#                               is invoked on        #
 	#             curr_elem - The current element being  #
 	#                         processed                  #
-	#             return_result - The dictionary that    #
-	#                             holds the results      #
 	#             callback - The callback function/      #
 	#                        method to use               #
 	#             callback_args - The arguments to       #
 	#                             supply to the callback #
-	# Return: N/A (All results are stored back in        #
-	#         return_result)                             #
+	# Return: The return of callback                     #
 	#----------------------------------------------------#
 	def _use_callback(self, curr_elem, callback, callback_args):
 		if DEBUG_MODE:
@@ -459,8 +464,11 @@ class Metadata_XML_Parser(Metadata_Parser):
                         print 'Callback Arguments: ' + str(callback_args)
                         print '===================================================='
 		
+		# Set the return variable originally to None
 		return_result = None
 		
+		# Check that people aren't trying to get away 
+		# with not specifing the callback 
 		if callback is not None:
 			# Check if there was any callback arguments given or not
 			if callback_args is None:
@@ -470,12 +478,37 @@ class Metadata_XML_Parser(Metadata_Parser):
 		else:
 			return_result = curr_elem.tag #etree.tostring(curr_elem)
 		
-		print '[_use_callback]Preparing to Return: ' #+ str(return_result)
-		
+		# Return the result
 		return return_result
 	
-	#
-	#
+	#----------------------------------------------------#
+	# Purpose: The purpose of this method is to find the #
+	#          desired tag and call the apporpriate      #
+	#          callback with that element as a parameter #
+	#          (in essencd it works as wrapper method    #
+	#          around the ElementTree.iter command       #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	#             desired_tag - The tag to be lookin for #
+	#             callback - The callback function to    #
+	#                        invoke when the desired tag #
+	#                        is found                    #
+	#             callback_args (Optional) - Any         #
+	#                                        additional  #
+	#                                        arguments   #
+	#                                        to be used  #
+	#                                        when making #
+	#                                        the         #
+	#                                        callback    #
+	#                                        call        #
+	#             root (Optional) - The root element to  #
+	#                               "look" under         #
+	#             from_file (Optional) - The file to     #
+	#                                    "look" in       #
+	# Return: An array containing the non-None results   #
+	#         that were provided by the callbacks        #
+	#----------------------------------------------------#
 	def find_tag(self, desired_tag, callback, callback_args=None, root=None, from_file=None):
 		if DEBUG_MODE:
 			print '===================================================='
@@ -515,12 +548,22 @@ class Metadata_XML_Parser(Metadata_Parser):
 			# with it
 			for elem in elems:
 				callback_return = self._use_callback(elem, callback, callback_args)
-				print '[find_tag]Callback Returning: ' #+ str(callback_return)
 				return_result.append(callback_return)
 		
-		print '[find_tag]Preparing to Return: ' + str(return_result)
+		# Delete any extranous None values
+		curr_index = 0
+		while curr_index < len(return_result):
+                        if return_result[curr_index] is None:
+                               	del return_result[curr_index]
+			else:
+				curr_index += 1
 		
-		#
+		# If there is only a single entry then assign the variable to 
+		# that (rather than having a needless list with one element)
+                if len(return_result) == 1:
+                        return_result = return_result[0]
+		
+		# Return the result
 		return return_result
 
 #====================================================#
@@ -601,20 +644,46 @@ class Marc_XML_RecordSet(object):
         #                               object the function  #
         #                               is invoked on        #
         # Return: N/A                                        #
-        # See Also: __init__ documentation in Python         #
+        # See Also: __init__ documentation in the Python     #
         #           documentaion                             #
         #----------------------------------------------------#
 	def __init__(self):
                 self._records = []
 	
+	#----------------------------------------------------#
+	# Purpose: Provide a method so that this object may  #
+	#          be looped over and provides the           #
+	#          appropriate value when reached as an      #
+	#          index                                     #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	#             index - The index of the object being  #
+	#                     referenced                     #
+	# Return: Marc_XML_Record - The record object at the #
+	#                           given position           #
+	# See Also: __getitem__ documentation in the Python  # 
+	#           documentation                            #
+	#----------------------------------------------------#
 	def __getitem__(self, index):
 		return self._records[index]
 	
+	#----------------------------------------------------#
+	# Purpose: Provide functionality (answer) for when   #
+	#          len(Marc_XML_RecordSet)                   #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	# Return: int - The "length" of the object           #
+	# See Also: __len__ documentation in the Python      #
+	#           documentation                            #
+	#----------------------------------------------------#
 	def __len__(self):
 		return len(self._records)
 	
 	#----------------------------------------------------#
-	# Purpose: Getter for the records property           #
+	# Purpose: Getter for the recordset (property) of    #
+	#          the object                                #
 	# Parameters: self (implicit) - The instance of the  #
 	#                               object the function  #
 	#                               is invoked on        #
@@ -625,6 +694,14 @@ class Marc_XML_RecordSet(object):
 	def records(self):
 		return self._records
 	
+	#----------------------------------------------------#
+	# Purpose: Setter for the records (property)         #
+	#          contained within the object                 #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	# Return: N/A                                        #
+	#----------------------------------------------------#
 	@records.setter
 	def records(self):
 		# TO BE IMPLEMENTED: Check if all entries are of Marc_XML_Record
@@ -644,20 +721,41 @@ class Marc_XML_RecordSet(object):
 	#         Marc_XML_Record object                     #
 	#----------------------------------------------------#
         def add_record(self, record):
+		# Check that the record argument provided is an instance of 
+		# Marc_XML_Record
                 if isinstance(record, Marc_XML_Record):
+			# Make sure that its a "valid" instance
 			if record.validate():
+				# Add it to the set
                         	self._records.append(record)
                 else:
+			# Raise a type error as they provided an incorrect type
                         raise TypeError
 	
+	#----------------------------------------------------#
+	# Purpose: Provide a string representation of the    #
+	#          object                                    #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	# Return: string - A string representation of the    #
+	#                  object                            #
+	# See Also: __str__ documentation in the Python      #
+	#           documentation                            #
+	#----------------------------------------------------@
 	def __str__(self):
+		# Start with an open square brace
 		result_str = '['
 		
+		# For each record suffix a comma and space
 		for record in self.records:
 			result_str += str(record) + ', '
 		
+		# Remove the last comma and space and replace with a close 
+		# square bracket
 		result_str = result_str[:-2] + ']'
 		
+		# Return the result
 		return result_str
 
 #====================================================#
@@ -691,6 +789,7 @@ class Marc_XML_RecordSet(object):
 #====================================================#
 class Marc_XML_Parser(Metadata_XML_Parser):
 	
+	# A dictionary of corresponding Marc to labeled values
 	Marc_index = {
 		'SCN':{'tag':'035', 'code':'a'}, 
 		'title':{'tag':'245', 'code':'a'}
@@ -742,7 +841,7 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 	# Parameters: self (implicit) - The instance of the  #
 	#                               object the function  #
 	#                               is invoked on        #
-	# Return: String - The name of the tag that          #
+	# Return: string - The name of the tag that          #
 	#                  represents the record ('record'   #
 	#                  in the case of Marc XML)          #
 	# Overrides: record_tag (Metadata_XML_Parser)        #
@@ -810,9 +909,7 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 		# name name and value of subfield.text
 		setattr(record, name, subfield.text)
 		
-		return_result = 'Set ' + name + ' to ' + subfield.text
-		
-		print '[parse_subfield]Preparing for Return: ' + return_result.encode('utf-8')
+		return_result = {name:  getattr(record, name)}
 		
 		return return_result
 	
@@ -863,8 +960,6 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 		# Call the method
 		return_result = self.find_tag_with_attr('subfield', look_for_attrs, callback, callback_args, data_field)
 		
-		print '[parse_data_field]Preparing to Return: ' + str(return_result)
-		
 		return return_result
 	
 	#----------------------------------------------------#
@@ -912,14 +1007,47 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 				'record':record_obj
 			}
 			
+			print record.tag + ': '
+			for k,v in record.attrib.iteritems():
+				print '\t' + k + ': ' + v
+			for data_field in record:
+				print '\t' + data_field.tag + ': '
+				for k,v in data_field.attrib.iteritems():
+					print '\t\t' + k + ': ' + v
+				for subfield in data_field:
+					print '\t\t' + subfield.tag + ': '
+					for k,v in subfield.attrib.iteritems():
+						print '\t\t\t' + k + ': ' + v
+					if type(subfield.text) is unicode:
+						subfield_text = subfield.text.encode('utf-8')
+					else:
+						subfield_text = str(subfield.text)
+					print '\t\t\t' + subfield_text
+			
 			# Call the method
 			return_result.append(self.find_tag_with_attr('datafield', look_for_attrs, callback, callback_args, record))
 		
 		# Add the record to the recordset
 		self.recordset.add_record(record_obj)
 		
-		print '[parse_record]Preparing to Return: ' + str(return_result)
+		curr_index = 0
+		while curr_index < len(return_result):
+			if return_result[curr_index] is None:
+				del return_result[curr_index]
+			else:
+				curr_index += 1
 		
+		new_return_result = {}
+		for return_val in return_result:
+			if type(return_val) == dict:
+				for k,v in return_val.iteritems():
+					new_return_result[k] = v
+		if len(new_return_result) > 0:
+			return_result = new_return_result
+		#if len(return_result) == 1:
+		#	return_result = return_result[0]
+		
+		print '[parse_record]Preparing to Return: ' + str(return_result)
 		return return_result
 	
 	#----------------------------------------------------#
@@ -937,6 +1065,7 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 			print '----------------------------------------------------'
 			print 'Self: ' + str(self)
 			print '===================================================='
+		return_result = {}
 		
 		# If the parsable files isn't set already set it up with 
 		# defaults
@@ -948,169 +1077,9 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 		
 		# For each file/tree loop over and find the records in it
 		for parsable_file in self.parsable_files:
-			return_result = self.find_records(parsable_file)
-		
-		print '[parse]Preparing to Return: ' #+ return_result
+			return_result[parsable_file] = self.find_records(parsable_file)
 		
 		return return_result
-	
-	#----------------------------------------------------#
-	# Purpose: Add the quotes needed for the JSON        #
-	#          formating of the output                   #
-	# Parameters: self (implicit) - The instance of the  #
-	#                               object the function  #
-	#                               is invoked  on       #
-	#             input - The input the process and      #
-	#                     produce the desired output     #
-	# Return: String - A string representing the input   #
-	#                  properly quoted for JSON          #
-	# NOTE: This method starts with a underscore (_)     #
-	#       which means its intended to be a private     #
-	#       method for use by the class only             #
-	#----------------------------------------------------#
-	def _add_json_quotes(self, input):	
-		# Split the input into tokens by colon(s)
-		sub_tokens = input.split(':')
-		
-		# Make sure there is an appropriate amount of tokens
-		if len(sub_tokens) != 2:
-			raise TypeError
-		
-		# Add the quotes and reconstruct the string
-		returnValue = ''
-		returnValue += '"' + sub_tokens[0].strip() + '"'
-		returnValue += ':'
-		returnValue += '"' + sub_tokens[1].strip() + '"'
-		
-		# Return the result
-		return returnValue
-	
-	#----------------------------------------------------#
-	# Purpose: Process each entry string for the JSON    #
-	#          this includes making sure correct quoting #
-	#          and adding commas as appropriate          #
-	# Parameters: self (implicit) - The instance of the  #
-	#                               object the function  #
-	#                               is invoked on        #
-	#             tokens - The array of json tokens      #
-	#             index - The index within the tokens    #
-	#                     array to process               #
-	# Return: string - The processed token               #
-	# NOTE: This method starts with a underscore (_)     #
-	#       which means its intended to be a private     #
-	#       method for use by the class only             #
-	#----------------------------------------------------#
-	def _process_json_entry(self, token, is_first=False, is_last=False):
-		returnValue = token
-		
-		if is_first:
-			returnValue = returnValue[1:]
-		if is_last:
-			returnValue = returnValue[:-1]
-		
-		returnValue = self._add_json_quotes(returnValue)
-		
-		return returnValue
-	
-	#----------------------------------------------------#
-	# Purpose: Builds the proper string for an entry in  #
-	#          a record (ex. title in a record)          #
-	# Parameters: self (implicit) - The instance of the  #
-	#                               object the function  #
-	#                               is invoked on        #
-	#             tokens - The array of JSON tokens      #
-	#             index - The index of the element in    #
-	#                     the tokens array being         #
-	#                     "reconstructed"                #
-	# Return: string - The processed line                #
-	# NOTE: This method starts with a underscore (_)     #
-	#       which means its intended to be a private     #
-	#       method for use by the class only             #
-	#----------------------------------------------------#
-	def _build_json_entry(self, token, is_first=False, is_last=False):
-		processed_record = self._process_json_entry(token, is_first, is_last)
-		
-		if not is_last:
-			processed_record += ', '
-		
-		return processed_record
-	
-	#----------------------------------------------------#
-	# Purpose: Build a JSON record within the entire     #
-	#          JSON file                                 #
-	# Parameters: self (implicit) - The instance of the  #
-	#                               object the function  #
-	#                               is invoked on        #
-	#             record - The record we're creating a   #
-	#                      JSON representation of        #
-	# Return: string - The valid JSON string             #
-	#                  representation of the record      #
-	# NOTE: This method starts with a underscore (_)     #
-	#       which means its intended to be a private     #
-	#       method for use by the class only             #
-	#----------------------------------------------------#
-	def _build_json_record(self, record):
-		# Tokenize the record by comma (,)
-		tokens = record.split(',')
-		
-		# Do the converstion/processing and reconstruct by returning 
-		# results
-		returnValue = '{'
-		for index in range(0, len(tokens)):
-			curr_token = tokens[index]
-			is_first = index == 0
-			is_last = index == len(tokens) - 1
-			returnValue += self._build_json_entry(curr_token, is_first, is_last)
-		returnValue += '}'
-		
-		return returnValue
-	
-	#----------------------------------------------------#
-	# Purpose: Write a individual record to the output   #
-	#          file                                      #
-	# Parameters: self (implicit) - The insanfce of the  #
-	#                               object the function  #
-	#                               is invoked on        #
-	#             fp - The file pointer/object that can  #
-	#                  be wrote to                       #
-	#             record - The record (object) being     # 
-	#                      written out                   #
-	#             format - The format its being written  #
-	#                      out as                        #
-	#             is_last - Boolean if it is the last    #
-	#                       entry (for comma suffix)     #
-	#----------------------------------------------------#
-	def _write_record_to_file(self, fp, record, format, is_last=False):
-		record_str = unicode(record)
-		
-		if format == 'json':
-			record_str = self._build_json_record(record_str)
-		
-		fp.write(record_str.encode('utf-8'))
-		
-		if not is_last:
-			fp.write(',\n')
-	
-	#----------------------------------------------------#
-	# Purpose: To write the records contained in the     #
-	#          recordset property of this instance into  #
-	#          a file                                    #
-	# Parameters: self (implicit) - The instance of the  #
-	#                               object the funtion   #
-	#                               is invoked on        #
-	#             fp - The file pointer/object that can  #
-	#                  be wrote to                       #
-	#             format - The format being writen       #
-	# Return: N/A                                        #
-	# NOTE: This method starts with a underscore (_)     #
-	#       which means its intended to be a private     #
-	#       method for use by the class only             #
-	#----------------------------------------------------#
-	def _write_records_to_file(self, fp, format):
-		for record_index in range(0, len(self.recordset)):
-			record = self.recordset[record_index]
-			is_last = record_index == len(self.recordset) - 1
-			self._write_record_to_file(fp, record, format, is_last)
 	
 	#----------------------------------------------------#
 	# Purpose: Similar to parse in that it is a trigger  #
@@ -1145,21 +1114,18 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 	#----------------------------------------------------#
 	def parse_to_file(self, output_file, format='json'):
 		# Parse the files using the generic trigg3er method
-		self.parse()
+		return_result = self.parse()
 		
 		# Give the filename the appropriate extension
 		if format == 'json' and not output_file.endswith('.json'):
 			# TO BE IMPLEMENTED: Strip extension if it exists
 			output_file = output_file + '.json'
 		
-		# Write to the file
-		with open(output_file, 'w+') as f:
-			if format == 'json':
-				f.write('{\n"collection":[\n')
-			self._write_records_to_file(f,  format)
-			if format == 'json':
-				f.write(']\n}')
-
-if __name__ == '__main__':
-	parser = Marc_XML_Parser()
-	print 'Output: ' + str(parser.parse())
+		writer = None
+		if format == 'json':
+			writer = Metadata_JSON_Writer()
+		
+		if isinstance(writer, Metadata_File_Writer):
+			writer.write_to_file(output_file, self.recordset)
+		
+		return return_result

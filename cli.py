@@ -19,7 +19,11 @@ def main(pattern):
 	type = click.prompt('What type of metadata to parse', type=click.Choice(options))
 	dict_file_name = click.prompt('Where (filename) should the file be stored?')
 	parser = callbacks[type]()
-	parser.parse_to_file(dict_file_name)
+	output = parser.parse_to_file(dict_file_name)
+        for parsed_file, parsed_values in output.iteritems():
+                for record in parsed_values:
+                        for k,v in record.iteritems():
+                                click.echo('Parsed the value ' + v + ' for the records ' + k + ' from ' + parsed_file)
 	
         #click.echo('Opening %s' % file)
         #with open(dictionary) as f:
