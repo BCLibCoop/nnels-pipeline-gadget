@@ -48,6 +48,7 @@ def main(pattern):
         input = click.prompt('What would you like to do?', type=click.Choice(options))
 	if input in callback_args:
 		callback_returns = globals()[callbacks[input]](**callback_args[input])
+		print 'Callback Return: ' + str(callback_returns)
 		#if type(callback_returns) is dict:
 		for k,v in callback_returns.iteritems():
 			input = click.prompt('Change ' + str(k) + ' into ' + str(v) + '?', type=click.Choice(['yes','no']))

@@ -1007,23 +1007,6 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 				'record':record_obj
 			}
 			
-			print record.tag + ': '
-			for k,v in record.attrib.iteritems():
-				print '\t' + k + ': ' + v
-			for data_field in record:
-				print '\t' + data_field.tag + ': '
-				for k,v in data_field.attrib.iteritems():
-					print '\t\t' + k + ': ' + v
-				for subfield in data_field:
-					print '\t\t' + subfield.tag + ': '
-					for k,v in subfield.attrib.iteritems():
-						print '\t\t\t' + k + ': ' + v
-					if type(subfield.text) is unicode:
-						subfield_text = subfield.text.encode('utf-8')
-					else:
-						subfield_text = str(subfield.text)
-					print '\t\t\t' + subfield_text
-			
 			# Call the method
 			return_result.append(self.find_tag_with_attr('datafield', look_for_attrs, callback, callback_args, record))
 		
