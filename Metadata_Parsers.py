@@ -20,7 +20,9 @@ Metadata_Record = loader.Metadata_Record
 
 from Metadata_File_Writers import Metadata_File_Writer, Metadata_JSON_Writer
 
-DEBUG_MODE = False
+import config
+debug_mode = config.DEBUG_MODE
+current_os = config.HOST_OS
 
 #====================================================#
 # Purpose: Provide an abstract base class for        #
@@ -325,7 +327,7 @@ class Metadata_XML_Parser(Metadata_Parser):
 	#       whenever it finds a new record               #
 	#----------------------------------------------------#
 	def find_records(self, from_file, curr_elem=None):
-		if DEBUG_MODE:
+		if debug_mode:
 			print '===================================================='
 			print 'Call Summary for find_records (Metadata_XML_Parser) '
 			print '----------------------------------------------------'
@@ -361,7 +363,7 @@ class Metadata_XML_Parser(Metadata_Parser):
 	#                         with the given attributes  #
 	#----------------------------------------------------#
 	def find_tag_with_attr(self, desired_tag, desired_attr_dict, callback, callback_args, root_elem):
-		if DEBUG_MODE:
+		if debug_mode:
 			print '===================================================='
 			print 'Call Summary for find_tag_with_attr (Metadata_XML_Parser)'
 			print '----------------------------------------------------'
@@ -417,7 +419,7 @@ class Metadata_XML_Parser(Metadata_Parser):
 	#                             callback               #
 	#----------------------------------------------------#
 	def check_attr(self, elem, attrs, callback, callback_args):
-		if DEBUG_MODE:
+		if debug_mode:
 			print '===================================================='
 			print 'Call Summary for check_attr (Metadata_XML_Parser)   '
 			print '----------------------------------------------------'
@@ -454,7 +456,7 @@ class Metadata_XML_Parser(Metadata_Parser):
 	# Return: The return of callback                     #
 	#----------------------------------------------------#
 	def _use_callback(self, curr_elem, callback, callback_args):
-		if DEBUG_MODE:
+		if debug_mode:
 			print '===================================================='
                         print 'Call Summary for _use_callback (Metadata_XML_Parser)     '
                         print '----------------------------------------------------'
@@ -510,7 +512,7 @@ class Metadata_XML_Parser(Metadata_Parser):
 	#         that were provided by the callbacks        #
 	#----------------------------------------------------#
 	def find_tag(self, desired_tag, callback, callback_args=None, root=None, from_file=None):
-		if DEBUG_MODE:
+		if debug_mode:
 			print '===================================================='
 			print 'Call Summary for find_tag (Metadata_XML_Parser)     '
 			print '----------------------------------------------------'
@@ -870,15 +872,21 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 			# Because we're not looking in the current directory no
 			# special processing has to occur
 			full_pattern = funcs.combine_regex(custom_patterns)
-		
+
 		# Setup arguments for the use of the find utility
-		args = ['find', '-E', look_dir, '-regex', full_pattern]
+
+		if current_os == 'MacOS':
+				args = ['find', '-E', look_dir, '-regex', full_pattern]
+        #args = ['find', '-E', folder, '-regex']
+		elif current_os == 'Linux':
+				args = ['find', look_dir, '-regextype posix-extended', '-regex', full_pattern]
+				args = " ".join(args)
 		
 		# DEBUGGING: Print statement showing whats being run
 		print 'Running ' + args[0] + ' with arguments ' + str(args[-1:])
 		
 		# Actually running the command
-		proc = subprocess.Popen(args, stdout=subprocess.PIPE)
+		proc = subprocess.Popen(args, shell=True, stdout=subprocess.PIPE)
 		stdout, stderr = proc.communicate()
 		
 		# Break the output up into lines
@@ -897,7 +905,7 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 	#             record - 
 	#----------------------------------------------------#
 	def parse_subfield(self, subfield, name, record):
-		if DEBUG_MODE:
+		if debug_mode:
 			print '===================================================='
 			print 'Call Summary for parse_subfield (Marc_XML_Parser)'
 			print '----------------------------------------------------'
@@ -936,7 +944,7 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 	# Return: N/A
 	#----------------------------------------------------#
 	def parse_data_field(self, data_field, name, subfield, record):
-		if DEBUG_MODE:
+		if debug_mode:
 			print '===================================================='
 			print 'Call Summary for parse_data_field (Marc_XML_Parser)'
 			print '----------------------------------------------------'
@@ -975,7 +983,7 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 	# Overrides: parse_record (Metadata_XML_Parser)      #
 	#----------------------------------------------------#
 	def parse_record(self, record):
-		if DEBUG_MODE:
+		if debug_mode:
 			print '===================================================='
 			print 'Call Summary for parse_record (Marc_XML_Parser)'
 			print '----------------------------------------------------'
@@ -1042,7 +1050,7 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 	# Return: N/A                                        #
 	#----------------------------------------------------#
 	def parse(self):
-		if DEBUG_MODE:
+		if debug_mode:
 			print '===================================================='
 			print 'Call Summary for parse (Marc_XML_Parser)'
 			print '----------------------------------------------------'

@@ -21,8 +21,10 @@ import funcs
 from BookFile import BookFile
 from BookFileType import BookFileType, DAISY_Type, DAISY202_Type, DAISY3_Type, BookFileTypeFactory
 
-DEBUG_MODE = False
-OS = 'Mac' # Can be Mac or Linux
+import config
+debug_mode = config.DEBUG_MODE
+current_os = config.HOST_OS
+
 #----------------------------------------------------#
 # Purpose: Because I use regular expressions instead #
 #          of globbing (like the terminal) I thought #
@@ -83,7 +85,7 @@ def correct_for_globbing(patterns):
 #                 (including path)                   #
 #----------------------------------------------------#
 def get_file_names(patterns, folder):
-	if DEBUG_MODE:
+	if debug_mode:
 		print '===================================================='
 		print 'Call Summary for get_file_names (rename_files.py)'
 		print '----------------------------------------------------'
@@ -93,9 +95,9 @@ def get_file_names(patterns, folder):
 	
 	# Prepare the arguments for a basic find command using regex (Extended 
 	# regex)
-	if OS == 'Mac':
-        	args = ['find', '-E', folder, '-regex']
-	elif OS == 'Linux':
+	if current_os == 'MacOS':
+		args = ['find', '-E', folder, '-regex']
+	elif current_os == 'Linux':
 		args = ['find', folder, '-regextype posix-extended', '-regex']
 	
 	use_prefixs = correct_for_globbing(patterns)
@@ -108,6 +110,7 @@ def get_file_names(patterns, folder):
 	
         # Add the built pattern to the find command arguments
         args.append(exp)
+        args = " ".join(args)
 
         # DEBUGGING: Just to see if the command was built right
         #if DEBUG_MODE:
@@ -115,9 +118,9 @@ def get_file_names(patterns, folder):
 
         # Run the find command and get the results (See subprocess documentation
 	# for more details)
-	if OS == 'Mac':
-        	proc = subprocess.Popen(args, stdout=subprocess.PIPE)
-        elif OS == 'Linux':
+	if current_os == 'MacOS':
+		proc = subprocess.Popen(args, stdout=subprocess.PIPE)
+	elif current_os == 'Linux':
 		proc = subprocess.Popen(args, shell=True, stdout=subprocess.PIPE)
 	stdout, stderr = proc.communicate()
 
@@ -154,7 +157,7 @@ def createCombinationToken(set):
 			outputEntry += '_'
 	
         # DEBUGGING: See what the value of the "combination token" is
-	if DEBUG_MODE:
+	if debug_mode:
 		print outputEntry
 	
 	# Return the value
@@ -172,7 +175,7 @@ def createCombinationToken(set):
 #                or title                            #
 #----------------------------------------------------#
 def get_combinations(tokens):
-	if DEBUG_MODE:
+	if debug_mode:
 		print 'Do permutation stuff'
 	
 	# Generate all possible combinations using the itertools moduole
@@ -187,7 +190,7 @@ def get_combinations(tokens):
 		outputSet.append(createCombinationToken(set))
 	
 	# Return the result
-	return outputSet         
+	return outputSet
 
 #----------------------------------------------------#
 # Purpose: Check the provieded token for matches     #
@@ -198,7 +201,7 @@ def get_combinations(tokens):
 # Return: N/A                                        #
 #----------------------------------------------------#
 def check_token(records, book, token):
-	if DEBUG_MODE:
+	if debug_mode:
 		print '===================================================='
         	print 'Call Summary for rename_files (rename_files.py) '
         	print '----------------------------------------------------'
@@ -214,17 +217,17 @@ def check_token(records, book, token):
 		# the proper one if we can
 		if book.title is not None:
 			if metadata_record.title == book.title:
-				if DEBUG_MODE:
+				if debug_mode:
 					print 'Setting the SCN: ' + token
 				# Sinc it matched set it in the book object
 				book.SCN = token
 			else:
 				# Since it didn't match let the user know and 
 				# move on
-				if DEBUG_MODE:
+				if debug_mode:
 					print 'Skipping SCN ' + token + ' because it does not match with identified title ' + book.title
 		else:
-			if DEBUG_MODE:
+			if debug_mode:
 				print 'Setting the SCN: ' + token
 			# Because we don't yet know the title assume this is 
 			# the right SCN
@@ -236,7 +239,7 @@ def check_token(records, book, token):
 		# the propery one if we can
 		if book.SCN is not None:
 			if metadata_record.SCN == book.SCN:
-				if DEBUG_MODE:
+				if debug_mode:
 					print 'Setting the title: ' + token
 				# Since it matched set it in the book object
 				book.title = token
@@ -253,7 +256,7 @@ def check_token(records, book, token):
 		bookType = factory.getStringType(token) 
 		if bookType is not None:
 			book.type = bookType
-			if DEBUG_MODE:
+			if debug_mode:
 				print 'Changed book type to ' + str(bookType)
 
 #----------------------------------------------------#
@@ -262,7 +265,7 @@ def check_token(records, book, token):
 # Return: 
 #----------------------------------------------------#
 def zero_length_token_fix(records, book, tokens):
-	if DEBUG_MODE:
+	if debug_mode:
 		print '===================================================='
         	print 'Call Summary for zero_length_token_fix (rename_files.py) '
         	print '----------------------------------------------------'
@@ -283,7 +286,7 @@ def zero_length_token_fix(records, book, tokens):
 		check_token(records, book, tokens[0])
 
 def process_two_tokens(records, book, tokens):
-	if DEBUG_MODE:
+	if debug_mode:
 		print '===================================================='
         	print 'Call Summary for process_two_tokens (rename_files.py) '
         	print '----------------------------------------------------'
@@ -308,7 +311,7 @@ def process_two_tokens(records, book, tokens):
 # Return: N/A (To be reevaluated later)
 #----------------------------------------------------#
 def tokenize_by_underscore(records, book, name):
-	if DEBUG_MODE:
+	if debug_mode:
 		print '===================================================='
         	print 'Call Summary for tokenize_by_underscore (rename_files.py) '
         	print '----------------------------------------------------'
@@ -319,7 +322,7 @@ def tokenize_by_underscore(records, book, name):
 	
 	tokens = name.split('_')
 	
-	if DEBUG_MODE:
+	if debug_mode:
 		print 'Tokens: ' + str(tokens)
 	
 	# Need to check if we have to start trying to make permutations of 
@@ -337,7 +340,7 @@ def tokenize_by_underscore(records, book, name):
 # Return: 
 #----------------------------------------------------#
 def get_name_parts(records, book):
-	if DEBUG_MODE:
+	if debug_mode:
 		print '===================================================='
         	print 'Call Summary for rename_files (rename_files.py) '
         	print '----------------------------------------------------'
@@ -361,7 +364,7 @@ def get_name_parts(records, book):
                         bookType = BookFileTypeFactory.getExtensionType(format)
                         if bookType is not None:
 				book.type = bookType
-			if DEBUG_MODE:
+			if debug_mode:
 				print bookType
 		
 		# Check that the name actually has some length (mostly 
@@ -400,7 +403,7 @@ def get_name_parts(records, book):
 #                processed                           #
 #----------------------------------------------------#
 def create_booklist(patterns, folder):
-	if DEBUG_MODE:
+	if debug_mode:
 		print '===================================================='
 		print 'Call Summary for create_booklist (rename_files.py) '
 		print '----------------------------------------------------'
@@ -434,7 +437,7 @@ def create_booklist(patterns, folder):
 #                  directory information)            #
 #----------------------------------------------------#
 def get_book_filename(book):
-	if DEBUG_MODE:
+	if debug_mode:
 		print '===================================================='
         	print 'Call Summary for get_book_filename (rename_files.py) '
         	print '----------------------------------------------------'
@@ -513,7 +516,7 @@ def _generate_new_file_name(book):
 # Return: N/A                                        #
 #----------------------------------------------------#
 def rename_files(records, patterns, folder='.'):
-	if DEBUG_MODE:
+	if debug_mode:
 		print '===================================================='
 		print 'Call Summary for rename_files (rename_files.py) '
 		print '----------------------------------------------------'

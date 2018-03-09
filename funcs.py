@@ -1,5 +1,9 @@
 import click
 
+import config
+debug_mode = config.DEBUG_MODE
+current_os = config.HOST_OS
+
 def func_get_title():
         input = click.prompt('What is the SCN of the title your looking for?')
         try:
@@ -83,8 +87,11 @@ def combine_regex(patterns, prefix=None, suffix=None, prefix_each=None, suffix_e
 	if prefix is not None:
 		exp += prefix
 	
-	# Either append or start with a open brace
-	exp += '(';
+	# Either append or start with a open brace/single-quote
+	if current_os == 'MacOS':
+		exp += "("
+	elif current_os == 'Linux':
+		exp += "'"
 	
 	# Loop over the 'patterns' supplied on the command line
 	for index in range(0, len(patterns)):
@@ -113,8 +120,11 @@ def combine_regex(patterns, prefix=None, suffix=None, prefix_each=None, suffix_e
 	# Remove the last character because it will be an extranous | character
 	exp = exp[:len(exp) - 1]
 	
-	# Add a close brace to end the expression
-	exp += ')'
+	# Add a close brace/single-quote to end the expression
+	if current_os == 'MacOS':
+		exp += ")"
+	elif current_os == 'Linux':
+		exp += "'"
 	
 	if suffix is not None:
 		exp += suffix
