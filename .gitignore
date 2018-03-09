@@ -1,3 +1,5 @@
 .*
 *.pyc
 output.txt
+dictionary.json
+config.py
