@@ -1,5 +1,3 @@
-DEBUG_MODE = False
-
 #====================================================#
 # Purpose: A generic data structure to hold          #
 #          information found in each metadata record #
@@ -29,7 +27,8 @@ class Metadata_Record(object):
 	#           documentaion                             #
 	#----------------------------------------------------#
 	def __init__(self):
-		if DEBUG_MODE:
+		import config
+		if config.DEBUG_MODE:
 			print '===================================================='
 			print 'Call Summary for __init__ (Metadata_Record)'
 			print '----------------------------------------------------'
@@ -40,6 +39,10 @@ class Metadata_Record(object):
 		self.SCN = None
 	
 	def _generate_new_SCN(self):
+
+		# Import datetime object from the datetime module for SCN generation
+		from datetime import datetime
+
 		# Create and parse a timestamp as part of new
 		# SCN generation
 		now = datetime.now()
@@ -98,10 +101,11 @@ class Metadata_Record(object):
 		
 		attrs = vars(self)
 		for k,v in attrs.iteritems():
-			if k.startswith('_'):
-				result_str += k[1:] + ':' + v + ', '
-			else:
-				result_str += k + ':' + v + ', '
+			if v is not None:
+				if k.startswith('_'):
+					result_str += k[1:] + ':' + v + ', '
+				else:
+					result_str += k + ':' + v + ', '
 		
 		result_str = result_str[:-2] + '}'
 		result_str = unicode(result_str)

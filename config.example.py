@@ -2,3 +2,4 @@
 
 HOST_OS = 'MacOS' #Linux
 DEBUG_MODE = True
+SCN_TAG = '035'

@@ -2,6 +2,8 @@
 import dynamic_loader as loader
 import funcs				# Requried to use some generic functions
 
+import config
+
 # Load abc (Abstract Class) module
 loader.load_abc()
 abc = loader.abc
@@ -793,7 +795,7 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 	
 	# A dictionary of corresponding Marc to labeled values
 	Marc_index = {
-		'SCN':{'tag':'035', 'code':'a'}, 
+		'SCN':{'tag': config.SCN_TAG, 'code':'a'},
 		'title':{'tag':'245', 'code':'a'}
 	}
 	
