@@ -1,5 +1,5 @@
 import abc
-from OPF_Parser import OPF_Parser
+from Parsers.OPF_Parser import OPF_Parser
 
 #====================================================#
 # Purpose: Represent the actual type of different    #

@@ -1,14 +1,42 @@
+#!/usr/bin/env python
+
 import click
 import os
 import data_structs as structs
-from Metadata_Parsers import Marc_XML_Parser
+from Parsers.Marc_XML.Marc_XML_Parser import Marc_XML_Parser
 from funcs import func_get, func_set
 from rename_files import rename_files
+from config import Config
 
-@click.command()
-#@click.option('--dictionary', '-d', prompt='Dictionary', help='The filename that you want to be processed')
-@click.option('--pattern', '-p', default=[u'.*'], help='The file pattern to use for looking up relavent filenames', multiple=True)
-def main(pattern):
+actions = ['get', 'rename']
+
+plugin_folder = os.path.join(os.path.dirname(__file__), 'commands')
+
+class MyCLI(click.MultiCommand):
+	def list_commands(self, ctx):
+		rv = []
+		for filename in os.listdir(plugin_folder):
+			if filename.endswith('.py'):
+				rv.append(filename[:-3])
+		rv.sort()
+		return rv
+	
+	def get_command(self, ctx, name):
+		ns = {}
+		fn = os.path.join(plugin_folder, name + '.py')
+		with open(fn) as f:
+			code = compile(f.read(), fn, 'exec')
+			eval(code, ns, ns)
+		return ns['cli']
+
+#----------------------------------------------------#
+# Purpose: Provide the CLI for the generating of the #
+#          dictiomary                                #
+# Parameters: N/A                                    #
+# Return: N/A                                        #
+#----------------------------------------------------#
+def generate_dictionary_cli():
+	# Setup the callback variables
 	parser_type = {'Marc XML':Marc_XML_Parser}
 	options = []
 	callbacks = {}
@@ -16,48 +44,144 @@ def main(pattern):
 		options.append(k)
 		callbacks[k] = v
 	
+	# Prompt the use to see what kind of Metadata file
+	# they'd like to parse to generate the dictionary
+	# After some development this might include types like
+	# Marc, Marc XML, ONIX, etc...
 	type = click.prompt('What type of metadata to parse', type=click.Choice(options))
-	dict_file_name = click.prompt('Where (filename) should the file be stored?')
-	parser = callbacks[type]()
-	output = parser.parse_to_file(dict_file_name)
-        for parsed_file, parsed_values in output.iteritems():
-                for record in parsed_values:
-                        for k,v in record.iteritems():
-                                click.echo('Parsed the value ' + v + ' for the records ' + k + ' from ' + parsed_file)
 	
-        #click.echo('Opening %s' % file)
-        #with open(dictionary) as f:
-        #        lines = f.readlines()
-        # you may also want to remove whitespace characters like `\n` at the
-        # end of each line
-        #lines = [x.strip() for x in lines]
-        #for line in lines:
-        #        tokens = line.split("\t")
-        #        structs.setTitle_fromSCN(tokens[0], tokens[1])
-        #        structs.setSCN_fromTitle(tokens[1], tokens[0])
-	#
-	options = ['get', 'set', 'rename']
-	with open(dict_file_name + '.json') as f:
+	# Now prompt the user what they want the dictionary file
+	# to be called this is partly in case they ever want to
+        # reuse that dictionary file
+	dictionary = click.prompt('Where (filename) should the file be stored?')
+	
+	# Initialize the proper parser and parse_to_file
+	parser = callbacks[type]()
+	output = parser.parse_to_file(dictionary)
+	
+	# For the returned output lets parse it and display it
+	# to the user so that they have som e idea of what is
+	# happening
+	for parsed_file, parsed_values in output.iteritems():
+		for record in parsed_values:
+			if isinstance(record, dict):
+				for k,v in record.iteritems():
+					click.echo('Parsed the value ' + v + ' for the records ' + k + ' from ' + parsed_file)
+			else:
+				print str(record) + ' isn\'t a dictionary'
+	
+	return dictionary
+
+#----------------------------------------------------#
+# Purpose: 
+# Parameters: 
+# Return: 
+#----------------------------------------------------#
+def get_records_from_dictionary(dictionary):
+	# Check if the dictionary was defined
+	if dictionary is None:
+		# Ask if the user wants to generate a dictionary
+		generate_dictionary = click.confirm('Do you neeed to generate a dictionary?')
+		
+		# Check what response was given
+		if generate_dictionary:
+			dictionary = generate_dictionary_cli()
+                else:
+			# Because the user didn't specify a dictionary at
+			# runtime and has said no to generating one we need to
+			# ask what file they'd like to use given that we do
+			# NEED one
+			dictionary = click.prompt('Filename of the dictionary file to use?')
+			# Acknowledge the user input so that they know whats
+			# happening
+			click.echo('Alright. Using %s as the dictionary' % dictionary)
+	
+	# Load in the dictionary (wheither just generated or not)
+	if not '.' in dictionary:
+		dictionary += '.json'
+	
+	with open(dictionary) as f:
 		result = structs.json.load(f)
 		records = structs.records_from_json(result)
-	callback_args = {'rename':{'records':records, 'patterns':pattern}}
-        callbacks = {'rename':'rename_files'}
-        #for option in options:
-        #        callbacks[option] = 'func_' + option
-	#
-        input = click.prompt('What would you like to do?', type=click.Choice(options))
-	if input in callback_args:
-		callback_returns = globals()[callbacks[input]](**callback_args[input])
-		print 'Callback Return: ' + str(callback_returns)
-		#if type(callback_returns) is dict:
-		for k,v in callback_returns.iteritems():
-			input = click.prompt('Change ' + str(k) + ' into ' + str(v) + '?', type=click.Choice(['yes','no']))
-			if input == 'yes':
-				os.rename(k, v)
-			else:
-				click.echo('Okay, I won\'t :(')
-	else:
-		globals()[callbacks[input]]()
+	
+	return records
 
+#----------------------------------------------------#
+# Purpose: Provide the CLI for the program including #
+#          triggers for applicable inputs            #
+# Parameters: dictionary - The filename of the       #
+#                          datastore/look up table   #
+#                          dictionary to use         #
+#             action - The action to be taken        #
+#                      (automatically) by the script #
+#             output_level - The level of output to  #
+#                            provide to the user     #
+# Return: N/A                                        #
+#----------------------------------------------------#
+@click.command(cls=MyCLI, invoke_without_command=True)
+@click.option('--dictionary', '-d', default=None, help='The filename that you want to use as the datastore dictionary/look up table')
+@click.option('--action', '-a', default=None, type=click.Choice(actions), help='The action you want the script to perform')
+@click.option('--verbose', '-v', 'output_level', flag_value='verbose', default=True, help='Provide output to the user')
+@click.option('--quiet', '-q', 'output_level', flag_value='quiet',  help='Provide minimal output to the user')
+@click.pass_context
+def main(ctx, dictionary, action, output_level):
+	ctx.obj = {}
+	ctx.obj['configs'] = Config()
+	
+	records = get_records_from_dictionary(dictionary)
+	
+	# Check if a (sub)command was specified
+	if ctx.invoked_subcommand is None:
+		actions = ctx.command.list_commands(ctx)
+		
+		if action is None:
+			# Prompt the user to see what they want to do
+        		action = click.prompt('What would you like to do?', type=click.Choice(actions))
+		
+		# Check if the action choosen needs to be acompanied by some 
+		# other arguments
+		if action in actions:
+			# Check if the function being called is spcifically 
+			# rename
+			if action == 'rename':
+				# Set the records extra parameter to supply for
+				# rename callback
+				ctx.obj['records'] = records
+				
+				patterns = []
+				
+				use_pattern = True
+				while use_pattern:
+					# Ask if the user would like to use a pattern 
+					# for the rename function
+					use_pattern = click.confirm('Would you like to specify a file pattern?')
+				
+					# If they do want to 
+					if use_pattern:
+						patterns.append(click.prompt('What file pattern(s) would you like to use?'))
+				
+				# Check if the list is empty
+				if patterns:
+					# If the list isn't empty then we need
+					# to assign it to the context objec 
+					# don't bother otherwise
+					ctx.obj['patterns'] = patterns
+			
+			# Invoke the desired callback with the additional 
+			# arguments
+			ctx.invoke(ctx.command.get_command(ctx, action))
+		else:
+			# Invoke the desired callback
+			ctx.invoke(ctx.command.get_command(ctx, action))
+	else:
+		if ctx.invoked_subcommand == 'rename':
+			ctx.obj['records'] = records
+
+#----------------------------------------------------#
+# Purpose: To provide the entry point for the CLI    #
+# Parameters (Command Line) - See main (Click)       #
+#                             function for details   #
+# Return: N/A                                        #
+#----------------------------------------------------#
 if __name__ == '__main__':
         main()
