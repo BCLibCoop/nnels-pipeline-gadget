@@ -434,6 +434,23 @@ class Metadata_XML_Parser(Metadata_Parser):
 				else:
 					curr_index += 1
 		
+		# Remove any duplicates including entries where things are contained within a seperate list ex. See the SCN example
+		for outer_index in range(0, len(return_result)):
+			for inner_index in range(0, len(return_result)):
+				# Because if the two entries matched each other we'd be comparing the entry withiteslf which is no what 
+				if outer_index != inner_index:
+					# Check if its an exact match
+					if return_result[outer_index] == return_result[inner_index]:
+						del return_result[inner_index]
+					else:
+						# Since we don't have an exact macth we need to see if one is within the other
+						if isinstance(return_result[outer_index], dict):
+							if isinstance(return_result[inner_index], dict):
+								for k,v in return_result[inner_index].iteritems():
+									if k in return_result[outer_index].keys():
+										if v == return_result[outer_index][k]:
+											del return_result[inner_index]
+		
 		# If there is only a single entry then assign the variable to
 		# that (rather than having a needless list with one element)
 		if len(return_result) == 1:
