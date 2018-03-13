@@ -426,9 +426,9 @@ class Metadata_XML_Parser(Metadata_Parser):
 			# Delete any extranous None values
 			curr_index = 0
 			while curr_index < len(return_result):
-				print 'Current Index: ' + str(curr_index)
-				print 'List Length: ' + str(len(return_result))
-				print 'List: ' + str(return_result)
+				#print 'Current Index: ' + str(curr_index)
+				#print 'List Length: ' + str(len(return_result))
+				#print 'List: ' + str(return_result)
 				if return_result[curr_index] is None:
 					del return_result[curr_index]
 				else:

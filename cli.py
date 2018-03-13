@@ -62,13 +62,13 @@ def generate_dictionary_cli():
 	# For the returned output lets parse it and display it
 	# to the user so that they have som e idea of what is
 	# happening
-	for parsed_file, parsed_values in output.iteritems():
-		for record in parsed_values:
-			if isinstance(record, dict):
-				for k,v in record.iteritems():
-					click.echo('Parsed the value ' + v + ' for the records ' + k + ' from ' + parsed_file)
-			else:
-				print str(record) + ' isn\'t a dictionary'
+	#for parsed_file, parsed_values in output.iteritems():
+	#	for record in parsed_values:
+	#		if isinstance(record, dict):
+	#			for k,v in record.iteritems():
+	#				click.echo('Parsed the value ' + unicode(v) + ' for the records ' + k + ' from ' + parsed_file)
+	#		else:
+	#			print str(record) + ' isn\'t a dictionary'
 	
 	return dictionary
 
@@ -100,11 +100,11 @@ def get_records_from_dictionary(dictionary):
 	if not '.' in dictionary:
 		dictionary += '.json'
 	
-	with open(dictionary) as f:
-		result = structs.json.load(f)
-		records = structs.records_from_json(result)
+	#with open(dictionary) as f:
+	#	result = structs.json.load(f)
+	#	records = structs.records_from_json(result)
 	
-	return records
+	#return records
 
 #----------------------------------------------------#
 # Purpose: Provide the CLI for the program including #

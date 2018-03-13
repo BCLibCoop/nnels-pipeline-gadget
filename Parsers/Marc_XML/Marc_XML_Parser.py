@@ -148,19 +148,22 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 	#             record -
 	#----------------------------------------------------#
         def parse_subfield(self, subfield, name, record):
-		if DEBUG_MODE:
-			print '===================================================='
-			print 'Call Summary for parse_subfield (Marc_XML_Parser)'
-			print '----------------------------------------------------'
-			print 'Self: ' + str(self)
-			print 'Subfield: ' + str(subfield)
-			print '===================================================='
-		#if hasattr(record, name):
-		#	setattr(record, name, [getattr(record, name), subfield.text]O	
-		#else:
-		# Set a attribute/property of the Marc_XML_Record to be
-		# of the name name and value of subfield.text
-		setattr(record, name, subfield.text)
+		#if DEBUG_MODE:
+		print '===================================================='
+		print 'Call Summary for parse_subfield (Marc_XML_Parser)'
+		print '----------------------------------------------------'
+		print 'Self: ' + str(self)
+		print 'Subfield: ' + str(subfield)
+		print 'Subfield - Text: ' + unicode(subfield.text)
+		print 'Name: ' + str(name)
+		print 'Record: ' + str(record)
+		print '===================================================='
+		if hasattr(record, name) and getattr(record, name) is not None:
+			setattr(record, name, [getattr(record, name), subfield.text])
+		else:
+			# Set a attribute/property of the Marc_XML_Record to be
+			# of the name name and value of subfield.text
+			setattr(record, name, subfield.text)
 		
 		return_result = {name:  getattr(record, name)}
 		
@@ -276,9 +279,11 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 		
 		new_return_result = {}
 		for return_val in return_result:
-			if type(return_val) == dict:
+			print 'What exactly am I transforming here? ' + str(return_val)
+			if isinstance(return_val, dict):
 				for k,v in return_val.iteritems():
 					new_return_result[k] = v
+
 		
 		if len(new_return_result) > 0:
 			return_result = new_return_result
@@ -363,7 +368,7 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 		if format == 'json':
 			writer = Metadata_JSON_Writer()
 		
-		if isinstance(writer, Metadata_File_Writer):
-			writer.write_to_file(output_file, self.recordset)
+		#if isinstance(writer, Metadata_File_Writer):
+			#writer.write_to_file(output_file, self.recordset)
 		
 		return return_result

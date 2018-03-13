@@ -41,17 +41,18 @@ class Marc_XML_Record(Metadata_Record):
         @title.setter
         def title(self, value):
                 if value is not None:
-                        # Remove special characters
-                        specialchars = [",", ":", ".", "'", "?", "&", "/"]
-
-                        for char in specialchars:
-                                value = value.replace(char, "")
-
-                        # Strip any extranous whitespace
-                        value = value.strip()
-
-                        # Underscore remaining whitespace
-                        value = value.replace(" ", "_")
+                        if not isinstance(value, list):
+				# Remove special characters
+                        	specialchars = [",", ":", ".", "'", "?", "&", "/"]
+			
+				for char in specialchars:
+					value = value.replace(char, "")
+				
+				# Strip any extranous whitespace
+				value = value.strip()
+				
+				# Underscore remaining whitespace
+				value = value.replace(" ", "_")
 
                 self._title = value
 
