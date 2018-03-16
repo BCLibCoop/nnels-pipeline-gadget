@@ -1,3 +1,5 @@
 .*
 *.pyc
+output.json
 output.txt
+output.csv
