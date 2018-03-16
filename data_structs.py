@@ -164,10 +164,12 @@ def records_from_tab_seperated(head_line, lines):
 	# Loop over each line an create a new Metadata_Reord object assign its
 	# values to is appropriate property (as determined by the schema)
 	for line in lines:
+		print 'Processing line: ' + unicode(line)
+		
 		new_record = Metadata_Record()
 		tokens = line.split('\t')
 		for index in range(0, len(tokens)):
-			setattr(new_record, props[index], tokens[index].decode('utf-8').strip())
+			setattr(new_record, props[index], tokens[index].strip())
 		records.append(new_record)
 	
 	# For each of the records we now have lets validate them so that we know

@@ -99,9 +99,9 @@ class Metadata_Record(object):
 		attrs = vars(self)
 		for k,v in attrs.iteritems():
 			if k.startswith('_'):
-				result_str += k[1:] + ':' + str(v) + ', '
+				result_str += k[1:] + ':' + unicode(v) + ', '
 			else:
-				result_str += k + ':' + str(v) + ', '
+				result_str += k + ':' + unicode(v) + ', '
 		
 		result_str = result_str[:-2] + '}'
 		result_str = unicode(result_str)

@@ -35,7 +35,7 @@ class MyCLI(click.MultiCommand):
 # Parameters: N/A                                    #
 # Return: N/A                                        #
 #----------------------------------------------------#
-def generate_dictionary_cli():
+def generate_dictionary_cli(dictionary_format):
 	# Setup the callback variables
 	parser_type = {'Marc XML':Marc_XML_Parser}
 	options = []
@@ -50,8 +50,6 @@ def generate_dictionary_cli():
 	# Marc, Marc XML, ONIX, etc...
 	type = click.prompt('What type of metadata to parse', type=click.Choice(options))
 	
-	format_options = ['json', 'tabs', 'csv']
-	dictionary_format = click.prompt('What format to store the dictionary in?', type=click.Choice(format_options))
 	# Now prompt the user what they want the dictionary file
 	# to be called this is partly in case they ever want to
         # reuse that dictionary file
@@ -85,9 +83,12 @@ def get_records_from_dictionary(dictionary):
 		# Ask if the user wants to generate a dictionary
 		generate_dictionary = click.confirm('Do you neeed to generate a dictionary?')
 		
+		format_options = ['json', 'tabs', 'csv']
+		dictionary_format = click.prompt('What format to store the dictionary in?', type=click.Choice(format_options))
+		
 		# Check what response was given
 		if generate_dictionary:
-			dictionary = generate_dictionary_cli()
+			dictionary = generate_dictionary_cli(dictionary_format)
                 else:
 			# Because the user didn't specify a dictionary at
 			# runtime and has said no to generating one we need to
@@ -104,11 +105,25 @@ def get_records_from_dictionary(dictionary):
 			
 	# Load in the dictionary (wheither just generated or not)
 	if not '.' in dictionary:
-		dictionary += '.json'
+		if dictionary_format == 'json':
+			dictionary += '.json'
+		elif dictionary_format == 'tabs':
+			dictionary += '.txt'
+		elif dictionary_format == 'csv':
+			dictionary += '.csv'
 	
 	with open(dictionary) as f:
-		result = structs.json.load(f)
-		records = structs.records_from_json(result)
+		if dictionary_format == 'json':
+			result = structs.json.load(f)
+			records = structs.records_from_json(result)
+		elif dictionary_format == 'tabs':
+			header_line = f.readline()
+			lines = []
+			curr_line = f.readline().decode('utf-8')
+			while curr_line != '':
+				lines.append(curr_line)
+				curr_line = f.readline().decode('utf-8')
+			records = structs.records_from_tab_seperated(header_line, lines)
 	
 	return records
 
@@ -135,6 +150,9 @@ def main(ctx, dictionary, action, output_level):
 	ctx.obj['configs'] = Config()
 	
 	records = get_records_from_dictionary(dictionary)
+	
+	#for record in records:
+	#	print unicode(record)
 	
 	# Check if a (sub)command was specified
 	if ctx.invoked_subcommand is None:

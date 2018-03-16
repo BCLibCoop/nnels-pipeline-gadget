@@ -18,7 +18,8 @@ class Metadata_Tab_Seperated_Writer(Metadata_File_Writer):
 		record_str = ''
 		
 		keep_writing = True
-                # Loop over properties of the record profided
+                index = 0
+		# Loop over properties of the record profided
                 for k in vars(record):
                         if isinstance(vars(record)[k], list):
 				keep_writing = False
@@ -28,7 +29,10 @@ class Metadata_Tab_Seperated_Writer(Metadata_File_Writer):
 					self._write_record_line_to_file(fp, record_copy)
 			else:
 				if keep_writing:
-					record_str += unicode(vars(record)[k]) + '\t'
+					record_str += unicode(vars(record)[k])
+					if index != len(vars(record)) - 1:
+						record_str += '\t'
+					index += 1
 		
 		if record_str != '':
                 	fp.write(record_str.encode('utf-8'))
