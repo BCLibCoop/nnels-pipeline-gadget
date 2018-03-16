@@ -61,6 +61,14 @@ class Metadata_XML_Parser(Metadata_Parser):
 	#           documentaion                             #
 	#----------------------------------------------------#
 	def __init__(self, XML_files=None):
+		if DEBUG_MODE:
+			print '===================================================='
+                        print 'Call Summary for __init__ (Metadata_XML_Parser) '
+                        print '----------------------------------------------------'
+                        print 'Self: ' + str(self)
+                        print 'XML File List: ' + str(XML_files)
+                        print '===================================================='
+		
 		# Call the parents constructor
 		super(Metadata_XML_Parser, self).__init__()
 		
@@ -93,6 +101,14 @@ class Metadata_XML_Parser(Metadata_Parser):
 	#       uses the XML_file paramter as the keys       #
 	#----------------------------------------------------#
 	def file_to_tree(self, XML_file):
+		if DEBUG_MODE:
+			print '===================================================='
+                        print 'Call Summary for file_to_tree (Metadata_XML_Parser) '
+                        print '----------------------------------------------------'
+                        print 'Self: ' + str(self)
+                        print 'XML File: ' + str(XML_file)
+                        print '===================================================='
+		
 		tree = etree.parse(XML_file)
 		self.trees[XML_file] = tree.getroot()
 		
@@ -114,6 +130,14 @@ class Metadata_XML_Parser(Metadata_Parser):
 	# Return: N/A                                        #
 	#----------------------------------------------------#
 	def files_to_trees(self, file_list):
+		if DEBUG_MODE:
+			print '===================================================='
+                        print 'Call Summary for files_to_trees (Metadata_XML_Parser) '
+                        print '----------------------------------------------------'
+                        print 'Self: ' + str(self)
+                        print 'File List: ' + str(file_list)
+                        print '===================================================='
+		
 		# Loop over the files in the list
 		for XML_file in file_list:
 			self.file_to_tree(XML_file)
@@ -351,6 +375,39 @@ class Metadata_XML_Parser(Metadata_Parser):
 		# Return the result
 		return return_result
 	
+	def _remove_empty_from_result(self, input):
+		if DEBUG_MODE:
+			print '===================================================='
+                        print 'Call Summary for _remove_empty_from_result (Metadata_XML_Parser) '
+                        print '----------------------------------------------------'
+                        print 'Self: ' + str(self)
+                        print 'Input: ' + str(input)
+                        print '===================================================='
+		return_result = input
+		
+		# Check that the returned rsults are not empty and are of the 
+		# expected type
+		if return_result and isinstance(return_result, list):
+			return_result = filter(None, return_result)
+		
+		return return_result
+	
+	def _remove_duplicates_or_encapsulated(self, input):
+		if DEBUG_MODE:
+			print '===================================================='
+                        print 'Call Summary for _remove_duplicates_or_encapsulatted (Metadata_XML_Parser) '
+                        print '----------------------------------------------------'
+                        print 'Self: ' + str(self)
+                        print 'Input: ' + str(input)
+                        print '===================================================='
+		
+		#return_result = set(val for dic in input for val in dic.values())
+		
+		#
+		
+		return input	
+		#return return_result
+	
 	#----------------------------------------------------#
 	# Purpose: The purpose of this method is to find the #
 	#          desired tag and call the apporpriate      #
@@ -380,7 +437,7 @@ class Metadata_XML_Parser(Metadata_Parser):
 	#         that were provided by the callbacks        #
 	#----------------------------------------------------#
 	def find_tag(self, desired_tag, callback, callback_args=None, root=None, from_file=None):
-		if DEBUG_MODE == 'stack_trace':
+		if DEBUG_MODE:
 			print '===================================================='
 			print 'Call Summary for find_tag (Metadata_XML_Parser)     '
 			print '----------------------------------------------------'
@@ -421,40 +478,14 @@ class Metadata_XML_Parser(Metadata_Parser):
 				callback_return = self._use_callback(elem, callback, callback_args)
 				return_result.append(callback_return)
 		
-		# Check that the returned rsults are not empty and are of the expected type
-		if return_result and isinstance(return_result, list):
-			# Delete any extranous None values
-			curr_index = 0
-			while curr_index < len(return_result):
-				#print 'Current Index: ' + str(curr_index)
-				#print 'List Length: ' + str(len(return_result))
-				#print 'List: ' + str(return_result)
-				if return_result[curr_index] is None:
-					del return_result[curr_index]
-				else:
-					curr_index += 1
-		
-		# Remove any duplicates including entries where things are contained within a seperate list ex. See the SCN example
-		for outer_index in range(0, len(return_result)):
-			for inner_index in range(0, len(return_result)):
-				# Because if the two entries matched each other we'd be comparing the entry withiteslf which is no what 
-				if outer_index != inner_index:
-					# Check if its an exact match
-					if return_result[outer_index] == return_result[inner_index]:
-						del return_result[inner_index]
-					else:
-						# Since we don't have an exact macth we need to see if one is within the other
-						if isinstance(return_result[outer_index], dict):
-							if isinstance(return_result[inner_index], dict):
-								for k,v in return_result[inner_index].iteritems():
-									if k in return_result[outer_index].keys():
-										if v == return_result[outer_index][k]:
-											del return_result[inner_index]
-		
+		return_result = self._remove_empty_from_result(return_result)
+		return_result = self._remove_duplicates_or_encapsulated(return_result)
+		#
 		# If there is only a single entry then assign the variable to
 		# that (rather than having a needless list with one element)
-		if len(return_result) == 1:
-			return_result = return_result[0]
+		if return_result:
+			if len(return_result) == 1:
+				return_result = return_result[0]
 		
 		# Return the result
 		return return_result

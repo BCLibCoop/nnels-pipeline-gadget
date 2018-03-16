@@ -47,8 +47,13 @@ def get_item_with_attr(records, attr_name, attr_value):
 	# Loop over the record set to check each one
 	for record in records:
 		try:
-			if attr_value == getattr(record, attr_name):
-				return_value = record
+			if isinstance(getattr(record, attr_name), list):
+				for gotten_attr in getattr(record, attr_name):
+					if attr_value == gotten_attr:
+						return_value = record
+			else:
+				if attr_value == getattr(record, attr_name):
+					return_value = record
 		except AttributeError:
 			pass
 	
@@ -174,13 +179,3 @@ def records_from_tab_seperated(head_line, lines):
 	
 	# Return result
 	return records
-	
-if __name__ == '__main__':
-        with open('parser_output.json') as f:
-                result = json.load(f)		
-		records = records_from_json(result)
-	with open('output.txt') as f:
-		lines = f.readlines()
-		records2 = records_from_tab_seperated(lines[0],lines)
-		for record in records2:
-			print unicode(record)

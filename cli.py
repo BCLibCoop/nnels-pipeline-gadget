@@ -50,6 +50,8 @@ def generate_dictionary_cli():
 	# Marc, Marc XML, ONIX, etc...
 	type = click.prompt('What type of metadata to parse', type=click.Choice(options))
 	
+	format_options = ['json', 'tabs', 'csv']
+	dictionary_format = click.prompt('What format to store the dictionary in?', type=click.Choice(format_options))
 	# Now prompt the user what they want the dictionary file
 	# to be called this is partly in case they ever want to
         # reuse that dictionary file
@@ -57,7 +59,7 @@ def generate_dictionary_cli():
 	
 	# Initialize the proper parser and parse_to_file
 	parser = callbacks[type]()
-	output = parser.parse_to_file(dictionary)
+	output = parser.parse_to_file(dictionary, format=dictionary_format)
 	
 	# For the returned output lets parse it and display it
 	# to the user so that they have som e idea of what is
@@ -95,16 +97,20 @@ def get_records_from_dictionary(dictionary):
 			# Acknowledge the user input so that they know whats
 			# happening
 			click.echo('Alright. Using %s as the dictionary' % dictionary)
-	
+	else:
+		if dictionary == 'Marc_XML':
+			parser = Marc_XML_Parser()
+			output = parser.parse()
+			
 	# Load in the dictionary (wheither just generated or not)
 	if not '.' in dictionary:
 		dictionary += '.json'
 	
-	#with open(dictionary) as f:
-	#	result = structs.json.load(f)
-	#	records = structs.records_from_json(result)
+	with open(dictionary) as f:
+		result = structs.json.load(f)
+		records = structs.records_from_json(result)
 	
-	#return records
+	return records
 
 #----------------------------------------------------#
 # Purpose: Provide the CLI for the program including #

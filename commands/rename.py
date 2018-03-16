@@ -6,7 +6,7 @@ from rename_files import rename_files
 @click.pass_context
 def cli(ctx, pattern):
        	# DEBUGGING: See what is passed along
-	#print 'Context Object: ' + str(ctx.obj)
+	print 'Context Object: ' + str(ctx.obj)
 	
 	# Create a variable to hold the callback arguments
 	callback_args = {

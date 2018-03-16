@@ -1,6 +1,8 @@
 from Parsers.Metadata_XML_Parser import Metadata_XML_Parser
 from File_Writers.Metadata_File_Writer import Metadata_File_Writer
 from File_Writers.Metadata_JSON_Writer import Metadata_JSON_Writer
+from File_Writers.Metadata_Tab_Seperated_Writer import Metadata_Tab_Seperated_Writer
+from File_Writers.Metadata_CSV_Writer import Metadata_CSV_Writer
 from Marc_XML_RecordSet import Marc_XML_RecordSet
 from Marc_XML_Record import Marc_XML_Record
 import funcs
@@ -148,16 +150,16 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 	#             record -
 	#----------------------------------------------------#
         def parse_subfield(self, subfield, name, record):
-		#if DEBUG_MODE:
-		print '===================================================='
-		print 'Call Summary for parse_subfield (Marc_XML_Parser)'
-		print '----------------------------------------------------'
-		print 'Self: ' + str(self)
-		print 'Subfield: ' + str(subfield)
-		print 'Subfield - Text: ' + unicode(subfield.text)
-		print 'Name: ' + str(name)
-		print 'Record: ' + str(record)
-		print '===================================================='
+		if DEBUG_MODE:
+			print '===================================================='
+			print 'Call Summary for parse_subfield (Marc_XML_Parser)'
+			print '----------------------------------------------------'
+			print 'Self: ' + str(self)
+			print 'Subfield: ' + str(subfield)
+			print 'Subfield - Text: ' + subfield.text.encode('utf-8')
+			print 'Name: ' + str(name)
+			print 'Record: ' + str(record)
+			print '===================================================='
 		if hasattr(record, name) and getattr(record, name) is not None:
 			setattr(record, name, [getattr(record, name), subfield.text])
 		else:
@@ -279,16 +281,19 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 		
 		new_return_result = {}
 		for return_val in return_result:
-			print 'What exactly am I transforming here? ' + str(return_val)
 			if isinstance(return_val, dict):
 				for k,v in return_val.iteritems():
 					new_return_result[k] = v
+			elif isinstance(return_val, list):
+				for item in return_val:
+					for k,v in item.iteritems():
+						new_return_result[k] = v
 
 		
 		if len(new_return_result) > 0:
 			return_result = new_return_result
 		
-		print '[parse_record]Preparing to Return: ' + str(return_result)
+		#print '[parse_record]Preparing to Return: ' + str(return_result)
 		
 		return return_result
 	
@@ -359,16 +364,28 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 		# Parse the files using the generic trigg3er method
 		return_result = self.parse()
 		
+		print 'Format to use: ' + format
+		
 		# Give the filename the appropriate extension
 		if format == 'json' and not output_file.endswith('.json'):
 			# TO BE IMPLEMENTED: Strip extension if it exists
 			output_file = output_file + '.json'
+		elif format == 'tabs' and not output_file.endswith('.txt'):
+			# TO BE IMPLEMENTED: Strip extension if it exists
+			output_file = output_file + '.txt'
+		elif format == 'csv' and not output_file.endswith('.csv'):
+			# TO BE IMPLEMENTED: Strip extension if it exists
+			output_file = output_file + '.csv'
 		
 		writer = None
 		if format == 'json':
 			writer = Metadata_JSON_Writer()
+		elif format == 'tabs':
+			writer = Metadata_Tab_Seperated_Writer()
+		elif format == 'csv':
+			writer = Metadata_CSV_Writer()
 		
-		#if isinstance(writer, Metadata_File_Writer):
-			#writer.write_to_file(output_file, self.recordset)
+		if isinstance(writer, Metadata_File_Writer):
+			writer.write_to_file(output_file, self.recordset)
 		
 		return return_result
