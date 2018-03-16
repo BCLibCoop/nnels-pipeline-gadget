@@ -30,7 +30,7 @@ class Metadata_Tab_Seperated_Writer(Metadata_File_Writer):
 			else:
 				if keep_writing:
 					record_str += unicode(vars(record)[k])
-					if index != len(vars(record)) - 1:
+					if index < len(vars(record)) - 1:
 						record_str += '\t'
 					index += 1
 		
@@ -41,8 +41,10 @@ class Metadata_Tab_Seperated_Writer(Metadata_File_Writer):
 	def _write_header_line_to_file(self, fp, header_names):
 		header_line = ''
 		
-		for header_name in header_names:
-			header_line += header_name + '\t'
+		for index in range(0, len(header_names)):
+			header_line += header_names[index]
+			if index < len(header_names) - 1:
+				header_line += '\t'
 		
 		fp.write(header_line.encode('utf-8'))
 		fp.write('\n')

@@ -124,7 +124,14 @@ def get_records_from_dictionary(dictionary):
 				lines.append(curr_line)
 				curr_line = f.readline().decode('utf-8')
 			records = structs.records_from_tab_seperated(header_line, lines)
-	
+		elif dictionary_format == 'csv':
+			header_line = f.readline()
+			lines = []
+			curr_line = f.readline().decode('utf-8')
+			while curr_line != '':
+				lines.append(curr_line)
+				curr_line = f.readline().decode('utf-8')
+			records = structs.records_from_csv(header_line, lines)
 	return records
 
 #----------------------------------------------------#

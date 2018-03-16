@@ -164,8 +164,6 @@ def records_from_tab_seperated(head_line, lines):
 	# Loop over each line an create a new Metadata_Reord object assign its
 	# values to is appropriate property (as determined by the schema)
 	for line in lines:
-		print 'Processing line: ' + unicode(line)
-		
 		new_record = Metadata_Record()
 		tokens = line.split('\t')
 		for index in range(0, len(tokens)):
@@ -181,3 +179,47 @@ def records_from_tab_seperated(head_line, lines):
 	
 	# Return result
 	return records
+
+#----------------------------------------------------#
+# Purpose: To construct a set of Metadata_Record     #
+#          objects from the input of a tab seperated #
+#          file                                      #
+# Parameters: head_line - The line that has the      #
+#                         columns names (denotes the #
+#                         schema of the file)        #
+#            lines - The array of lines to parse     #
+#                    into individual records         #
+# Return: list - A set of Metadata_Record objects    #
+#               constructed from the input           #
+#----------------------------------------------------#
+def records_from_csv(head_line, lines):
+        records = []
+
+        # Parse the schema (what each column means)
+        props = head_line.split(',')
+        for index in range(0, len(props)):
+                props[index] = props[index].strip()
+
+        # If the first line of the array and the schema line are the same remove
+        # it (so that we don't try to parse it as a line
+        if lines[0] == head_line:
+                lines.remove(lines[0])
+
+        # Loop over each line an create a new Metadata_Reord object assign its
+        # values to is appropriate property (as determined by the schema)
+        for line in lines:
+                new_record = Metadata_Record()
+                tokens = line.split(',')
+                for index in range(0, len(tokens)):
+                        setattr(new_record, props[index], tokens[index].strip())
+                records.append(new_record)
+
+        # For each of the records we now have lets validate them so that we know
+        # there wasn't hany mistakes made (human or program)
+        for record in records:
+                if not record.validate():
+                        print 'Removing ' + str(record) + ' because it is an invalid record'
+                        recoreds.remove(record)
+
+        # Return result
+        return records

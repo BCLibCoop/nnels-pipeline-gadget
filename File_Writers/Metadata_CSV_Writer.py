@@ -18,6 +18,7 @@ class Metadata_CSV_Writer(Metadata_File_Writer):
 		record_str = ''
 		
 		keep_writing = True
+		index = 0
                 # Loop over properties of the record profided
                 for k in vars(record):
                         if isinstance(vars(record)[k], list):
@@ -28,7 +29,10 @@ class Metadata_CSV_Writer(Metadata_File_Writer):
 					self._write_record_line_to_file(fp, record_copy)
 			else:
 				if keep_writing:
-					record_str += unicode(vars(record)[k]) + ','
+					record_str += unicode(vars(record)[k]) 
+					if index < len(vars(record)) - 1:
+						record_str += ','
+					index += 1
 		
 		if record_str != '':
                 	fp.write(record_str.encode('utf-8'))
@@ -37,8 +41,10 @@ class Metadata_CSV_Writer(Metadata_File_Writer):
 	def _write_header_line_to_file(self, fp, header_names):
 		header_line = ''
 		
-		for header_name in header_names:
-			header_line += header_name + ','
+		for index in range(0, len(header_names)):
+			header_line += header_names[index]
+			if index < len(header_names) - 1: 
+				header_line += ','
 		
 		fp.write(header_line.encode('utf-8'))
 		fp.write('\n')
