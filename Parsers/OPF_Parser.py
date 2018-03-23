@@ -1,4 +1,4 @@
-from Metadata_Parsers import Metadata_XML_Parser
+from Metadata_XML_Parser import Metadata_XML_Parser
 
 import dynamic_loader as loader
 

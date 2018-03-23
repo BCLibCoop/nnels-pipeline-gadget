@@ -1,5 +1,7 @@
 import click
 
+DEBUG_MODE = False
+
 def func_get_title():
         input = click.prompt('What is the SCN of the title your looking for?')
         try:
@@ -66,15 +68,16 @@ def func_set():
 #                  expression                        #
 #----------------------------------------------------#
 def combine_regex(patterns, prefix=None, suffix=None, prefix_each=None, suffix_each=None):
-	print '===================================================='
-        print 'Call Summary for combine_regex (funcs.py)'
-        print '----------------------------------------------------'
-        print 'Patterns: ' + str(patterns)
-        print 'Prefix (Whole): ' + str(prefix)
-	print 'Suffix (Whole): ' + str(suffix)
-	print 'Prefix (Each): ' + str(prefix_each)
-	print 'Suffix (Each): ' + str(suffix_each)
-        print '===================|================================'
+	if DEBUG_MODE:
+		print '===================================================='
+        	print 'Call Summary for combine_regex (funcs.py)'
+        	print '----------------------------------------------------'
+        	print 'Patterns: ' + str(patterns)
+        	print 'Prefix (Whole): ' + str(prefix)
+		print 'Suffix (Whole): ' + str(suffix)
+		print 'Prefix (Each): ' + str(prefix_each)
+		print 'Suffix (Each): ' + str(suffix_each)
+        	print '===================|================================'
 	
 	# Define the variable to store the final expression in
 	exp = ''

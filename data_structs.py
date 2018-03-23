@@ -47,8 +47,13 @@ def get_item_with_attr(records, attr_name, attr_value):
 	# Loop over the record set to check each one
 	for record in records:
 		try:
-			if attr_value == getattr(record, attr_name):
-				return_value = record
+			if isinstance(getattr(record, attr_name), list):
+				for gotten_attr in getattr(record, attr_name):
+					if attr_value == gotten_attr:
+						return_value = record
+			else:
+				if attr_value == getattr(record, attr_name):
+					return_value = record
 		except AttributeError:
 			pass
 	
@@ -162,7 +167,7 @@ def records_from_tab_seperated(head_line, lines):
 		new_record = Metadata_Record()
 		tokens = line.split('\t')
 		for index in range(0, len(tokens)):
-			setattr(new_record, props[index], tokens[index].decode('utf-8').strip())
+			setattr(new_record, props[index], tokens[index].strip())
 		records.append(new_record)
 	
 	# For each of the records we now have lets validate them so that we know
@@ -174,13 +179,47 @@ def records_from_tab_seperated(head_line, lines):
 	
 	# Return result
 	return records
-	
-if __name__ == '__main__':
-        with open('parser_output.json') as f:
-                result = json.load(f)		
-		records = records_from_json(result)
-	with open('output.txt') as f:
-		lines = f.readlines()
-		records2 = records_from_tab_seperated(lines[0],lines)
-		for record in records2:
-			print unicode(record)
+
+#----------------------------------------------------#
+# Purpose: To construct a set of Metadata_Record     #
+#          objects from the input of a tab seperated #
+#          file                                      #
+# Parameters: head_line - The line that has the      #
+#                         columns names (denotes the #
+#                         schema of the file)        #
+#            lines - The array of lines to parse     #
+#                    into individual records         #
+# Return: list - A set of Metadata_Record objects    #
+#               constructed from the input           #
+#----------------------------------------------------#
+def records_from_csv(head_line, lines):
+        records = []
+
+        # Parse the schema (what each column means)
+        props = head_line.split(',')
+        for index in range(0, len(props)):
+                props[index] = props[index].strip()
+
+        # If the first line of the array and the schema line are the same remove
+        # it (so that we don't try to parse it as a line
+        if lines[0] == head_line:
+                lines.remove(lines[0])
+
+        # Loop over each line an create a new Metadata_Reord object assign its
+        # values to is appropriate property (as determined by the schema)
+        for line in lines:
+                new_record = Metadata_Record()
+                tokens = line.split(',')
+                for index in range(0, len(tokens)):
+                        setattr(new_record, props[index], tokens[index].strip())
+                records.append(new_record)
+
+        # For each of the records we now have lets validate them so that we know
+        # there wasn't hany mistakes made (human or program)
+        for record in records:
+                if not record.validate():
+                        print 'Removing ' + str(record) + ' because it is an invalid record'
+                        recoreds.remove(record)
+
+        # Return result
+        return records

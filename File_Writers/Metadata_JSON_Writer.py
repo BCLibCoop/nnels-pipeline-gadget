@@ -1,24 +1,4 @@
-import abc
-
-class Metadata_File_Writer(object):
-	__metaclass__ = abc.ABCMeta
-	
-	#----------------------------------------------------#
-	# Purpose: The entry/top level function that         #
-	#          triggers or performs the writes of the    #
-	#          provided records to the file itself       #
-	# Parameters: self (implicit) - The instance of the  #
-	#                               object the function  #
-	#                               is invoked on        #
-	#             output_file - The file to put the      #
-	#                           output in                #
-	#             recordset - The set of records to be   #
-	#                         written to the file        #
-	# Return: N/A                                        #
-	#----------------------------------------------------#
-	@abc.abstractmethod
-	def write_to_file(self, output_file, recordset):
-		raise NotImplementedError
+from Metadata_File_Writer import Metadata_File_Writer
 
 class Metadata_JSON_Writer(Metadata_File_Writer):
 	#----------------------------------------------------#
@@ -38,7 +18,7 @@ class Metadata_JSON_Writer(Metadata_File_Writer):
         def _add_json_quotes(self, input):
                 # Split the input into tokens by colon(s)
                 sub_tokens = input.split(':')
-
+		
                 # Make sure there is an appropriate amount of tokens
                 if len(sub_tokens) != 2:
                         raise TypeError
@@ -47,7 +27,23 @@ class Metadata_JSON_Writer(Metadata_File_Writer):
                 returnValue = ''
                 returnValue += '"' + sub_tokens[0].strip() + '"'
                 returnValue += ':'
-                returnValue += '"' + sub_tokens[1].strip() + '"'
+		if sub_tokens[1].startswith('[') and sub_tokens[1].endswith(']'):
+                	list_token = sub_tokens[1][1:-1]
+			list_tokens = list_token.split(',')
+			
+			returnValue += '[\n'
+			
+			index = 0
+			for index in range(0, len(list_tokens)):
+				returnValue += '\t\t\t\t"' + list_tokens[index].strip()[1:-1] + '"'
+				if index != len(list_tokens) - 1:
+					returnValue += ', \n'
+				else:
+					returnValue += '\n'
+			
+			returnValue += '\t\t\t]'
+		else:
+			returnValue += '"' + sub_tokens[1].strip() + '"'
 
                 # Return the result
                 return returnValue
@@ -70,10 +66,10 @@ class Metadata_JSON_Writer(Metadata_File_Writer):
         def _process_json_entry(self, token, is_first=False, is_last=False):
                 returnValue = token
 
-                if is_first:
-                        returnValue = returnValue[1:]
-                if is_last:
-                        returnValue = returnValue[:-1]
+                #if is_first:
+                #        returnValue = returnValue[1:]
+                #if is_last:
+                #        returnValue = returnValue[:-1]
 
                 returnValue = self._add_json_quotes(returnValue)
 
@@ -95,10 +91,12 @@ class Metadata_JSON_Writer(Metadata_File_Writer):
         #       method for use by the class only             #
         #----------------------------------------------------#
         def _build_json_entry(self, token, is_first=False, is_last=False):
-                processed_record = self._process_json_entry(token, is_first, is_last)
+                processed_record = '\t\t\t' + self._process_json_entry(token, is_first, is_last)
 
                 if not is_last:
-                        processed_record += ', '
+                        processed_record += ', \n'
+		else:
+			processed_record += '\n'
 
                 return processed_record
 
@@ -117,18 +115,25 @@ class Metadata_JSON_Writer(Metadata_File_Writer):
         #       method for use by the class only             #
         #----------------------------------------------------#
         def _build_json_record(self, record):
-                # Tokenize the record by comma (,)
-                tokens = record.split(',')
+		# Tokenize the record by comma (,)
+                #tokens = record.split(',')
 
-                # Do the converstion/processing and reconstruct by returning
-                # results
-                returnValue = '{'
-                for index in range(0, len(tokens)):
-                        curr_token = tokens[index]
+                # Add the open brace for the JSON entry
+                returnValue = '\t\t{\n'
+		
+		# An index to keep track of how many properties we've processed
+		index = 0
+		
+		# Loop over properties of the record profided
+                for k,v in vars(record).iteritems():
+                        curr_token = k.replace('_','') + ':' + unicode(v)
                         is_first = index == 0
-                        is_last = index == len(tokens) - 1
+                        is_last = index == len(vars(record)) - 1
                         returnValue += self._build_json_entry(curr_token, is_first, is_last)
-                returnValue += '}'
+			index += 1
+                
+		# Close the JSON entry
+		returnValue += '\t\t}'
 
                 return returnValue
 	
@@ -146,14 +151,14 @@ class Metadata_JSON_Writer(Metadata_File_Writer):
         #                       entry (for comma suffix)     #
         #----------------------------------------------------#
         def _write_record_to_file(self, fp, record, is_last=False):
-                record_str = unicode(record)
-
-                record_str = self._build_json_record(record_str)
+                record_str = self._build_json_record(record)
 
                 fp.write(record_str.encode('utf-8'))
 
                 if not is_last:
                         fp.write(',\n')
+		else:
+			fp.write('\n')
 
         #----------------------------------------------------#
         # Purpose: To write the records contained in the     #
@@ -194,6 +199,6 @@ class Metadata_JSON_Writer(Metadata_File_Writer):
         def write_to_file(self, output_file, recordset):
                 # Write to the file
                 with open(output_file, 'w+') as f:
-                        f.write('{\n"collection":[\n')
+                        f.write('{\n\t"collection":[\n')
                         self._write_records_to_file(f, recordset)
-                        f.write(']\n}')
+                        f.write('\t]\n}')

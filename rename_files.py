@@ -190,6 +190,41 @@ def get_combinations(tokens):
 	return outputSet         
 
 #----------------------------------------------------#
+# Purpose: Abstract away the logic for checking if   #
+#          the book SCN should be set to the found   #
+#          SCN                                       #
+# Parameters: records - The records to               #
+#                       search/reference for the SCN #
+#             book - The book object currently being #
+#                    built/worked on                 #
+#             token - The string/token being         #
+#                     processed that matces a SCN    #
+# Return: N/A                                        #
+#----------------------------------------------------#
+def check_SCN(records, book, token):
+	metadata_record = structs.get_item_with_attr(records, 'SCN', token)
+	# Now that we know the token matches A SCN lets check if its
+	# the proper one if we can
+	if book.title is not None:
+		if metadata_record.title == book.title:
+			if DEBUG_MODE:
+				print 'Setting the SCN: ' + token
+			# Since it matched set it in the book object
+			book.SCN = token
+		else:
+			# Since it didn't match let the user know and
+			# move on
+			if DEBUG_MODE:
+				print 'Skipping SCN ' + token + ' because it does not match with identified title ' + book.title
+	else:
+		if DEBUG_MODE:
+			print 'Setting the SCN: ' + token
+		
+		# Because we don't yet know the title assume this is
+		# the right SCN
+		book.SCN = token
+
+#----------------------------------------------------#
 # Purpose: Check the provieded token for matches     #
 #          with SCNs and titles                      #
 # Parameters: book - The book object being processed #
@@ -204,31 +239,32 @@ def check_token(records, book, token):
         	print '----------------------------------------------------'
         	print 'Records: ' + str(records)
 		print 'Book: ' + str(book)
-        	print 'Token: ' + str(token)
+       		print 'Token: ' + str(token)
         	print '===================================================='
 	
 	# Check if the current token matches a SCN
 	if structs.has_SCN(records, token):
-		metadata_record = structs.get_item_with_attr(records, 'SCN', token)
+		check_SCN(records, book, token)
+		#metadata_record = structs.get_item_with_attr(records, 'SCN', token)
 		# Now that we know the token matches A SCN lets check if its 
 		# the proper one if we can
-		if book.title is not None:
-			if metadata_record.title == book.title:
-				if DEBUG_MODE:
-					print 'Setting the SCN: ' + token
-				# Sinc it matched set it in the book object
-				book.SCN = token
-			else:
-				# Since it didn't match let the user know and 
-				# move on
-				if DEBUG_MODE:
-					print 'Skipping SCN ' + token + ' because it does not match with identified title ' + book.title
-		else:
-			if DEBUG_MODE:
-				print 'Setting the SCN: ' + token
-			# Because we don't yet know the title assume this is 
-			# the right SCN
-			book.SCN = token
+		#if book.title is not None:
+		#	if metadata_record.title == book.title:
+		#		if DEBUG_MODE:
+		#			print 'Setting the SCN: ' + token
+		#		# Since it matched set it in the book object
+		#		book.SCN = token
+		#	else:
+		#		# Since it didn't match let the user know and 
+		#		# move on
+		#		if DEBUG_MODE:
+		#			print 'Skipping SCN ' + token + ' because it does not match with identified title ' + book.title
+		#else:
+		#	if DEBUG_MODE:
+		#		print 'Setting the SCN: ' + token
+		#	# Because we don't yet know the title assume this is 
+		#	# the right SCN
+		#	book.SCN = token
 	# Check if the current token matches a title
 	elif structs.has_title(records, token):
 		metadata_record = structs.get_item_with_attr(records, 'title', token)
