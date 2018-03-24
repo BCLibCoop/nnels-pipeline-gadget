@@ -1,6 +1,7 @@
 import click
 
-DEBUG_MODE = False
+from config import Config
+cfg = Config()
 
 def func_get_title():
         input = click.prompt('What is the SCN of the title your looking for?')
@@ -68,7 +69,7 @@ def func_set():
 #                  expression                        #
 #----------------------------------------------------#
 def combine_regex(patterns, prefix=None, suffix=None, prefix_each=None, suffix_each=None):
-	if DEBUG_MODE:
+	if cfg.DEBUG_MODE:
 		print '===================================================='
         	print 'Call Summary for combine_regex (funcs.py)'
         	print '----------------------------------------------------'
@@ -87,7 +88,10 @@ def combine_regex(patterns, prefix=None, suffix=None, prefix_each=None, suffix_e
 		exp += prefix
 	
 	# Either append or start with a open brace
-	exp += '(';
+	if cfg.HOST_OS == 'Mac':
+		exp += '('
+	elif cfg.HOST_OS == 'Linux':
+		exp += "'"
 	
 	# Loop over the 'patterns' supplied on the command line
 	for index in range(0, len(patterns)):
@@ -116,8 +120,12 @@ def combine_regex(patterns, prefix=None, suffix=None, prefix_each=None, suffix_e
 	# Remove the last character because it will be an extranous | character
 	exp = exp[:len(exp) - 1]
 	
-	# Add a close brace to end the expression
-	exp += ')'
+  # Add a close brace/single-quote to end the expression
+	if cfg.HOST_OS == 'Mac':
+		exp += ")"
+	elif cfg.HOST_OS == 'Linux':
+		exp += "'"
+
 	
 	if suffix is not None:
 		exp += suffix

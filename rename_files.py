@@ -17,12 +17,15 @@ structs = loader.structs
 #import data_structs as structs
 
 import funcs
-		
+
 from BookFile import BookFile
 from BookFileType import BookFileType, DAISY_Type, DAISY202_Type, DAISY3_Type, BookFileTypeFactory
 
 DEBUG_MODE = False
-OS = 'Mac' # Can be Mac or Linux
+
+from config import Config
+cfg = Config()
+
 #----------------------------------------------------#
 # Purpose: Because I use regular expressions instead #
 #          of globbing (like the terminal) I thought #
@@ -83,7 +86,7 @@ def correct_for_globbing(patterns):
 #                 (including path)                   #
 #----------------------------------------------------#
 def get_file_names(patterns, folder):
-	if DEBUG_MODE:
+	if cfg.DEBUG_MODE:
 		print '===================================================='
 		print 'Call Summary for get_file_names (rename_files.py)'
 		print '----------------------------------------------------'
@@ -93,9 +96,9 @@ def get_file_names(patterns, folder):
 	
 	# Prepare the arguments for a basic find command using regex (Extended 
 	# regex)
-	if OS == 'Mac':
+	if cfg.HOST_OS == 'Mac':
         	args = ['find', '-E', folder, '-regex']
-	elif OS == 'Linux':
+	elif cfg.HOST_OS == 'Linux':
 		args = ['find', folder, '-regextype posix-extended', '-regex']
 	
 	use_prefixs = correct_for_globbing(patterns)
@@ -115,14 +118,15 @@ def get_file_names(patterns, folder):
 
         # Run the find command and get the results (See subprocess documentation
 	# for more details)
-	if OS == 'Mac':
-        	proc = subprocess.Popen(args, stdout=subprocess.PIPE)
-        elif OS == 'Linux':
+	if cfg.HOST_OS == 'Mac':
+		proc = subprocess.Popen(args, stdout=subprocess.PIPE)
+	elif cfg.HOST_OS == 'Linux':
 		proc = subprocess.Popen(args, shell=True, stdout=subprocess.PIPE)
+
 	stdout, stderr = proc.communicate()
 
-        # Get the lines of output as a list
-        lines = stdout.decode('ascii').splitlines()
+	# Get the lines of output as a list
+	lines = stdout.decode('ascii').splitlines()
 	
 	# return the results
 	return lines
