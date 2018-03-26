@@ -372,8 +372,8 @@ def tokenize_by_underscore(records, book, name):
 # Parameters: 
 # Return: 
 #----------------------------------------------------#
-def get_name_parts(records, book):
-	if DEBUG_MODE:
+def get_name_parts(configs, records, book):
+	if configs.DEBUG_MODE == 'stactrace':
 		print '===================================================='
         	print 'Call Summary for rename_files (rename_files.py) '
         	print '----------------------------------------------------'
@@ -397,7 +397,7 @@ def get_name_parts(records, book):
                         bookType = BookFileTypeFactory.getExtensionType(format)
                         if bookType is not None:
 				book.type = bookType
-			if DEBUG_MODE:
+			if configs.DEBUG_MODE == 'status':
 				print bookType
 		
 		# Check that the name actually has some length (mostly 
@@ -435,8 +435,8 @@ def get_name_parts(records, book):
 # Return: list - A list of the book objects to be    #
 #                processed                           #
 #----------------------------------------------------#
-def create_booklist(patterns, folder):
-	if DEBUG_MODE:
+def create_booklist(configs, patterns, folder):
+	if configs.DEBUG_MODE == 'stacktrace':
 		print '===================================================='
 		print 'Call Summary for create_booklist (rename_files.py) '
 		print '----------------------------------------------------'
@@ -469,8 +469,8 @@ def create_booklist(patterns, folder):
 # Return: string - The books filename (without       #
 #                  directory information)            #
 #----------------------------------------------------#
-def get_book_filename(book):
-	if DEBUG_MODE:
+def get_book_filename(configs, book):
+	if configs.DEBUG_MODE == 'stacktrace':
 		print '===================================================='
         	print 'Call Summary for get_book_filename (rename_files.py) '
         	print '----------------------------------------------------'
@@ -507,7 +507,7 @@ def get_book_filename(book):
 #                    new (desired) filename for      #
 # Return: string - The new (desired) filename        #
 #----------------------------------------------------#
-def _generate_new_file_name(book):
+def _generate_new_file_name(book, SCN_index=-1):
         # Set the return variable to None initially
         return_result = None
 
@@ -521,18 +521,38 @@ def _generate_new_file_name(book):
         return_result = book.fullpath[:-file_name_length]
 
         # Generate that desired title_SCN format that was desired
-        return_result += book.title + '_' + book.SCN
+        if isinstance(book.SCN, list) and SCN_index != -1:
+		return_result += book.title + '_' + book.SCN[SCN_index]
+	elif isinstance(book.SCN, list):
+		folder_info = return_result
+		return_result = []
+		for scn in book.SCN:
+			return_result.append(folder_info + book.title + '_' + scn)
+	else:
+		return_result += book.title + '_' + book.SCN
 
         # If its a DAISY book put the appropriate suffix at the end of the
         # filename
         if isinstance(book.type, DAISY_Type):
                 if isinstance(book.type, DAISY202_Type):
-                        return_result += '_DAISY202'
+			if isinstance(return_result, list):
+				for index in range(len(return_result)):
+					return_result[index] += '_DAISY202'
+			else:
+                        	return_result += '_DAISY202'
                 elif isinstance(book.type, DAISY3_Type):
-                        return_result += '_DAISY3'
+			if isinstance(return_result, list):
+				for index in range(len(return_result)):
+					return_result[index] += '_DAISY3'
+			else:
+                        	return_result += '_DAISY3'
 
         # Add the file extenstion (.type) to theend of the file name
-        return_result += '.' + file_ext
+	if isinstance(return_result, list):
+		for index in range(len(return_result)):
+			return_result[index] += '.' + file_ext
+	else:
+        	return_result += '.' + file_ext
 
         # Return the result
         return return_result
@@ -540,16 +560,24 @@ def _generate_new_file_name(book):
 #----------------------------------------------------#
 # Purpose: Trigger method for starting the renaming  #
 #          of files funtionality                     #
-# Parameters: patterns - A list of regular           #
+# Parameters: configs - The global configuration     #
+#                       object for global            #
+#                       configurations               #
+#             records - The records to use as the    #
+#                       search space                 #
+#             patterns - A list of regular           #
 #                        expression "patterns" to    #
 #                        identify book files         # 
 #             folder - The workspace directory/      #
 #                      folder where all the relavent #
 #                      files are kept                #
+#             SCN_index - The index of the SCN to    #
+#                         use when generating the    #
+#                         new names                  #
 # Return: N/A                                        #
 #----------------------------------------------------#
-def rename_files(records, patterns, folder='.'):
-	if DEBUG_MODE:
+def rename_files(configs, records, patterns, folder='.', SCN_index=None):
+	if configs.DEBUG_MODE == 'stacktrace':
 		print '===================================================='
 		print 'Call Summary for rename_files (rename_files.py) '
 		print '----------------------------------------------------'
@@ -558,29 +586,30 @@ def rename_files(records, patterns, folder='.'):
 		print '===================================================='
 	
 	# Get a list of books
-	books = create_booklist(patterns, folder)
+	books = create_booklist(configs, patterns, folder)
 	
 	renames = {}
 	
 	# Loop over the list of books
 	for book in books:
 		# Set the book's filename (remove directory info)
-		book.filename = get_book_filename(book)
+		book.filename = get_book_filename(configs, book)
 		
 		# 
-		get_name_parts(records, book)
+		get_name_parts(configs, records, book)
 	
 	for book in books:
 		# DEBUGGING: Print a summary of the information we have
-		print '|----------------------------------------------------|'
-		print '| BOOK SUMMARY'
-		print '| ============'
-		print '| File Path: ' + str(book.fullpath)
-		print '| File Name: ' + str(book.filename)
-		print '| Book SCN: ' + str(book.SCN)
-		print '| Book Title: ' + str(book.title)
-		print '| Book Type: ' + str(book.type)
-		print '|----------------------------------------------------|'
+		if configs.DEBUG_MODE == 'status':
+			print '|----------------------------------------------------|'
+			print '| BOOK SUMMARY'
+			print '| ============'
+			print '| File Path: ' + str(book.fullpath)
+			print '| File Name: ' + str(book.filename)
+			print '| Book SCN: ' + str(book.SCN)
+			print '| Book Title: ' + str(book.title)
+			print '| Book Type: ' + str(book.type)
+			print '|----------------------------------------------------|'
 		
 		# Check if there was enough information or if further
 		# investigation is required
@@ -593,7 +622,8 @@ def rename_files(records, patterns, folder='.'):
 				
 				# DEBUGGING: Print the result of the file 
 				#            metadata extraction
-				print 'Result of call is: ' + str(metadata)
+				if configs.DEBUG_MODE == 'stacktrace':
+					print 'Result of call is: ' + str(metadata)
 			else:
 				print book.filename + ' seems to be a bit of a mystory'
 		
@@ -605,8 +635,11 @@ def rename_files(records, patterns, folder='.'):
 				book.SCN = structs.get_item_with_attr(records, 'title', book.title).SCN
 		
 		if book.SCN is not None and book.title is not None:
-			renames[book.fullpath] = _generate_new_file_name(book)
-			print 'Setting renames[' + book.fullpath + '] to ' + renames[book.fullpath]
+			if SCN_index is None:
+				renames[book.fullpath] = _generate_new_file_name(book)
+			else:
+				renames[book.fullpath] = _generate_new_file_name(book, SCN_index)
+			#print 'Setting renames[' + book.fullpath + '] to ' + renames[book.fullpath]
 	
 	# Return the resulrt
 	return renames

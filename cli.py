@@ -12,21 +12,70 @@ actions = ['get', 'rename']
 
 plugin_folder = os.path.join(os.path.dirname(__file__), 'commands')
 
+#====================================================#
+# Purpose: To lazily loads the "plugins" from the    #
+#          commands folder for Click use (ex.        #
+#          rename, etc...)                           #
+# Properties: None                                   #
+# Methods: list_commands - List the available        #
+#                          "plugins"                 #
+#          get_command - Get the desired "plugin"    #
+# Superclass: Click.MultiCommand                     #
+#====================================================#
 class MyCLI(click.MultiCommand):
+	#----------------------------------------------------#
+	# Purpose: To list the available "plugins"           #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	#             ctx - The Click context thats being    #
+	#                   used                             #
+	# Return: A (sorted) list of the available "plugins" #
+	#----------------------------------------------------#
 	def list_commands(self, ctx):
+		# Initialize the return list
 		rv = []
+		
+		# Loop over the files in the plugin directory
 		for filename in os.listdir(plugin_folder):
+			# Ensure the file is a Python file
 			if filename.endswith('.py'):
+				# Add the file to the list
 				rv.append(filename[:-3])
+		
+		# Sort the list
 		rv.sort()
+		
+		# Return the list
 		return rv
 	
+	#----------------------------------------------------#
+	# Purpose: Get the command for the given "plugin"    #
+	# Parameters: self (implicit) - The instance of the  #
+	#                               object the function  #
+	#                               is invoked on        #
+	#             ctx - The Click context thats being    #
+	#                   used                             #
+	#             name - The name of the "plugin" to get #
+	#                    the command from                #
+	# Return: function - The function to call to run the #
+	#                    command                         #
+	#----------------------------------------------------#
 	def get_command(self, ctx, name):
+		# Initialize the return dictionary
 		ns = {}
+		
+		# Add the name of the command/"plugin" the user wants to use to
+		# the end of the filepath for the "plugin"/commands folder
 		fn = os.path.join(plugin_folder, name + '.py')
+		
+		# Open the file
 		with open(fn) as f:
+			# Compile and evaluate the file
 			code = compile(f.read(), fn, 'exec')
 			eval(code, ns, ns)
+		
+		# Return a pointer to the newly loaded function
 		return ns['cli']
 
 #----------------------------------------------------#
@@ -102,6 +151,7 @@ def get_records_from_dictionary(dictionary):
 		if dictionary == 'Marc_XML':
 			parser = Marc_XML_Parser()
 			output = parser.parse()
+		dictionary_format = None
 			
 	# Load in the dictionary (wheither just generated or not)
 	if not '.' in dictionary:
@@ -113,6 +163,14 @@ def get_records_from_dictionary(dictionary):
 			dictionary += '.csv'
 	
 	with open(dictionary) as f:
+		if dictionary_format is None:
+			if dictionary.endswith('.json'):
+				dictionary_format = 'json'
+			elif dictionary.endswith('.txt'):
+				dictionary_format = 'tabs'
+			elif dictionary.endswith('.csv'):
+				dictionary_format = 'csv'
+		
 		if dictionary_format == 'json':
 			result = structs.json.load(f)
 			records = structs.records_from_json(result)
