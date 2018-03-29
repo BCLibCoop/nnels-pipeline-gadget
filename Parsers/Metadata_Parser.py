@@ -10,8 +10,6 @@ abc = loader.abc
 loader.load_Metadata_Record()
 Metadata_Record = loader.Metadata_Record
 
-DEBUG_MODE = False
-
 #====================================================#
 # Purpose: Provide an abstract base class for        #
 #          metadata parsers for the purposes of      #
