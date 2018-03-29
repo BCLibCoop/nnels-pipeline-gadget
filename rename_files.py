@@ -96,7 +96,7 @@ def get_file_names(patterns, folder):
 	
 	# Prepare the arguments for a basic find command using regex (Extended 
 	# regex)
-	if cfg.HOST_OS == 'Mac':
+	if cfg.HOST_OS == 'Darwin':
         	args = ['find', '-E', folder, '-regex']
 	elif cfg.HOST_OS == 'Linux':
 		args = ['find', folder, '-regextype posix-extended', '-regex']
@@ -118,7 +118,7 @@ def get_file_names(patterns, folder):
 
         # Run the find command and get the results (See subprocess documentation
 	# for more details)
-	if cfg.HOST_OS == 'Mac':
+	if cfg.HOST_OS == 'Darwin':
 		proc = subprocess.Popen(args, stdout=subprocess.PIPE)
 	elif cfg.HOST_OS == 'Linux':
 		proc = subprocess.Popen(args, shell=True, stdout=subprocess.PIPE)
