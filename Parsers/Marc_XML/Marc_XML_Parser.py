@@ -11,7 +11,9 @@ import dynamic_loader as loader
 loader.load_subprocess()
 subprocess = loader.subprocess
 
-DEBUG_MODE = False
+from config import Config
+cfg = Config()
+
 #====================================================#
 # Purpose: Provide a concreate implementation of the $
 #          metadata parser abstract class for the    #
@@ -125,13 +127,17 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 			full_pattern = funcs.combine_regex(custom_patterns)
 		
 		# Setup arguments for the use of the find utility
-		args = ['find', '-E', look_dir, '-regex', full_pattern]
+		if cfg.HOST_OS == 'Mac':
+			args = ['find', '-E', look_dir, '-regex', full_pattern]
+		if cfg.HOST_OS == 'Linux':
+			args = ['find', look_dir, '-regextype posix-extended', '-regex', full_pattern]
+			args = " ".join(args)
 		
 		# DEBUGGING: Print statement showing whats being run
 		print 'Running ' + args[0] + ' with arguments ' + str(args[-1:])
 		
 		# Actually running the command
-		proc = subprocess.Popen(args, stdout=subprocess.PIPE)
+		proc = subprocess.Popen(args, shell=True, stdout=subprocess.PIPE)
 		stdout, stderr = proc.communicate()
 		
 		# Break the output up into lines
@@ -150,7 +156,7 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 	#             record -
 	#----------------------------------------------------#
         def parse_subfield(self, subfield, name, record):
-		if DEBUG_MODE:
+		if cfg.DEBUG_MODE:
 			print '===================================================='
 			print 'Call Summary for parse_subfield (Marc_XML_Parser)'
 			print '----------------------------------------------------'
@@ -194,7 +200,7 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 	# Return: N/A
 	#----------------------------------------------------#
 	def parse_data_field(self, data_field, name, subfield, record):
-		if DEBUG_MODE:
+		if cfg.DEBUG_MODE:
 			print '===================================================='
 			print 'Call Summary for parse_data_field (Marc_XML_Parser)'
 			print '----------------------------------------------------'
@@ -233,7 +239,7 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 	# Overrides: parse_record (Metadata_XML_Parser)      #
 	#----------------------------------------------------#
 	def parse_record(self, record):
-		if DEBUG_MODE:
+		if cfg.DEBUG_MODE:
 			print '===================================================='
 			print 'Call Summary for parse_record (Marc_XML_Parser)'
 			print '----------------------------------------------------'
@@ -306,7 +312,7 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 	# Return: N/A                                        #
 	#----------------------------------------------------#
 	def parse(self):
-		if DEBUG_MODE:
+		if cfg.DEBUG_MODE:
 			print '===================================================='
 			print 'Call Summary for parse (Marc_XML_Parser)'
 			print '----------------------------------------------------'

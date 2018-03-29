@@ -158,7 +158,11 @@ def processMarcXMLFile(filename):
 	
 	# Get the title
 	for key,value in with035.iteritems():
-		returnVal[getTitleFromRecord(value)] = key
+		try:
+			returnVal[getTitleFromRecord(value)] = key
+		except AttributeError:
+			print "Found a null record"
+			continue
 	
 	tree = loader.etree.ElementTree(root)
 	tree.write(filename,  xml_declaration=True, encoding="utf-8")

@@ -16,6 +16,7 @@ class File_Name_Parser(object):
 	def __init__(self, records, file_list):
 		self.records = records
 		self.files = file_list
+		self.configs = Config()
 	
 	#----------------------------------------------------#
 	# Purpose: Check the provieded token for matches     #
@@ -26,7 +27,7 @@ class File_Name_Parser(object):
 	# Return: N/A                                        #
 	#----------------------------------------------------#
 	def parse_token(has_type, token):
-		if DEBUG_MODE:
+		if config.DEBUG_MODE:
 			print '===================================================='
 			print 'Call Summary for rename_files (rename_files.py) '
 			print '----------------------------------------------------'
@@ -50,7 +51,7 @@ class File_Name_Parser(object):
                 	# the propery one if we can
                 if book.SCN is not None:
                         if metadata_record.SCN == book.SCN:
-                                if DEBUG_MODE:
+                                if config.DEBUG_MODE:
                                         print 'Setting the title: ' + token
                                 # Since it matched set it in the book object
                                 book.title = token
@@ -67,7 +68,7 @@ class File_Name_Parser(object):
                 bookType = factory.getStringType(token)
                 if bookType is not None:
                         return_result['type'] = bookType
-                        if DEBUG_MODE:
+                        if config.DEBUG_MODE:
                                 print 'Changed book type to ' + str(bookType)
 		
 		return return_result
@@ -78,7 +79,7 @@ class File_Name_Parser(object):
 	# Return:
 	#----------------------------------------------------#
 	def parse(filename):
-		if DEBUG_MODE:
+		if config.DEBUG_MODE:
 			print '===================================================='
 			print 'Call Summary for rename_files (rename_files.py) '
 			print '----------------------------------------------------'

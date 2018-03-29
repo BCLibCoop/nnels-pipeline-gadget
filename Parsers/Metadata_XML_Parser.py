@@ -6,7 +6,9 @@ abc = loader.abc
 loader.load_XML_parser()
 etree = loader.etree
 
-DEBUG_MODE = False
+import os.path
+
+DEBUG_MODE = True
 #====================================================#
 # Purpose: A tier 2 abstract class in the            #
 #          Metadata_Parser hiearchy meant to         #
@@ -140,7 +142,9 @@ class Metadata_XML_Parser(Metadata_Parser):
 		
 		# Loop over the files in the list
 		for XML_file in file_list:
-			self.file_to_tree(XML_file)
+			if os.path.isfile(XML_file):
+				self.file_to_tree(XML_file)
+
 	
 	def add_XML_tree(self, name, input):
 		if type(input) is list:
