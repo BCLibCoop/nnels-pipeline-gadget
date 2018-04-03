@@ -1,4 +1,5 @@
 import click
+import os
 from rename_files import rename_files
 
 #----------------------------------------------------#

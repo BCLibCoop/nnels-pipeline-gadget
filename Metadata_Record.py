@@ -1,4 +1,4 @@
-DEBUG_MODE = True
+LOCAL_DEBUG = False
 
 #====================================================#
 # Purpose: A generic data structure to hold          #
@@ -29,7 +29,7 @@ class Metadata_Record(object):
 	#           documentaion                             #
 	#----------------------------------------------------#
 	def __init__(self):
-		if DEBUG_MODE:
+		if LOCAL_DEBUG:
 			print '===================================================='
 			print 'Call Summary for __init__ (Metadata_Record)'
 			print '----------------------------------------------------'
@@ -40,6 +40,8 @@ class Metadata_Record(object):
 		self.SCN = None
 	
 	def _generate_new_SCN(self):
+
+		from datetime import datetime
 		# Create and parse a timestamp as part of new
 		# SCN generation
 		now = datetime.now()
