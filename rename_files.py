@@ -629,7 +629,7 @@ def rename_files(configs, records, patterns, folder='.', SCN_index=None):
 				if configs.DEBUG_MODE == 'stacktrace':
 					print 'Result of call is: ' + str(metadata)
 			else:
-				print book.filename + ' seems to be a bit of a mystory'
+				print book.filename + ' is not a parseable format'
 		
 		if book.SCN is not None:
 			if book.title is None:

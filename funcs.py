@@ -88,7 +88,7 @@ def combine_regex(patterns, prefix=None, suffix=None, prefix_each=None, suffix_e
 		exp += prefix
 	
 	# Either append or start with a open brace
-	if cfg.HOST_OS == 'Mac':
+	if cfg.HOST_OS == 'Darwin':
 		exp += '('
 	elif cfg.HOST_OS == 'Linux':
 		exp += "'"
@@ -121,7 +121,7 @@ def combine_regex(patterns, prefix=None, suffix=None, prefix_each=None, suffix_e
 	exp = exp[:len(exp) - 1]
 	
   # Add a close brace/single-quote to end the expression
-	if cfg.HOST_OS == 'Mac':
+	if cfg.HOST_OS == 'Darwin':
 		exp += ")"
 	elif cfg.HOST_OS == 'Linux':
 		exp += "'"

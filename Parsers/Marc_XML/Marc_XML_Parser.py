@@ -127,7 +127,7 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 			full_pattern = funcs.combine_regex(custom_patterns)
 		
 		# Setup arguments for the use of the find utility
-		if cfg.HOST_OS == 'Mac':
+		if cfg.HOST_OS == 'Darwin':
 			args = ['find', '-E', look_dir, '-regex', full_pattern]
 		if cfg.HOST_OS == 'Linux':
 			args = ['find', look_dir, '-regextype posix-extended', '-regex', full_pattern]
