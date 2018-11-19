@@ -156,7 +156,7 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 	#             record -
 	#----------------------------------------------------#
         def parse_subfield(self, subfield, name, record):
-		if cfg.DEBUG_MODE:
+		if cfg.DEBUG_MODE != 'none':
 			print '===================================================='
 			print 'Call Summary for parse_subfield (Marc_XML_Parser)'
 			print '----------------------------------------------------'
@@ -200,7 +200,7 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 	# Return: N/A
 	#----------------------------------------------------#
 	def parse_data_field(self, data_field, name, subfield, record):
-		if cfg.DEBUG_MODE:
+		if cfg.DEBUG_MODE != 'none':
 			print '===================================================='
 			print 'Call Summary for parse_data_field (Marc_XML_Parser)'
 			print '----------------------------------------------------'

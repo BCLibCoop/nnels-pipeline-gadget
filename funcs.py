@@ -69,7 +69,7 @@ def func_set():
 #                  expression                        #
 #----------------------------------------------------#
 def combine_regex(patterns, prefix=None, suffix=None, prefix_each=None, suffix_each=None):
-	if cfg.DEBUG_MODE:
+	if cfg.DEBUG_MODE != 'none':
 		print '===================================================='
         	print 'Call Summary for combine_regex (funcs.py)'
         	print '----------------------------------------------------'
