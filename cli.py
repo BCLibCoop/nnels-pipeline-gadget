@@ -217,7 +217,7 @@ def get_records_from_dictionary(dict_options):
 @click.pass_context
 def main(ctx, dictionary, action, output_level):
   ctx.obj = {}
-  ctx.obj['configs'] = Config()
+  ctx.obj['cfg'] = Config()
 
   records = get_records_from_dictionary(dictionary)
 

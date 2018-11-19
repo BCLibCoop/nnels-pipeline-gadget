@@ -21,7 +21,6 @@ import funcs
 from BookFile import BookFile
 from BookFileType import BookFileType, DAISY_Type, DAISY202_Type, DAISY3_Type, BookFileTypeFactory
 
-DEBUG_MODE = False
 
 from config import Config
 cfg = Config()
@@ -47,9 +46,9 @@ cfg = Config()
 def correct_for_globbing(patterns):
 	# Fill an array of the same size as patterns with None for all values
 	use_prefixs = [None for i in range(len(patterns))]
-	
-	# For each pattern see if it starts with a star (*) if so then check if 
-	# it has a dot (.) next to it. If so we can correct with a dot (.) 
+
+	# For each pattern see if it starts with a star (*) if so then check if
+	# it has a dot (.) next to it. If so we can correct with a dot (.)
 	# prefix
         for index in range(0, len(patterns)):
                 if patterns[index].startswith('*'):
@@ -58,19 +57,19 @@ def correct_for_globbing(patterns):
                                 if len(tokens) == 2:
                                         if len(tokens[0]) == 1:
                                                 use_prefixs[index] = '.'
-	
+
 	# Check if all prefixes are the same (None or the same value)
         all_prefixs_same = True
         for index in range(0, len(use_prefixs)):
                 for index2 in range(0, len(use_prefixs)):
                         if use_prefixs[index] != use_prefixs[index2]:
                                 all_prefixs_same = False
-	
+
 	# If they are all the same (arbitrarly) assign the first entry to be the
 	# value of the variable. In other words change the type of the variable
         if all_prefixs_same:
                 use_prefixs = use_prefixs[0]
-	
+
 	# Return the result
 	return use_prefixs
 
@@ -93,22 +92,22 @@ def get_file_names(patterns, folder):
 		print 'Patterns: ' + str(patterns)
 		print 'Workspace: ' + str(folder)
 		print '===================================================='
-	
-	# Prepare the arguments for a basic find command using regex (Extended 
+
+	# Prepare the arguments for a basic find command using regex (Extended
 	# regex)
 	if cfg.HOST_OS == 'Darwin':
         	args = ['find', '-E', folder, '-regex']
 	elif cfg.HOST_OS == 'Linux':
 		args = ['find', folder, '-regextype posix-extended', '-regex']
-	
+
 	use_prefixs = correct_for_globbing(patterns)
-	
+
         # Build the regex expression from the patterns supplied
 	if use_prefixs is not None:
         	exp = funcs.combine_regex(patterns, prefix_each=use_prefixs)
 	else:
 		exp = funcs.combine_regex(patterns)
-	
+
         # Add the built pattern to the find command arguments
         args.append(exp)
 
@@ -127,7 +126,7 @@ def get_file_names(patterns, folder):
 
 	# Get the lines of output as a list
 	lines = stdout.decode('ascii').splitlines()
-	
+
 	# return the results
 	return lines
 
@@ -146,21 +145,20 @@ def get_file_names(patterns, folder):
 def createCombinationToken(set):
 	# Create and initialize a variable for the "combination token"
 	outputEntry = ''
-	
-	# Loop over list of entries/tokens in the set I need an index whih is 
+
+	# Loop over list of entries/tokens in the set I need an index whih is
 	# why I'm using the 'in range' syntax rather than the purely 'in' syntax
         for x in range(0, len(set)):
 		# Add the current entry to the "combination token'
         	outputEntry += set[x]
-		
+
 		# If this isn't the last token we're looking at add a underscore
                 if x < len(set) - 1:
 			outputEntry += '_'
-	
-        # DEBUGGING: See what the value of the "combination token" is
-	if DEBUG_MODE:
+
+	if cfg.DEBUG_MODE == 'status':
 		print outputEntry
-	
+
 	# Return the value
 	return outputEntry
 
@@ -176,22 +174,22 @@ def createCombinationToken(set):
 #                or title                            #
 #----------------------------------------------------#
 def get_combinations(tokens):
-	if DEBUG_MODE:
+	if cfg.DEBUG_MODE == 'status':
 		print 'Do permutation stuff'
-	
+
 	# Generate all possible combinations using the itertools moduole
 	superset = []
 	for x in range(0, len(tokens)):
 		superset.extend(list(itertools.combinations(tokens, x + 1)))
-	
+
 	# Previous step generates a list of lists rather than a list of strings
 	# so need to recombine to put it back into the list of strings format
 	outputSet = []
 	for set in superset:
 		outputSet.append(createCombinationToken(set))
-	
+
 	# Return the result
-	return outputSet         
+	return outputSet
 
 #----------------------------------------------------#
 # Purpose: Abstract away the logic for checking if   #
@@ -211,19 +209,19 @@ def check_SCN(records, book, token):
 	# the proper one if we can
 	if book.title is not None:
 		if metadata_record.title == book.title:
-			if DEBUG_MODE:
+			if cfg.DEBUG_MODE == 'status':
 				print 'Setting the SCN: ' + token
 			# Since it matched set it in the book object
 			book.SCN = token
 		else:
 			# Since it didn't match let the user know and
 			# move on
-			if DEBUG_MODE:
+			if cfg.DEBUG_MODE == 'status':
 				print 'Skipping SCN ' + token + ' because it does not match with identified title ' + book.title
 	else:
-		if DEBUG_MODE:
+		if cfg.DEBUG_MODE == 'status':
 			print 'Setting the SCN: ' + token
-		
+
 		# Because we don't yet know the title assume this is
 		# the right SCN
 		book.SCN = token
@@ -237,7 +235,7 @@ def check_SCN(records, book, token):
 # Return: N/A                                        #
 #----------------------------------------------------#
 def check_token(records, book, token):
-	if DEBUG_MODE:
+	if cfg.DEBUG_MODE == 'stacktrace':
 		print '===================================================='
         	print 'Call Summary for rename_files (rename_files.py) '
         	print '----------------------------------------------------'
@@ -245,12 +243,12 @@ def check_token(records, book, token):
 		print 'Book: ' + str(book)
        		print 'Token: ' + str(token)
         	print '===================================================='
-	
+
 	# Check if the current token matches a SCN
 	if structs.has_SCN(records, token):
 		check_SCN(records, book, token)
 		#metadata_record = structs.get_item_with_attr(records, 'SCN', token)
-		# Now that we know the token matches A SCN lets check if its 
+		# Now that we know the token matches A SCN lets check if its
 		# the proper one if we can
 		#if book.title is not None:
 		#	if metadata_record.title == book.title:
@@ -259,24 +257,24 @@ def check_token(records, book, token):
 		#		# Since it matched set it in the book object
 		#		book.SCN = token
 		#	else:
-		#		# Since it didn't match let the user know and 
+		#		# Since it didn't match let the user know and
 		#		# move on
 		#		if DEBUG_MODE:
 		#			print 'Skipping SCN ' + token + ' because it does not match with identified title ' + book.title
 		#else:
 		#	if DEBUG_MODE:
 		#		print 'Setting the SCN: ' + token
-		#	# Because we don't yet know the title assume this is 
+		#	# Because we don't yet know the title assume this is
 		#	# the right SCN
 		#	book.SCN = token
 	# Check if the current token matches a title
 	elif structs.has_title(records, token):
 		metadata_record = structs.get_item_with_attr(records, 'title', token)
-		# Now that we know the token matches A title lets check if its 
+		# Now that we know the token matches A title lets check if its
 		# the propery one if we can
 		if book.SCN is not None:
 			if metadata_record.SCN == book.SCN:
-				if DEBUG_MODE:
+				if cfg.DEBUG_MODE == 'status':
 					print 'Setting the title: ' + token
 				# Since it matched set it in the book object
 				book.title = token
@@ -285,24 +283,24 @@ def check_token(records, book, token):
 				print 'Skipping title ' + token + ' because it does not match with identified SCN ' + book.SCN
 		else:
 			print 'Setting the title: ' + token
-			# Because we don't yet know the SCN assume this is the 
+			# Because we don't yet know the SCN assume this is the
 			# right title
 			book.title = token
 	elif book.type is None:
 		factory = BookFileTypeFactory()
-		bookType = factory.getStringType(token) 
+		bookType = factory.getStringType(token)
 		if bookType is not None:
 			book.type = bookType
-			if DEBUG_MODE:
+			if cfg.DEBUG_MODE == 'status':
 				print 'Changed book type to ' + str(bookType)
 
 #----------------------------------------------------#
-# Purpose: 
-# Parameters: 
-# Return: 
+# Purpose:
+# Parameters:
+# Return:
 #----------------------------------------------------#
 def zero_length_token_fix(records, book, tokens):
-	if DEBUG_MODE:
+	if cfg.DEBUG_MODE == 'stacktrace':
 		print '===================================================='
         	print 'Call Summary for zero_length_token_fix (rename_files.py) '
         	print '----------------------------------------------------'
@@ -310,20 +308,20 @@ def zero_length_token_fix(records, book, tokens):
         	print 'Book: ' + str(book)
         	print 'Tokens: ' + str(tokens)
         	print '===================================================='
-	
+
 	# Loop over each of the tokens to check their length
 	for x in range(0, len(tokens)):
 		# Check if token x is a/the empty entry
 		if len(tokens[x]) < 1:
 			tokens.remove(tokens[x])
-	
-        # Avoid edge case of a file named _.format and process the any/the 
+
+        # Avoid edge case of a file named _.format and process the any/the
 	# token left
         if len(tokens) > 0:
 		check_token(records, book, tokens[0])
 
 def process_two_tokens(records, book, tokens):
-	if DEBUG_MODE:
+	if cfg.DEBUG_MODE == 'stacktrace':
 		print '===================================================='
         	print 'Call Summary for process_two_tokens (rename_files.py) '
         	print '----------------------------------------------------'
@@ -331,8 +329,8 @@ def process_two_tokens(records, book, tokens):
         	print 'Book: ' + str(book)
         	print 'Tokens: ' + str(tokens)
         	print '===================================================='
-	
-	# Nothing is stopping people to put a underscore at the beginning or 
+
+	# Nothing is stopping people to put a underscore at the beginning or
 	# end of a filename
 	if len(tokens[0]) > 0 and len(tokens[1]) > 0:
 		check_token(records, book, tokens[0])
@@ -348,7 +346,7 @@ def process_two_tokens(records, book, tokens):
 # Return: N/A (To be reevaluated later)
 #----------------------------------------------------#
 def tokenize_by_underscore(records, book, name):
-	if DEBUG_MODE:
+	if cfg.DEBUG_MODE == 'stacktrace':
 		print '===================================================='
         	print 'Call Summary for tokenize_by_underscore (rename_files.py) '
         	print '----------------------------------------------------'
@@ -356,13 +354,13 @@ def tokenize_by_underscore(records, book, name):
         	print 'Book: ' + str(book)
         	print 'Name: ' + str(name)
         	print '===================================================='
-	
+
 	tokens = name.split('_')
-	
-	if DEBUG_MODE:
+
+	if cfg.DEBUG_MODE == 'status':
 		print 'Tokens: ' + str(tokens)
-	
-	# Need to check if we have to start trying to make permutations of 
+
+	# Need to check if we have to start trying to make permutations of
 	# multiple tokens or the simpler case
 	if len(tokens) >  2:
 		combos = get_combinations(tokens)
@@ -373,27 +371,27 @@ def tokenize_by_underscore(records, book, name):
 
 #----------------------------------------------------#
 # Purpose: Break the filename into meaningful peices
-# Parameters: 
-# Return: 
+# Parameters:
+# Return:
 #----------------------------------------------------#
-def get_name_parts(configs, records, book):
-	if configs.DEBUG_MODE == 'stactrace':
+def get_name_parts(cfg, records, book):
+	if cfg.DEBUG_MODE == 'stacktrace':
 		print '===================================================='
         	print 'Call Summary for rename_files (rename_files.py) '
         	print '----------------------------------------------------'
         	print 'Book: ' + str(book)
         	print '===================================================='
-	
-	# If the filename contains a do we want to tokenize it by that (know 
+
+	# If the filename contains a do we want to tokenize it by that (know
 	# what the format is otherwise eliminate dealing with .blahblah files)
 	if '.' in book.filename:
 		filename_parts = book.filename.split('.')
-		
-		# If the filename started with a . then the first token has no 
+
+		# If the filename started with a . then the first token has no
 		# length so lets just remove it
 		if len(filename_parts[0]) < 1:
 			filename_parts.remove(filename_parts[0])
-		
+
 		# If there are EXACTLY two tokens assume the second token is the
                 # format/extension
 		if len(filename_parts) == 2:
@@ -401,16 +399,16 @@ def get_name_parts(configs, records, book):
                         bookType = BookFileTypeFactory.getExtensionType(format)
                         if bookType is not None:
 				book.type = bookType
-			if configs.DEBUG_MODE == 'status':
+			if cfg.DEBUG_MODE == 'status':
 				print bookType
-		
-		# Check that the name actually has some length (mostly 
+
+		# Check that the name actually has some length (mostly
 		# a sanity check but...)
 		if len(filename_parts[0]) > 0:
 			name = filename_parts[0]
-			
-			# Check if the filename contains a underscore because 
-			# this allows us to assume its either the title only 
+
+			# Check if the filename contains a underscore because
+			# this allows us to assume its either the title only
 			# or some combination of title and SCN
 			if '_' in name:
 				tokenize_by_underscore(records, book, name)
@@ -439,29 +437,29 @@ def get_name_parts(configs, records, book):
 # Return: list - A list of the book objects to be    #
 #                processed                           #
 #----------------------------------------------------#
-def create_booklist(configs, patterns, folder):
-	if configs.DEBUG_MODE == 'stacktrace':
+def create_booklist(cfg, patterns, folder):
+	if cfg.DEBUG_MODE == 'stacktrace':
 		print '===================================================='
 		print 'Call Summary for create_booklist (rename_files.py) '
 		print '----------------------------------------------------'
 		print 'Patterns: ' + str(patterns)
 		print 'Workspace: ' + str(folder)
 		print '===================================================='
-	
+
 	# A list variable to hold the reults
 	booklist = []
-	
+
 	# Get the list of files with the given patterns
 	files = get_file_names(patterns, folder)
-	
+
 	# Loop over the list of files and create a new book object for each
 	for currFile in files:
 		currBook = BookFile()
 		currBook.fullpath = currFile
-		
+
 		# Add the newly created book object to the list
 		booklist.append(currBook)
-	
+
 	# Return the result
 	return booklist
 
@@ -473,35 +471,35 @@ def create_booklist(configs, patterns, folder):
 # Return: string - The books filename (without       #
 #                  directory information)            #
 #----------------------------------------------------#
-def get_book_filename(configs, book):
-	if configs.DEBUG_MODE == 'stacktrace':
+def get_book_filename(cfg, book):
+	if cfg.DEBUG_MODE == 'stacktrace':
 		print '===================================================='
         	print 'Call Summary for get_book_filename (rename_files.py) '
         	print '----------------------------------------------------'
         	print 'Book: ' + str(book)
         	print '===================================================='
-	
+
 	# Create a variable for the result that will be returned
 	book_filename = None
-	
+
 	# Check if there is a / character in the fullpath of the book
 	if '/' in book.fullpath:
 		# Tokenize/split the path using the / as a delimiter
 		path_parts = book.fullpath.split('/')
-		
-		# Check if there is more than one token/substring after the 
+
+		# Check if there is more than one token/substring after the
 		# split
 		if len(path_parts) > 1:
-			# Set the result to be the the last token in the set 
+			# Set the result to be the the last token in the set
 			# (the text after the last /)
 			book_filename = path_parts[len(path_parts) - 1]
-	
+
 	# Check if the result variable is still None
 	if book_filename == None:
-		# Because it wasn't set assume that the filename and path are 
+		# Because it wasn't set assume that the filename and path are
 		# the same
 		book_filename = book.fullpath
-	
+
 	# Return the result
 	return book_filename
 
@@ -564,14 +562,14 @@ def _generate_new_file_name(book, SCN_index=-1):
 #----------------------------------------------------#
 # Purpose: Trigger method for starting the renaming  #
 #          of files funtionality                     #
-# Parameters: configs - The global configuration     #
+# Parameters: cfg - The global configuration     #
 #                       object for global            #
 #                       configurations               #
 #             records - The records to use as the    #
 #                       search space                 #
 #             patterns - A list of regular           #
 #                        expression "patterns" to    #
-#                        identify book files         # 
+#                        identify book files         #
 #             folder - The workspace directory/      #
 #                      folder where all the relavent #
 #                      files are kept                #
@@ -580,31 +578,31 @@ def _generate_new_file_name(book, SCN_index=-1):
 #                         new names                  #
 # Return: N/A                                        #
 #----------------------------------------------------#
-def rename_files(configs, records, patterns, folder='.', SCN_index=None):
-	if configs.DEBUG_MODE == 'stacktrace':
+def rename_files(cfg, records, patterns, folder='.', SCN_index=None):
+	if cfg.DEBUG_MODE == 'stacktrace':
 		print '===================================================='
 		print 'Call Summary for rename_files (rename_files.py) '
 		print '----------------------------------------------------'
 		print 'Patterns: ' + str(patterns)
 		print 'Workspace: ' + str(folder)
 		print '===================================================='
-	
+
 	# Get a list of books
-	books = create_booklist(configs, patterns, folder)
-	
+	books = create_booklist(cfg, patterns, folder)
+
 	renames = {}
-	
+
 	# Loop over the list of books
 	for book in books:
 		# Set the book's filename (remove directory info)
-		book.filename = get_book_filename(configs, book)
-		
-		# 
-		get_name_parts(configs, records, book)
-	
+		book.filename = get_book_filename(cfg, book)
+
+		#
+		get_name_parts(cfg, records, book)
+
 	for book in books:
 		# DEBUGGING: Print a summary of the information we have
-		if configs.DEBUG_MODE == 'status':
+		if cfg.DEBUG_MODE == 'stacktrace':
 			print '|----------------------------------------------------|'
 			print '| BOOK SUMMARY'
 			print '| ============'
@@ -614,7 +612,7 @@ def rename_files(configs, records, patterns, folder='.', SCN_index=None):
 			print '| Book Title: ' + str(book.title)
 			print '| Book Type: ' + str(book.type)
 			print '|----------------------------------------------------|'
-		
+
 		# Check if there was enough information or if further
 		# investigation is required
 		if book.SCN is None and book.title is None:
@@ -623,27 +621,27 @@ def rename_files(configs, records, patterns, folder='.', SCN_index=None):
 				# Get the metadata from the actual file based
 				# on its type
 				metadata = book.type.get_metadata(book.fullpath)
-				
-				# DEBUGGING: Print the result of the file 
+
+				# DEBUGGING: Print the result of the file
 				#            metadata extraction
-				if configs.DEBUG_MODE == 'stacktrace':
+				if cfg.DEBUG_MODE == 'status':
 					print 'Result of call is: ' + str(metadata)
 			else:
 				print book.filename + ' is not a parseable format'
-		
+
 		if book.SCN is not None:
 			if book.title is None:
 				book.title = structs.get_item_with_attr(records, 'SCN', book.SCN).title
 		if book.title is not None:
 			if book.SCN is None:
 				book.SCN = structs.get_item_with_attr(records, 'title', book.title).SCN
-		
+
 		if book.SCN is not None and book.title is not None:
 			if SCN_index is None:
 				renames[book.fullpath] = _generate_new_file_name(book)
 			else:
 				renames[book.fullpath] = _generate_new_file_name(book, SCN_index)
 			#print 'Setting renames[' + book.fullpath + '] to ' + renames[book.fullpath]
-	
+
 	# Return the resulrt
 	return renames
