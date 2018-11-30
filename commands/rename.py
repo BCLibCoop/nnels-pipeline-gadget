@@ -31,21 +31,22 @@ from rename_files import rename_files
 # Return: N/A                                        #
 #----------------------------------------------------#
 @click.command()
-@click.option('--pattern', '-p', default=[u'.*'], help='The file pattern to use for looking up relavent filenames', multiple=True)
-@click.option('--scn', '-s', default=-1, help='The SCN index to use for the names')
-@click.option('--folder', '-f', default='.', help='The folder to find the files for renamening in')
+@click.option('--pattern', '-p', default=[u'.*'], help='The regex pattern to use for finding target items', multiple=True)
+@click.option('--scn-index', '-s', default=-1, help='The position of the SCN instance')
+@click.option('--folder', '-f', default='.', help='Folder to look in for target items')
+@click.option('--sweep', '-s', is_flag=True, default=True, help="Sweep through all target items after first prompt")
 @click.pass_context
-def cli(ctx, pattern, scn, folder):
+def cli(ctx, pattern, scn_index, folder, sweep):
        	# DEBUGGING: See what is passed along
-	if ctx.obj['configs'].DEBUG_MODE == 'status':
+	if ctx.obj['cfg'].DEBUG_MODE == 'status':
 		print 'Context Object: ' + str(ctx.obj)
-	
+
 	# Create a variable to hold the callback arguments
 	callback_args = {
 		'records':ctx.obj['records'],
-		'configs':ctx.obj['configs']
+		'cfg':ctx.obj['cfg']
 	}
-	
+
 	# If the pattern(s) are specified in context object use thos if not use
 	# the command line arguments via Click
 	if 'patterns' in ctx.obj:
@@ -53,80 +54,58 @@ def cli(ctx, pattern, scn, folder):
 	else:
 		# Add the pattern parameter in the extra callback parameters
         	callback_args['patterns'] = pattern
-	
+
 	# If the SCN index value is specified by the command line via Click add
 	# it to the callback arguments
-	if scn != -1:
-		callback_args['SCN_index'] = scn
-	
+	if scn_index != -1:
+		callback_args['scn_index'] = scn_index
+
 	# If the folder value is specified by the command line via Click add it
 	# to the callback arguments
 	if folder != '.':
 		callback_args['folder'] = folder
-	
-        # Invoke the callback with appropriate arguments
-        callback_return = rename_files(**callback_args)
-	
+
+	# If the sweep switch is specified by the command line via Click add it
+	# to the callback arguments
+	if sweep != False:
+		callback_args['sweep'] = sweep
+
+	# Invoke the callback with appropriate arguments
+	callback_return = rename_files(**callback_args)
+
 	# Setup a progress bar so that the user knows how many more files there
 	# are to consider renaming
 	with click.progressbar(callback_return, show_eta=False, width=0) as bar:
-		# The actual loop control
-		for key in bar:
-			# Check if the current value is a list or not as we'll 
+		try:
+			# Sweep is active
+			callback_args['sweep']
+			click.echo('Set to rename: ')
+			for k, v in callback_return.iteritems():
+				click.echo(str(k) + ' into ' + str(callback_return[k][scn_index]))
+
+			if click.confirm('Proceed?', abort=True):
+				for k, v in callback_return.iteritems():
+					os.rename(k, callback_return[k][scn_index])
+				click.echo("Renamed " + len(callback_return) + ' items')
+
+			# Check if the current value is a list or not as we'll
 			# need to treat these differently. The list arises when
 			# there are multiple SCNs for a file but no specific
 			# index was given
 			if isinstance(callback_return[key], list):
-				# Preface the user with what they will see
-				prompt_text = 'Do you want to change ' + str(key) + ' to any of the following:\n'
-				
-				# Generate the indexed list for printing
-				for index in range(len(callback_return[key])):
-					prompt_text += str(index) + '. ' + callback_return[key][index] + '\n'
-				
-				# Ask the actual questions (stating unintuitive
-				# controls)
-				prompt_text += 'Enter the number you wish to use or -1 for none'
-				# Set the input variable to a value that will 
-				# fail our loop constrainto
-				input = -2
-				
-				# Have a loop to make sure the user provides 
-				# valid input otherwise is reasked
-				while input < -1 or input > len(callback_return[key]) - 1:
-					input = click.prompt(prompt_text, type=int)
-					# Check if invalid input was given and 
-					# if so notify the user
-					if input < -1 or input > len(callback_return[key]) - 1:
-						click.echo(str(input) + ' is an invalid index. Please try again')
-				
-				# If the input is -1 that means they just want 
-				# to skip this entry
-				if input != -1:
-					# Confirm with the user this is what 
-					# they want to do
-					input = click.confirm('Change ' + str(key) + ' into ' + str(callback_return[key][input]) + '?')
-					
-					if input:
-						# Rename the actual file
-						os.rename(key, callback_return[key][index])
-						# Let the user know the result
-						click.echo('Done! I\'ve renamed the file :)')
-					else:
-						# Let the user know whats
-						# happening
-						click.echo('Okay, I won\'t :(')
-			else:
-				# Confirm with the user this is what they want 
-				# to do
-				input = click.confirm('Change ' + str(key) + ' into ' + str(callback_return[key]) + '?')
-				
-				if input:
+				prompt_text = "There was no --scn-index value provided and there are multiple candidate SCNs to use. Please choose one:"
+				input = click.prompt(prompt_text, type=int)
+
+		# Sweep inactive
+		except IndexError:
+			for key in bar:
+				if click.confirm('Rename ' + str(key) + ' into ' + str(callback_return[key][scn_index]) + '?', abort=True):
 					# Rename the actual file
-					os.rename(key, callback_return[key])
-					
-					# Let the user know the result
-					click.echo('Done! I\'ve renamed the file :)')
+					click.echo('Renaming...')
+					os.rename(key, callback_return[key][scn_index])
 				else:
-					# Let the user know whats happening
-					click.echo('Okay, I won\'t :(')
+					click.echo('Skipping...')
+
+
+
+
