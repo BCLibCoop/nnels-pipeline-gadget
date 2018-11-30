@@ -61,15 +61,19 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 	# See Also: __init__ documentation in Python         #
 	#           documentaion                             #
 	#----------------------------------------------------#
-	def __init__(self, patterns=None):
+	def __init__(self, path=None, patterns=None):
 		# Check if the pattern parameter was set
+
+		#if patterns, run find_parseable_files with path (if its blank just defaults)
+		#if no patterns but path, set the path to self.parsable_files
+		#if neither - use default find_parseable_files call
+
 		if patterns is not None:
-			self.find_parsable_files(custom_patterns=patterns)
-			
+			self.find_parsable_files(look_dir=path, custom_patterns=patterns)
 			super(Marc_XML_Parser, self).__init__(self.parsable_files)
 		else:
 			super(Marc_XML_Parser, self).__init__()
-		
+
 		# Set the recordset property to a new Marc_XML_Recordset object
 		self.recordset = Marc_XML_RecordSet()
 	
@@ -116,15 +120,15 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 	# Return: List - A list of files for parsing         #
 	# Overrides: find_parsable_files (Metadata_Parser)   #
 	#----------------------------------------------------#
-	def find_parsable_files(self, look_dir='.', custom_patterns=['*.xml']):
+	def find_parsable_files(self, look_dir='./testdata', custom_patterns=['*.xml']):
 		# Check if the parent_dir is that special . character
-		if look_dir == '.':
+		#if look_dir == '.':
 			# Because there is prefix all entries with .*/
-			full_pattern = funcs.combine_regex(custom_patterns, prefix_each='.*/')
-		else:
+		full_pattern = funcs.combine_regex(custom_patterns, prefix_each='.*/')
+		#else:
 			# Because we're not looking in the current directory no
 			# special processing has to occur
-			full_pattern = funcs.combine_regex(custom_patterns)
+			#full_pattern = funcs.combine_regex(custom_patterns)
 		
 		# Setup arguments for the use of the find utility
 		if cfg.HOST_OS == 'Darwin':
@@ -155,8 +159,8 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 	#             name -
 	#             record -
 	#----------------------------------------------------#
-        def parse_subfield(self, subfield, name, record):
-		if cfg.DEBUG_MODE:
+	def parse_subfield(self, subfield, name, record):
+		if cfg.DEBUG_MODE != 'none':
 			print '===================================================='
 			print 'Call Summary for parse_subfield (Marc_XML_Parser)'
 			print '----------------------------------------------------'
@@ -176,7 +180,7 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 		return_result = {name:  getattr(record, name)}
 		
 		return return_result
-	
+
 	#----------------------------------------------------#
 	# Purpose: To parse an individual datafield element  #
 	#          in the Marc XML file (callback function   #
@@ -200,7 +204,7 @@ class Marc_XML_Parser(Metadata_XML_Parser):
 	# Return: N/A
 	#----------------------------------------------------#
 	def parse_data_field(self, data_field, name, subfield, record):
-		if cfg.DEBUG_MODE:
+		if cfg.DEBUG_MODE != 'none':
 			print '===================================================='
 			print 'Call Summary for parse_data_field (Marc_XML_Parser)'
 			print '----------------------------------------------------'
