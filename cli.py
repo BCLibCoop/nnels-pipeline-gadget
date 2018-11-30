@@ -84,7 +84,7 @@ class MyCLI(click.MultiCommand):
 # Parameters: N/A                                    #
 # Return: N/A                                        #
 #----------------------------------------------------#
-def generate_dictionary_cli(dict_extension, dict_source):
+def generate_dictionary_cli(recordset, dict_extension, dict_source):
   # Setup the callback variables
   parser_type = {'MarcXML':Marc_XML_Parser}
   options = []
@@ -105,6 +105,8 @@ def generate_dictionary_cli(dict_extension, dict_source):
   # dictionary = click.prompt('Where (filename) should the file be stored?')
 
   dict_file = 'dict' + '.' + dict_extension
+  if recordset != '.':
+    parser = callbacks[dict_source](recordset)
   # Initialize the proper parser and parse_to_file
   parser = callbacks[dict_source]()
   output = parser.parse_to_file(dict_file, format=dict_extension)
@@ -127,19 +129,23 @@ def generate_dictionary_cli(dict_extension, dict_source):
 # Parameters:
 # Return:
 #----------------------------------------------------#
-def get_records_from_dictionary(dict_options):
+def get_records_from_dictionary(dict_flag, recordset, format_options):
   # # Ask if the user wants to generate a dictionary
   # generate_dictionary = click.confirm('Do you neeed to generate a dictionary?')
 
   # format_options = ['json', 'tabs', 'csv']
   # dict_format = click.prompt('What format to store the dictionary in?', type=click.Choice(format_options))
 
-  dict_source = dict_options[0]
-  dict_extension = dict_options[1]
+  dict_source = format_options[0]
+  dict_extension = format_options[1]
 
-  dict_file = generate_dictionary_cli(dict_extension, dict_source)
-  click.echo('Using %s.%s as the dictionary' % (dict_file, dict_extension))
-  print dict_file
+  if dict_flag is True:
+    dict_file = generate_dictionary_cli(recordset, dict_extension, dict_source)
+  else:
+    dict_file = 'dict' + '.' + format_options[1]
+
+  click.echo('Using %s as the dictionary' % (dict_file))
+
   # else:
   #     # Because the user didn't specify a dictionary at
   #     # runtime and has said no to generating one we need to
@@ -210,16 +216,18 @@ def get_records_from_dictionary(dict_options):
 # Return: N/A                                        #
 #----------------------------------------------------#
 @click.command(cls=MyCLI, invoke_without_command=True)
-@click.option('--dictionary', '-d', default=('MarcXML', 'json'), type=(unicode, unicode), help='The filename that you want to use as the datastore dictionary/look up table')
+@click.option('--dict/--no-dict', ' /-d', default=True, help='Boolean flag to disable building a new dictionary')
+@click.option('--recordset', '-r', default=".", type=click.Path(exists=True), help='Record set file to read as dictionary')
+@click.option('--format', '-f', default=('MarcXML', 'json'), type=(unicode, unicode), help='The format for imported records followed by format for dictionary construction')
 @click.option('--action', '-a', default="rename", type=click.Choice(actions), help='The action you want the script to perform')
 @click.option('--verbose', '-v', 'output_level', flag_value='verbose', default=True, help='Provide output to the user')
 @click.option('--quiet', '-q', 'output_level', flag_value='quiet',  help='Provide minimal output to the user')
 @click.pass_context
-def main(ctx, dictionary, action, output_level):
+def main(ctx, dict, recordset, format, action, output_level):
   ctx.obj = {}
-  ctx.obj['configs'] = Config()
+  ctx.obj['cfg'] = Config()
 
-  records = get_records_from_dictionary(dictionary)
+  records = get_records_from_dictionary(dict, recordset, format)
 
   #for record in records:
   #  print unicode(record)
